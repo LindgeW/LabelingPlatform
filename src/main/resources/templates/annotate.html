@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>标注平台</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bg/icons.css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css">
+    <style>
+        #lbl_obj{
+            /*text-align: center;*/
+            margin-top: 10%;
+            min-height: 100px;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            font-size: 20px;
+            font-family: 微软雅黑, serif;
+            /*border: #ff0000 1px dotted;*/
+        }
+
+        input[type="radio"]{
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!--&lt;!&ndash;Scripts js&ndash;&gt;-->
+    <script src="/js/scripts.js"></script>
+
+    <!--<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">-->
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/messages_zh.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+
+    <script>
+        function goto(cmd) {
+            tag = $('input:radio:checked').val();
+            $.ajax({
+                type: "POST",
+                url: "/annotate",
+                data: {"tag": tag, "cmd": cmd},
+                dataType: "json",
+                cache: "false",
+                success: function (resp) {
+                    if (resp.code == 200){
+                        $("#lbl_obj").text(resp.data.item);
+                    }else if(resp.code == 201){
+                        $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            })
+        }
+
+    </script>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="navbar-text">
+                            <i class="fa fa-user-circle"></i> <span th:text="${username}"></span>
+                        </li>
+                        <!--<li class="nav-item">-->
+                            <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                                <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                                <!--<span id="fullscreen-button">全屏</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bg">管理员</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
+                <div id="lbl_obj" th:text="${instance.item}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
+                <div align="center">
+                    <p>
+                        <label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="1" checked />正面</label>
+                        <label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="2" />负面</label>
+                        <label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="3" />中立</label>
+                    </p>
+                    <p>
+                        <button type="button" class="btn btn-primary" value="-1" onclick="goto('prev')">上一个</button>
+                        <button type="button" class="btn btn-primary" value="1" onclick="goto('next')">下一个</button>
+                    </p>
+
+                    <!--<button type="button" class="btn btn-primary" value="1" onclick="submitAnswer(this.value)">正面</button>-->
+                    <!--<button type="button" class="btn btn-primary" value="2" onclick="submitAnswer(this.value)">反面</button>-->
+                    <!--<button type="button" class="btn btn-primary" value="3" onclick="submitAnswer(this.value)">中立</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
