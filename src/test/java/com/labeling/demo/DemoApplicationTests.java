@@ -20,5 +20,12 @@ public class DemoApplicationTests {
         System.out.println(StringUtils.trimToEmpty(s));
         System.out.println(StringUtils.isAllBlank(" a "));
         System.out.println(StringUtils.trimToNull(s));
+
+        String s2 = "asdfas;asdf;qweqwer;qwerwqer;werq";
+        String[] tokens = StringUtils.split(s2, ';');
+        for (String t: tokens) {
+            System.out.println(t);
+        }
+
     }
 }

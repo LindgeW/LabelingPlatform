@@ -68,9 +68,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/js/**", "anon");
 
         //普通用户、游客
-        filterChainDefinitionMap.put("/user/**", "anon");
-        //管理员，需要角色权限 “admin”
-        filterChainDefinitionMap.put("/admin/**", "roles[admin]");
+//        filterChainDefinitionMap.put("/user/**", "anon");
+//        //管理员，需要角色权限 “admin”
+//        filterChainDefinitionMap.put("/admin/**", "roles[admin]");
         //<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
 //        //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");
@@ -88,14 +88,6 @@ public class ShiroConfig {
     @Bean
     public UserRealm myShiroRealm(){
         return new UserRealm();
-    }
-
-    //开启Shiro的注解(如@RequiresRoles,@RequiresPermissions)
-    @Bean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator app=new DefaultAdvisorAutoProxyCreator();
-        app.setProxyTargetClass(true);
-        return app;
     }
 
     //开启aop注解支持
@@ -119,12 +111,22 @@ public class ShiroConfig {
      * 自动创建代理
      * @return
      */
+//    @Bean
+//    @DependsOn({"lifecycleBeanPostProcessor"})
+//    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+//        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+//        advisorAutoProxyCreator.setProxyTargetClass(true);
+//        advisorAutoProxyCreator.setUsePrefix(true);
+//        return advisorAutoProxyCreator;
+//    }
+
+    //开启Shiro的注解(如@RequiresRoles,@RequiresPermissions)
     @Bean
-    @DependsOn({"lifecycleBeanPostProcessor"})
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        advisorAutoProxyCreator.setProxyTargetClass(true);
-        return advisorAutoProxyCreator;
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator app = new DefaultAdvisorAutoProxyCreator();
+//        app.setUsePrefix(true);
+        app.setProxyTargetClass(true);
+        return app;
     }
 }
 

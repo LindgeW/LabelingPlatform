@@ -10,4 +10,6 @@ public interface InstanceService {
     void saveAll(Iterable<Instance> instances);
 
     List<Instance> findAll();
+
+    List<Instance> findByTaskName(String taskName);
 }

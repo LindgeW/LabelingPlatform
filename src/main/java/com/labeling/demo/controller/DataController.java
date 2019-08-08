@@ -3,9 +3,12 @@ package com.labeling.demo.controller;
 import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.RespEntity;
 import com.labeling.demo.entity.RespStatus;
+import com.labeling.demo.entity.Task;
 import com.labeling.demo.service.InstanceService;
+import com.labeling.demo.service.TaskService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,21 +31,28 @@ public class DataController {
     private static final String tempDir = "src/main/resources/temp";
     private static final int BATCHSIZE  = 50;
 
-
     private InstanceService instanceService;
+    private TaskService taskService;
+
     @Autowired
-    public DataController(InstanceService instanceService) {
+    public DataController(InstanceService instanceService, TaskService taskService) {
         this.instanceService = instanceService;
+        this.taskService = taskService;
     }
 
     @GetMapping("/upload")
+    @RequiresRoles("admin")
     public String toUpload(){
         return "upload";
     }
 
     @PostMapping("/upload")
     @ResponseBody
-    public RespEntity upload(@RequestParam("file") MultipartFile multiFile) throws IOException {
+    @RequiresRoles("admin")
+    public RespEntity upload(@RequestParam("file") MultipartFile multiFile,
+                             @RequestParam("taskName") String taskName,
+                             @RequestParam("dataType") Short dataType,
+                             @RequestParam("tags") String tags) throws IOException {
         if(multiFile==null || multiFile.isEmpty()){
             return new RespEntity(RespStatus.Error);
         }
@@ -108,7 +118,7 @@ public class DataController {
         if (!instSet.isEmpty()){
             ArrayList<Instance> insts = new ArrayList<>(BATCHSIZE);
             for(String item: instSet){
-                insts.add(new Instance(0, item, "x", 0));
+                insts.add(new Instance(taskName, item, "", 0));
                 if (insts.size() == BATCHSIZE){
                     instanceService.saveAll(insts);
                     insts.clear();
@@ -116,6 +126,8 @@ public class DataController {
             }
             if (!insts.isEmpty())
                 instanceService.saveAll(insts);
+
+            taskService.save(new Task(taskName, dataType, instSet.size(), tags));
         }
 
         return new RespEntity(RespStatus.SUCCESS);

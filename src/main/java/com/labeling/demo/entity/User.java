@@ -7,10 +7,18 @@ public class User {
 
     private String role;
 
-    public User(String username, String password, String role) {
+    private String teamName;
+
+    public User(String username, String teamName) {
+        this.username = username;
+        this.teamName = teamName;
+    }
+
+    public User(String username, String password, String role, String teamName) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.teamName = teamName;
     }
 
     public User() {
@@ -41,12 +49,21 @@ public class User {
         this.role = role == null ? null : role.trim();
     }
 
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName == null ? null : teamName.trim();
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", teamName='" + teamName + '\'' +
                 '}';
     }
 }

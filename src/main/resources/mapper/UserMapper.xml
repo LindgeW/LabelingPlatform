@@ -6,11 +6,17 @@
       <idArg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="role" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="teamName" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    username, password, role
+    username, password, role, teamName
   </sql>
+  <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_user
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -22,10 +28,10 @@
     where username = #{username,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.User">
-    insert into tb_user (username, password, role
-      )
-    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}
-      )
+    insert into tb_user (username, password, role, 
+      teamName)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, 
+      #{teamName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.User">
     insert into tb_user
@@ -39,6 +45,9 @@
       <if test="role != null">
         role,
       </if>
+      <if test="teamName != null">
+        teamName,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -49,6 +58,9 @@
       </if>
       <if test="role != null">
         #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="teamName != null">
+        #{teamName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -61,13 +73,17 @@
       <if test="role != null">
         role = #{role,jdbcType=VARCHAR},
       </if>
+      <if test="teamName != null">
+        teamName = #{teamName,jdbcType=VARCHAR},
+      </if>
     </set>
     where username = #{username,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.User">
     update tb_user
     set password = #{password,jdbcType=VARCHAR},
-      role = #{role,jdbcType=VARCHAR}
+      role = #{role,jdbcType=VARCHAR},
+      teamName = #{teamName,jdbcType=VARCHAR}
     where username = #{username,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -4,31 +4,30 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "corpus")
 public class Instance {
-    private Integer taskId;  //任务Id
+    private String taskName; //隶属于哪个任务
     private String item;   //一个数据项
-    private String tag;    //标签
+    private String tag;     //标签值
+//    private Integer tagNum;  //被标的次数，相当于团队人数
     private Integer status; //状态：无效(-1)、未标(0)、已标(1)
 
     public Instance() {
-        this.taskId = 0;
-        this.item = "";
-        this.tag = "";
-        this.status = 0;
+        tag = "";
+        status = 0;
     }
 
-    public Instance(Integer taskId, String item, String tag, Integer status) {
-        this.taskId = taskId;
+    public Instance(String taskName, String item, String tag, Integer status) {
+        this.taskName = taskName;
         this.item = item;
         this.tag = tag;
         this.status = status;
     }
 
-    public Integer getTaskId() {
-        return taskId;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public String getItem() {
@@ -55,4 +54,5 @@ public class Instance {
         this.status = status;
     }
 }
+
 

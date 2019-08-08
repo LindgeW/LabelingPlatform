@@ -25,12 +25,24 @@
     </style>
     <title>上传资源</title>
     <script>
-        $(function(){
+        $(function () {
+            initUpload('/upload');
+        });
+
+        function initUpload(url){
             $("#uploadFile").fileinput({  //初始化上传控件
                 language: 'zh',    // 中文显示
-                uploadUrl: '/upload',
+                uploadUrl: url,
+                uploadExtraData: function () {   //以函数形式传，不要直接写JSON格式
+                    var taskName = $.trim($("#taskName").val());
+                    var dataType = $("#dataType").val();
+                    var tags = $("#tags").val();
+                    return {'taskName': taskName, 'dataType': dataType, 'tags': tags};
+                },
+                showUpload: false,
                 showCaption: true,          // 显示文件文本框
-//                dropZoneEnabled: false,    // 是否可拖拽
+                showPreview: false,         // 是否显示预览
+                dropZoneEnabled: false,    // 是否可拖拽
 //                uploadLabel: '上传附件',    // 上传按钮内容
 //                browseLabel: '选择附件',    // 浏览按钮内容
                 hideThumbnailContent: true, // 是否隐藏文件内容
@@ -41,40 +53,77 @@
                 maxFileSize: 20000,  //单位KB，20M
 //                minFileSize: 1,
                 fileActionSettings: {                                // 在预览窗口中为新选择的文件缩略图设置文件操作的对象配置
-                    showRemove: true,                                 // 显示删除按钮
-                    showUpload: true,                                // 显示上传按钮
+                    showRemove: false,                                 // 显示删除按钮
+                    showUpload: false,                                // 显示上传按钮
                     showDownload: false,                             // 显示下载按钮
                     showZoom: false,                                   // 显示预览按钮
                     showDrag: false,                                   // 显示拖拽
-                    removeIcon: '<i class="fa fa-trash"></i>',      // 删除图标
-                    uploadIcon: '<i class="fa fa-upload"></i>',      // 上传图标
-                    uploadRetryIcon: '<i class="fa fa-repeat"></i>'  // 重试图标
+                    // removeIcon: '<i class="fa fa-trash"></i>',       // 删除图标
+                    // uploadIcon: '<i class="fa fa-upload"></i>',      // 上传图标
+                    // uploadRetryIcon: '<i class="fa fa-repeat"></i>'  // 重试图标
                 }
-            }).on("fileclear", function(event, data, msg){
-
+            }).on("fileuploaderror", function(event, data, msg){
+                bootbox.alert({
+                    title: 'Error',
+                    className: 'rubberBand animated',
+                    message: "文件上传失败！\n\n"+msg
+                });
             }).on("fileuploaded", function(event, data, previewId, index) {
-
             });
-        });
+        }
+
+        function validate() {
+            var taskName = $.trim($("#taskName").val());
+            var tags = $.trim($("#tags").val());
+
+            if (taskName === ""){
+                alert('任务名不能为空！');
+                return false;
+            }
+
+            if (tags === ""){
+                alert('标签值不能为空！');
+                return false;
+            }
+
+            var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
+            var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
+            if (eng_reg.test(tags) || ch_reg.test(tags)){
+                return true
+            }else {
+                alert('标签值格式有误！');
+                return false;
+            }
+
+        }
+
+        function submitAll() {
+            if (validate()){
+                $("#uploadFile").fileinput("upload");  //触发文件提交
+            }
+        }
+
     </script>
 </head>
 <body>
-<div class="container" style="margin-top: 50px;min-height: 800px;">
+<div class="container" style="margin-top:50px; min-height: 800px;">
+    <div>
+        <div class="form-group">
+            <label for="taskName">标注任务：</label>
+            <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>
+        </div>
+        <div class="form-group">
+            <label for="dataType">数据类型：</label>
+            <select class="form-control" id="dataType">
+                <option value="1" selected>文本分类</option>
+            </select>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
-            <span style="color: #ff0000"><strong>* 请先选择上传项目</strong></span>
+            <span style="color: #ff0000"><strong>* 请选择上传数据集</strong></span>
         </div>
         <div class="card-body">
-            <!--<div>-->
-                <!--<div class="form-group">-->
-                    <!--<label for="uploadItems">上传项目:</label>-->
-                    <!--<select class="form-control" id="uploadItems">-->
-                        <!--<option value="0" selected>评论语料</option>-->
-                        <!--<option value="1">Word2Vec模型</option>-->
-                        <!--<option value="2">LSTM模型</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
             <div id="upload_data">
                 <div id="file_pane">
                     <form id="fileForm" enctype="multipart/form-data">
@@ -84,8 +133,15 @@
             </div>
         </div>
         <div class="card-footer">
-            <strong>* 建议打包上传文件!!!</strong>
+            <div class="form-group">
+                <label for="tags">标签设置：</label>
+                <textarea class="form-control" rows="5" id="tags" placeholder="标签值用英文;隔开，如：正面;中立;负面"></textarea>
+            </div>
+        <!--    <strong>* 建议打包上传文件!!!</strong>-->
         </div>
+    </div>
+    <div style="padding-top: 20px; text-align: center;">
+        <button type="button" class="btn btn-primary btn-lg" onclick="submitAll()">提交</button>
     </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -90,7 +90,7 @@
 							<a class="nav-link pl-2 pr-2 leading-none d-flex" data-toggle="dropdown" href="#">
 								<img alt="image" src="/img/admin.gif" class=" avatar-md rounded-circle">
 								<span class="ml-2 d-lg-block">
-									<span class="text-white app-sidebar__user-name mt-5">Admin</span><br>
+									<span class="text-white app-sidebar__user-name mt-5" th:text="${username}">Admin</span><br>
 									<span class="text-muted app-sidebar__user-name text-sm">平台管理员</span>
 								</span>
 							</a>
@@ -100,26 +100,23 @@
 						<li>
 							<a class="side-menu__item" href="/admin/index" target="right"><i class="side-menu__icon fa fa-home"></i><span class="side-menu__label">首页</span></a>
 						</li>
-						<li class="slide">
-							<a class="side-menu__item"  data-toggle="slide" href="#"><i class="side-menu__icon fa fa-user"></i><span class="side-menu__label">权限管理</span><i class="angle fa fa-angle-right"></i></a>
-							<ul class="slide-menu">
-								<li><a class="slide-item" href="/admin/alter_pwd" target="right"><span>修改密码</span></a></li>
-							</ul>
-						</li>
 						<li>
 							<a class="side-menu__item" href="/upload" target="right"><i class="side-menu__icon fa fa-comment"></i><span class="side-menu__label">上传数据</span></a>
 						</li>
 						<li class="slide">
 							<a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon fa fa-server"></i><span class="side-menu__label">标注设置</span><i class="angle fa fa-angle-right"></i></a>
 							<ul class="slide-menu">
-								<li><a href="/admin/host" target="right" class="slide-item"> 设置服务器IP</a></li>
+								<li><a href="/admin/host" target="right" class="slide-item"> 标注规则</a></li>
+							</ul>
+						</li>
+						<li class="slide">
+							<a class="side-menu__item"  data-toggle="slide" href="#"><i class="side-menu__icon fa fa-user"></i><span class="side-menu__label">用户管理</span><i class="angle fa fa-angle-right"></i></a>
+							<ul class="slide-menu">
+								<li><a class="slide-item" href="/build" target="right"><span>小组创建</span></a></li>
 							</ul>
 						</li>
 						<li class="slide">
 							<a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon fa fa-database"></i><span class="side-menu__label">导出数据</span><i class="angle fa fa-angle-right"></i></a>
-							<ul class="slide-menu">
-								<li><a href="/admin/resources" target="right" class="slide-item"> 上传资源</a></li>
-							</ul>
 						</li>
 					</ul>
 				</aside>
@@ -137,7 +134,7 @@
                                     <div class="mb-0">
                                         <div class="card-body">
                                             <!--<iframe src="/login" id="iframe" name="right" width="100%" height="100%" frameborder="0" onload="this.height=right.document.body.scrollHeight"></iframe>-->
-                                            <iframe src="/index" id="iframe" name="right" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>
+                                            <iframe src="/bg_index" id="iframe" name="right" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>
                                         </div>
                                     </div>
                                 </div>

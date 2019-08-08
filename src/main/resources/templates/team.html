@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>创建团队</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        var memberLst = new Array(0);
+
+        function contain(arr, val) {
+            for (var i=0, len=arr.length; i<len; i++){
+                if (arr[i] === val){
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function addMember() {
+            var members = $("#users").val();  //数组
+
+            if (members.length === 0){
+                alert("请先选择人员！");
+            }
+
+            for (var i=0, len=members.length ; i<len; i++){
+                var mem = members[i];
+                if (memberLst.length === 0){
+                    memberLst.push(mem);
+                }else{
+                    if (!contain(memberLst, mem)) {
+                        memberLst.push(mem);
+                    } else{
+                        alert("请不要重复添加！");
+                    }
+                }
+            }
+
+            $("#member_box").val(memberLst.join("\n"));
+        }
+
+        function deleteMember() {
+            if (memberLst.length > 0){
+                memberLst.pop();
+                $("#member_box").val(memberLst.join("\n"));
+            } else{
+                alert("请先添加成员！");
+            }
+        }
+
+        function validate() {
+            var teamName = $.trim($("#teamName").val());
+            var members = $.trim($("#member_box").val());
+
+            if (teamName === ""){
+                alert("小组名称不能为空！");
+                return false;
+            }
+
+            if (members === ""){
+                alert("请添加小组成员！");
+                return false;
+            }
+
+            return true;
+        }
+
+        function buildTeam() {
+            if(validate()){
+                $("#members").val(memberLst.join(";"));
+                $("#buildForm").submit();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container" style="margin-top:50px; min-height: 800px;">
+        <!--<div th:if="${isBuilt} eq true">-->
+            <!--<div class="alert alert-success alert-dismissible fade show">-->
+                <!--<button type="button" class="close" data-dismiss="alert">&times;</button>-->
+                <!--<strong>恭喜，团队创建成功!</strong>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div th:switch="${isBuilt}">
+            <div th:case="true">
+                <div class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>恭喜，团队创建成功!</strong>
+                </div>
+            </div>
+            <div th:case="false">
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>抱歉，团队创建失败!</strong>
+                </div>
+            </div>
+        </div>
+        <div>
+            <form action="/build_team" method="post" id="buildForm">
+                <div class="form-group">
+                    <label for="tasks">选择标注任务：</label>
+                    <select class="form-control" id="tasks" name="task">
+                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="teamName">小组名称：</label>
+                    <input type="text" class="form-control" id="teamName" name="teamName" placeholder="输入小组名称">
+                </div>
+                <div class="form-group">
+                    <label for="users">选择待添加的成员（可按shift键多选）：</label>
+                    <select class="form-control" id="users" multiple>
+                        <option th:each="user: ${users}" th:value="${user.username}" th:text="${user.username}">无</option>
+                    </select>
+
+                    <button type="button" onclick="addMember()" class="btn btn-primary"> 添加 </button>
+
+                    <button type="button" onclick="deleteMember()" class="btn btn-primary"> 撤回 </button>
+
+                    <input type="hidden" name="members" id="members">
+                    <textarea rows="5" class="form-control" placeholder="添加后的小组成员" id='member_box' readonly="readonly"></textarea>
+                </div>
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="buildTeam()">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

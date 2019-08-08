@@ -5,11 +5,14 @@ import com.labeling.demo.repository.UserMapper;
 import com.labeling.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
+    private UserMapper userMapper;
 
     //构造器注入
     //尽量避免使用属性注入
@@ -24,11 +27,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAll() {
+        return userMapper.findAll();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean addUser(User user) {
         return this.userMapper.insertSelective(user) >= 1;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateUser(User user) {
         return this.userMapper.updateByPrimaryKeySelective(user) >= 1;
     }

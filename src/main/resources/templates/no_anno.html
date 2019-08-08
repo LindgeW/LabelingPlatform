@@ -43,11 +43,7 @@
 
     <script>
         function goto(cmd) {
-            var tag = $('input:radio:checked').val();
-            if (tag==null || tag===""){
-                alert("请先选择标注项！");
-            }
-
+            tag = $('input:radio:checked').val();
             $.ajax({
                 type: "POST",
                 url: "/annotate",
@@ -61,8 +57,8 @@
                         $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
                     }
                 },
-                error: function (msg) {
-                    alert("error: "+msg);
+                error: function () {
+                    alert("error");
                 }
             })
         }
@@ -113,40 +109,8 @@
         </nav>
     </header>
 
-    <div class="container">
-        <h4>
-            你现在进行的是<span th:text="${taskName}"></span>任务，
-            标注类型为<span th:text="${dataType}"></span>，
-            总任务量为<span th:text="${corpusSize}"></span>条
-        </h4>
-    </div>
-    <div>
-        <div class="row">
-            <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
-                <div id="lbl_obj" th:text="${instance.item}"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
-                <div align="center">
-                    <p>
-                        <label class="radio-inline" th:each="tag : ${tags}">
-                            <input type="radio" name="tag" class="radio_tag" value="1" th:text="${tag}"/>
-                        </label>
-                        <!--<label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="2" />负面</label>-->
-                        <!--<label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="3" />中立</label>-->
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-primary" value="-1" onclick="goto('prev')">上一个</button>
-                        <button type="button" class="btn btn-primary" value="1" onclick="goto('next')">下一个</button>
-                    </p>
-
-                    <!--<button type="button" class="btn btn-primary" value="1" onclick="submitAnswer(this.value)">正面</button>-->
-                    <!--<button type="button" class="btn btn-primary" value="2" onclick="submitAnswer(this.value)">反面</button>-->
-                    <!--<button type="button" class="btn btn-primary" value="3" onclick="submitAnswer(this.value)">中立</button>-->
-                </div>
-            </div>
-        </div>
+    <div class="container" style="margin-top: 100px;">
+        <h2>你还没有加入任何标注小组，请先联系管理员！</h2>
     </div>
 
 </body>

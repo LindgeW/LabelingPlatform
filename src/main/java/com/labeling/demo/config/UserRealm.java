@@ -25,11 +25,14 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("授权验证。。。。。");
-        String username = (String)principalCollection.getPrimaryPrincipal();
-        System.out.println(username);
+//        String username = (String)principalCollection.getPrimaryPrincipal();
+//        System.out.println(username);
 //        String username = (String) SecurityUtils.getSubject().getPrincipal();
 //        System.out.println(username);
-        User user = userService.findUser(username);
+
+        User curUser = (User)principalCollection.getPrimaryPrincipal();
+        User user = userService.findUser(curUser.getUsername());
+        System.out.println(user);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         Set<String> roles = new HashSet<>();
         roles.add(user.getRole());
@@ -45,12 +48,15 @@ public class UserRealm extends AuthorizingRealm {
         String loginPwd = new String((char[]) authenticationToken.getCredentials());
         System.out.println(loginUserName+" "+loginPwd);
         User user = userService.findUser(loginUserName);
+
         if(user == null){
             throw new UnknownAccountException("用户不存在！！！");
         }
         if(!loginPwd.equals(user.getPassword())){
             throw new IncorrectCredentialsException("密码错误！！！");
         }
-        return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
+
+//        return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
+        return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
     }
 }

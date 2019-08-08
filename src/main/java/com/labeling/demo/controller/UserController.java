@@ -5,6 +5,8 @@ import com.labeling.demo.entity.RespStatus;
 import com.labeling.demo.entity.User;
 import com.labeling.demo.service.UserService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +24,15 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/bg_index")
+    @RequiresRoles("admin")
+    public  String bgIndex(){
+        return "bg_index";
+    }
+
     @GetMapping("/bg")
+    @RequiresRoles("admin")
+//    @RequiresPermissions("login:annotate:bg")
     public String background(){
         return "/bg";
     }

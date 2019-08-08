@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.labeling.demo.repository.TeamMapper">
+  <resultMap id="BaseResultMap" type="com.labeling.demo.entity.Team">
+    <constructor>
+      <idArg column="teamId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="teamName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="memberNum" javaType="java.lang.Short" jdbcType="SMALLINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    teamId, teamName, taskName, memberNum
+  </sql>
+  <select id="findByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_team
+    where teamName = #{teamName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_team
+    where teamId = #{teamId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_team
+    where teamId = #{teamId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.labeling.demo.entity.Team">
+    insert into tb_team (teamId, teamName, taskName, 
+      memberNum)
+    values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, 
+      #{memberNum,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.labeling.demo.entity.Team">
+    insert into tb_team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teamId != null">
+        teamId,
+      </if>
+      <if test="teamName != null">
+        teamName,
+      </if>
+      <if test="taskName != null">
+        taskName,
+      </if>
+      <if test="memberNum != null">
+        memberNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teamId != null">
+        #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="teamName != null">
+        #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberNum != null">
+        #{memberNum,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.labeling.demo.entity.Team">
+    update tb_team
+    <set>
+      <if test="teamName != null">
+        teamName = #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        taskName = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberNum != null">
+        memberNum = #{memberNum,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where teamId = #{teamId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.Team">
+    update tb_team
+    set teamName = #{teamName,jdbcType=VARCHAR},
+      taskName = #{taskName,jdbcType=VARCHAR},
+      memberNum = #{memberNum,jdbcType=SMALLINT}
+    where teamId = #{teamId,jdbcType=INTEGER}
+  </update>
+</mapper>
