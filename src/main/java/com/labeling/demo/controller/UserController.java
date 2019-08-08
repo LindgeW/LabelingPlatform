@@ -39,8 +39,8 @@ public class UserController {
 
     @GetMapping("/account")
     public String account(Model model){
-        String username = (String)SecurityUtils.getSubject().getPrincipal();
-        model.addAttribute("username", username);
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        model.addAttribute("username", user.getUsername());
         return "/account";
     }
 
@@ -62,10 +62,12 @@ public class UserController {
     @ResponseBody
     public RespEntity alterPwd(@RequestParam("oldPwd") String oldPwd,
                                @RequestParam("newPwd") String newPwd){
-        String username = (String) SecurityUtils.getSubject().getPrincipal();
-        User real = userService.findUser(username);
-        System.out.println(real);
-        if(!oldPwd.equals(real.getPassword())){
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        String username = curUser.getUsername();
+        String password = curUser.getPassword();
+//        User real = userService.findUser(curUser.getUsername());
+        System.out.println(curUser);
+        if(!oldPwd.equals(password)){
             return new RespEntity(RespStatus.UNAUTHEN);
         } else if(!oldPwd.equals(newPwd)){
             User user = new User();

@@ -6,7 +6,6 @@ import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +33,6 @@ public class AnnotateController {
     @GetMapping("/annotate")
     public String toAnnotate(Model model){
         Subject curSubj = SecurityUtils.getSubject();
-
         User curUser = (User) curSubj.getPrincipal();
         String username = curUser.getUsername();
         model.addAttribute("username", username);
