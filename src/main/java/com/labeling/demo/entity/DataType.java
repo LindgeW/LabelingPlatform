@@ -1,18 +1,18 @@
 package com.labeling.demo.entity;
 
 public enum DataType {
-    UNKNOWN("未知任务", 0),
-    CLASSIFY("文本分类", 1);
+    UNKNOWN("未知任务", (short)0),
+    CLASSIFY("文本分类", (short)1);
 
     private String name;  //名称
-    private Integer id;    //对应的编号
+    private Short id;    //对应的编号
 
-    DataType(String name, Integer id) {
+    DataType(String name, Short id) {
         this.name = name;
         this.id = id;
     }
 
-    public String getTypeByID(Integer id){
+    public static String getTypeByID(Short id){
         if (id.equals(DataType.CLASSIFY.id)){
             return DataType.CLASSIFY.name;
         }
@@ -24,7 +24,7 @@ public enum DataType {
         return name;
     }
 
-    public Integer getId() {
+    public Short getId() {
         return id;
     }
 }

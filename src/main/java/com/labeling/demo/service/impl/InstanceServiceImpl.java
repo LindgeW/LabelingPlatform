@@ -4,6 +4,8 @@ import com.labeling.demo.entity.Instance;
 import com.labeling.demo.repository.InstanceRepository;
 import com.labeling.demo.service.InstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,11 @@ public class InstanceServiceImpl implements InstanceService {
     @Override
     public List<Instance> findAll() {
         return instanceRepository.findAll();
+    }
+
+    @Override
+    public Page<Instance> findPageData(Pageable instPage) {
+        return instanceRepository.findAll(instPage);
     }
 
     @Override

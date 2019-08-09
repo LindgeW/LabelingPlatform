@@ -13,4 +13,6 @@ public interface UserService {
     boolean addUser(User user);
 
     boolean updateUser(User user);
+
+    boolean updateBatchUser(List<User> users);
 }

@@ -34,8 +34,6 @@
                 }else{
                     if (!contain(memberLst, mem)) {
                         memberLst.push(mem);
-                    } else{
-                        alert("请不要重复添加！");
                     }
                 }
             }
@@ -122,7 +120,7 @@
                     <button type="button" onclick="deleteMember()" class="btn btn-primary"> 撤回 </button>
 
                     <input type="hidden" name="members" id="members">
-                    <textarea rows="5" class="form-control" placeholder="添加后的小组成员" id='member_box' readonly="readonly"></textarea>
+                    <textarea rows="5" class="form-control" placeholder="添加后的小组成员" id='member_box' style="background-color: #ffffff;" readonly="readonly"></textarea>
                 </div>
                 <div style="text-align: center">
                     <button type="button" class="btn btn-primary btn-lg" onclick="buildTeam()">创建</button>

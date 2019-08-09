@@ -5,6 +5,7 @@ import com.labeling.demo.repository.TeamMapper;
 import com.labeling.demo.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -17,6 +18,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(Team team) {
         teamMapper.insertSelective(team);
     }

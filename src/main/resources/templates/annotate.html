@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bg/icons.css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!--&lt;!&ndash;Scripts js&ndash;&gt;-->
+    <script src="/js/scripts.js"></script>
+
+    <!--<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">-->
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/messages_zh.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+
     <style>
         #lbl_obj{
             /*text-align: center;*/
@@ -29,23 +41,28 @@
         }
     </style>
 
-    <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-
-    <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!--&lt;!&ndash;Scripts js&ndash;&gt;-->
-    <script src="/js/scripts.js"></script>
-
-    <!--<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">-->
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/messages_zh.min.js"></script>
-    <script src="/js/bootbox.min.js"></script>
-
     <script>
+        $(function () {
+            randSelect();
+        });
+
+        function randSelect() {
+            var tag_radios = $(".radio_tag");
+            // var tags = [];
+            // tag_radios.each(function (i, tr) {
+            //     // tags.push($(this).value);
+            //     tags.push(tr.value);
+            // });
+
+            var randNum = parseInt(Math.random() * tag_radios.length);
+            tag_radios[randNum].checked = true;
+        }
+
         function goto(cmd) {
             var tag = $('input:radio:checked').val();
             if (tag==null || tag===""){
                 alert("请先选择标注项！");
+                return;
             }
 
             $.ajax({
@@ -64,7 +81,9 @@
                 error: function (msg) {
                     alert("error: "+msg);
                 }
-            })
+            });
+
+            randSelect();
         }
 
     </script>
@@ -114,10 +133,10 @@
     </header>
 
     <div class="container">
-        <h4>
-            你现在进行的是<span th:text="${taskName}"></span>任务，
-            标注类型为<span th:text="${dataType}"></span>，
-            总任务量为<span th:text="${corpusSize}"></span>条
+        <h4 class="text-center">
+            你现在进行的是<span th:text="${taskName}" style="text-decoration: underline"></span>任务，
+            标注类型为<span th:text="${dataType}" style="text-decoration: underline"></span>，
+            总任务量为<span th:text="${corpusSize}" style="text-decoration: underline"></span>条
         </h4>
     </div>
     <div>
@@ -131,10 +150,8 @@
                 <div align="center">
                     <p>
                         <label class="radio-inline" th:each="tag : ${tags}">
-                            <input type="radio" name="tag" class="radio_tag" value="1" th:text="${tag}"/>
+                            <input type="radio" name="tag" class="radio_tag" th:value="${tag}" th:text="${tag}"/>
                         </label>
-                        <!--<label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="2" />负面</label>-->
-                        <!--<label class="radio-inline"><input type="radio" name="tag" class="radio_tag" value="3" />中立</label>-->
                     </p>
                     <p>
                         <button type="button" class="btn btn-primary" value="-1" onclick="goto('prev')">上一个</button>

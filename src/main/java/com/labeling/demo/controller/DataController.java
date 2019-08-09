@@ -118,7 +118,7 @@ public class DataController {
         if (!instSet.isEmpty()){
             ArrayList<Instance> insts = new ArrayList<>(BATCHSIZE);
             for(String item: instSet){
-                insts.add(new Instance(taskName, item, "", 0));
+                insts.add(new Instance(taskName, item, "", 0, 0));
                 if (insts.size() == BATCHSIZE){
                     instanceService.saveAll(insts);
                     insts.clear();

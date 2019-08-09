@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface InstanceRepository extends MongoRepository<Instance, Integer> {
     List<Instance> findByTaskName(String taskName);
+
 }

@@ -34,14 +34,14 @@ public class UserController {
     @RequiresRoles("admin")
 //    @RequiresPermissions("login:annotate:bg")
     public String background(){
-        return "/bg";
+        return "bg";
     }
 
     @GetMapping("/account")
     public String account(Model model){
         User user = (User)SecurityUtils.getSubject().getPrincipal();
         model.addAttribute("username", user.getUsername());
-        return "/account";
+        return "account";
     }
 
 

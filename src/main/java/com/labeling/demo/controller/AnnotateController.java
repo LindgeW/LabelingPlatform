@@ -8,10 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller
@@ -28,6 +31,7 @@ public class AnnotateController {
         this.instanceService = instanceService;
         this.taskService = taskService;
         this.teamService = teamService;
+        System.out.println("构造方法");
     }
 
     @GetMapping("/annotate")
@@ -42,7 +46,6 @@ public class AnnotateController {
         } else {
             //判断当前用户是否加入小组（没有，则返回空页面）
             String teamName = curUser.getTeamName();
-            System.out.println("teamName:"+teamName);
             if (StringUtils.isBlank(teamName)){
                 return "no_anno";
             }
@@ -51,14 +54,19 @@ public class AnnotateController {
             //获取该任务对应的标注数据
             String taskName = team.getTaskName();
             Task task = taskService.findByName(taskName);
+            // 最好分页读取！
             instanceList = instanceService.findByTaskName(taskName);
-
-            String[] tags = StringUtils.split(task.getTags(), ";");
+//            Pageable instPage = PageRequest.of(0, 5);  //当前页 pageNum, 每页大小 pageSize
+//            Page<Instance> pageData = instanceService.findPageData(instPage);
+//            instanceList = pageData.getContent();
 
             model.addAttribute("taskName", taskName);
-            model.addAttribute("dataType", task.getDatatype());
+            model.addAttribute("dataType", DataType.getTypeByID(task.getDatatype()));
             model.addAttribute("corpusSize", task.getCorpussize());
+
+            String[] tags = StringUtils.split(task.getTags(), ";");
             model.addAttribute("tags", tags);
+
             counter = 0;
             model.addAttribute("instance", instanceList.get(counter));
             return "annotate";
@@ -70,6 +78,7 @@ public class AnnotateController {
     public RespEntity annotate(@RequestParam("tag") String tag,
                                @RequestParam("cmd") String cmd){
         System.out.println(tag);
+
         if(cmd.equalsIgnoreCase("prev")){
             counter --;
         }else if (cmd.equalsIgnoreCase("next")){

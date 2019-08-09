@@ -43,4 +43,13 @@ public class UserServiceImpl implements UserService {
         return this.userMapper.updateByPrimaryKeySelective(user) >= 1;
     }
 
+    @Override
+    public boolean updateBatchUser(List<User> users) {
+        boolean isOk = false;
+        for (User user: users) {
+            isOk = this.updateUser(user);
+        }
+        return isOk;
+    }
+
 }
