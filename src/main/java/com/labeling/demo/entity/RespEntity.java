@@ -6,6 +6,7 @@ public class RespEntity<T> implements Serializable {
     private String message;
     private Integer code;
     private T data;
+    private long work_count;
 
     public RespEntity(RespStatus status, T data) {
         this.code = status.getStatusCode();
@@ -18,6 +19,24 @@ public class RespEntity<T> implements Serializable {
         this.message = status.getStatusValue();
         data = null;
     }
+    public RespEntity(RespStatus status, T data , long work_count) {
+        this.code = status.getStatusCode();
+        this.message = status.getStatusValue();
+        this.data = data;
+        this.work_count = work_count;
+    }
+
+
+    public long getWork_count() {
+        return work_count;
+    }
+
+    public void setWork_count(long work_count) {
+        this.work_count = work_count;
+    }
+
+
+
 
     public String getMessage() {
         return message;

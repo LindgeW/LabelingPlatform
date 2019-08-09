@@ -74,6 +74,7 @@
                 success: function (resp) {
                     if (resp.code == 200){
                         $("#lbl_obj").text(resp.data.item);
+                        $("#work_count").text(resp.work_count);
                     }else if(resp.code == 201){
                         $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
                     }
@@ -137,6 +138,7 @@
             你现在进行的是<span th:text="${taskName}" style="text-decoration: underline"></span>任务，
             标注类型为<span th:text="${dataType}" style="text-decoration: underline"></span>，
             总任务量为<span th:text="${corpusSize}" style="text-decoration: underline"></span>条
+            您已标注<span id="work_count" th:text="${work_count}" style="text-decoration: underline" ></span>条
         </h4>
     </div>
     <div>
