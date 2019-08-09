@@ -7,6 +7,7 @@ public class Instance {
     private String taskName; //隶属于哪个任务
     private String item;   //一个数据项
     private String tag;     //标签值
+//    private String tagMine; //地雷
     private Integer tagNum;  //被标的次数，只有被标了指定次数才算被标
     private Integer status; //状态：无效(-1)、未标(0)、已标(1)
 

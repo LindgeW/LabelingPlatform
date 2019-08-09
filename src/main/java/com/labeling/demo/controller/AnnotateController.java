@@ -4,6 +4,7 @@ import com.labeling.demo.entity.*;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
+import com.labeling.demo.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -20,7 +21,6 @@ import java.util.List;
 @Controller
 public class AnnotateController {
     private List<Instance> instanceList = null;
-    private Integer counter = 0;
 
     private InstanceService instanceService;
     private TaskService taskService;
@@ -31,7 +31,6 @@ public class AnnotateController {
         this.instanceService = instanceService;
         this.taskService = taskService;
         this.teamService = teamService;
-        System.out.println("构造方法");
     }
 
     @GetMapping("/annotate")
@@ -56,7 +55,7 @@ public class AnnotateController {
             Task task = taskService.findByName(taskName);
             // 最好分页读取！
             instanceList = instanceService.findByTaskName(taskName);
-//            Pageable instPage = PageRequest.of(0, 5);  //当前页 pageNum, 每页大小 pageSize
+//            Pageable instPage = PageRequest.of(0, 1);  //当前页 pageNum, 每页大小 pageSize
 //            Page<Instance> pageData = instanceService.findPageData(instPage);
 //            instanceList = pageData.getContent();
 
@@ -67,8 +66,7 @@ public class AnnotateController {
             String[] tags = StringUtils.split(task.getTags(), ";");
             model.addAttribute("tags", tags);
 
-            counter = 0;
-            model.addAttribute("instance", instanceList.get(counter));
+            model.addAttribute("instance", instanceList.get(0));
             return "annotate";
         }
     }
@@ -79,19 +77,18 @@ public class AnnotateController {
                                @RequestParam("cmd") String cmd){
         System.out.println(tag);
 
-        if(cmd.equalsIgnoreCase("prev")){
-            counter --;
-        }else if (cmd.equalsIgnoreCase("next")){
-            counter ++;
-        }
+        Subject curSubj = SecurityUtils.getSubject();
+        User curUser = (User) curSubj.getPrincipal();
+        System.out.println(curUser);
+        // 保存标签值
 
-        if (counter <= 0){
-            counter = 0;
-        }
+        // 更新用户的标注记录
 
-        if (counter >= instanceList.size()){
-            return new RespEntity<>(RespStatus.Over);
-        }
-        return new RespEntity<>(RespStatus.SUCCESS, instanceList.get(counter));
+        // 保存标注记录
+
+        // 根据用户已标数据量取出下一条数据
+
+
+        return new RespEntity<>(RespStatus.SUCCESS, instanceList.get(0));
     }
 }
