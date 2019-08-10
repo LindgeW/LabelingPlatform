@@ -1,28 +1,40 @@
 package com.labeling.demo.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "corpus")
-public class Instance {
+public class Instance {  //不建议自己设主键，MongoDB自动生成一个唯一主键
+    private Long instanceId;
     private String taskName; //隶属于哪个任务
+//    @Indexed  提高检索速度
     private String item;   //一个数据项
     private String tag;     //标签值
-//    private String tagMine; //地雷
+    private String tagMine; //“地雷”
     private Integer tagNum;  //被标的次数，只有被标了指定次数才算被标
     private Integer status; //状态：无效(-1)、未标(0)、已标(1)
 
     public Instance() {
-        tag = "";
-        tagNum = 0;
-        status = 0;
+        super();
     }
 
-    public Instance(String taskName, String item, String tag, Integer tagNum, Integer status) {
+    public Instance(Long instanceId, String taskName, String item, String tag, String tagMine, Integer tagNum, Integer status) {
+        this.instanceId = instanceId;
         this.taskName = taskName;
         this.item = item;
         this.tag = tag;
+        this.tagMine = tagMine;
         this.tagNum = tagNum;
         this.status = status;
+    }
+
+    public Long getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(Long instanceId) {
+        this.instanceId = instanceId;
     }
 
     public String getTaskName() {
@@ -49,12 +61,12 @@ public class Instance {
         this.tag = tag;
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getTagMine() {
+        return tagMine;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setTagMine(String tagMine) {
+        this.tagMine = tagMine;
     }
 
     public Integer getTagNum() {
@@ -63,6 +75,14 @@ public class Instance {
 
     public void setTagNum(Integer tagNum) {
         this.tagNum = tagNum;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
 

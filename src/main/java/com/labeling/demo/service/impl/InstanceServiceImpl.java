@@ -48,5 +48,10 @@ public class InstanceServiceImpl implements InstanceService {
         return instanceRepository.findByTaskName(taskName);
     }
 
+    @Override
+    public long count() {
+        return instanceRepository.count();
+    }
+
 
 }

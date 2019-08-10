@@ -5,39 +5,37 @@
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="instance_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="instanceId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tag" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, username, instance_id, tag
+    id, username, instanceId, tag
   </sql>
+  <select id="findAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_instance_user
+  </select>
+  <select id="countByUsername"  parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT
+    COUNT(username)
+    FROM tb_instance_user WHERE username = #{username};
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tb_instance_user
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="findAll"  resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from tb_instance_user
-  </select>
-  <select id="CountByUsername"  parameterType="java.lang.String" resultType="java.lang.Long">
-    SELECT
-    COUNT(username)
-    FROM tb_instance_user WHERE username = #{username};
-
-
-  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_instance_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.InstanceUser">
-    insert into tb_instance_user (id, username, instance_id, 
+    insert into tb_instance_user (id, username, instanceId, 
       tag)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{instance_id,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER}, 
       #{tag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.InstanceUser">
@@ -49,8 +47,8 @@
       <if test="username != null">
         username,
       </if>
-      <if test="instance_id != null">
-        instance_id,
+      <if test="instanceId != null">
+        instanceId,
       </if>
       <if test="tag != null">
         tag,
@@ -63,8 +61,8 @@
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="instance_id != null">
-        #{instance_id,jdbcType=INTEGER},
+      <if test="instanceId != null">
+        #{instanceId,jdbcType=INTEGER},
       </if>
       <if test="tag != null">
         #{tag,jdbcType=VARCHAR},
@@ -77,8 +75,8 @@
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="instance_id != null">
-        instance_id = #{instance_id,jdbcType=INTEGER},
+      <if test="instanceId != null">
+        instanceId = #{instanceId,jdbcType=INTEGER},
       </if>
       <if test="tag != null">
         tag = #{tag,jdbcType=VARCHAR},
@@ -89,7 +87,7 @@
   <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.InstanceUser">
     update tb_instance_user
     set username = #{username,jdbcType=VARCHAR},
-      instance_id = #{instance_id,jdbcType=INTEGER},
+      instanceId = #{instanceId,jdbcType=INTEGER},
       tag = #{tag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

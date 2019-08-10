@@ -33,7 +33,10 @@ public class UserController {
     @GetMapping("/bg")
     @RequiresRoles("admin")
 //    @RequiresPermissions("login:annotate:bg")
-    public String background(){
+    public String background(Model model){
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        System.out.println(user);
+        model.addAttribute("username", user.getUsername());
         return "bg";
     }
 

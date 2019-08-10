@@ -13,9 +13,5 @@ public interface InstanceUserService {
 
     boolean updateInstanceUser(InstanceUser instanceuser);
 
-
-
-    long countByUsername(String username);
-
-
+    Integer countByUsername(String username);
 }

@@ -56,4 +56,14 @@ public class User {
     public void setTeamName(String teamName) {
         this.teamName = teamName == null ? null : teamName.trim();
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", teamName='" + teamName + '\'' +
+                '}';
+    }
 }

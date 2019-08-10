@@ -4,6 +4,7 @@ import com.labeling.demo.entity.InstanceUser;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+
 @Mapper
 public interface InstanceUserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -18,9 +19,7 @@ public interface InstanceUserMapper {
 
     int updateByPrimaryKey(InstanceUser record);
 
-    List<InstanceUser>findAll();
+    List<InstanceUser> findAll();
 
-    long CountByUsername(String username);
-
-
+    int countByUsername(String username);
 }

@@ -59,7 +59,11 @@
         }
 
         function goto(cmd) {
-            var tag = $('input:radio:checked').val();
+            var username = $("#username").text();
+            var instId = $("#instanceId").val();
+            var tag = $("input:radio:checked").val();
+            var tagNum = parseInt($("#tagNum").text());
+
             if (tag==null || tag===""){
                 alert("请先选择标注项！");
                 return;
@@ -68,13 +72,14 @@
             $.ajax({
                 type: "POST",
                 url: "/annotate",
-                data: {"tag": tag, "cmd": cmd},
+                data: {"username": username, "instanceId": instId, "tag": tag, "tagNum": tagNum, "cmd": cmd},
                 dataType: "json",
                 cache: "false",
                 success: function (resp) {
                     if (resp.code == 200){
+                        $("#instanceId").val(resp.data.instId);
                         $("#lbl_obj").text(resp.data.item);
-                        $("#work_count").text(resp.work_count);
+                        $("#tagNum").text(resp.data.tagNum);
                     }else if(resp.code == 201){
                         $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
                     }
@@ -105,7 +110,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                     <ul class="navbar-nav">
                         <li class="navbar-text">
-                            <i class="fa fa-user-circle"></i> <span th:text="${username}"></span>
+                            <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>
                         </li>
                         <!--<li class="nav-item">-->
                             <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
@@ -135,23 +140,24 @@
 
     <div class="container">
         <h4 class="text-center">
-            你现在进行的是<span th:text="${taskName}" style="text-decoration: underline"></span>任务，
-            标注类型为<span th:text="${dataType}" style="text-decoration: underline"></span>，
-            总任务量为<span th:text="${corpusSize}" style="text-decoration: underline"></span>条
-            您已标注<span id="work_count" th:text="${work_count}" style="text-decoration: underline" ></span>条
+            你现在进行的是<span th:text="${taskVo.taskname}" style="text-decoration: underline"></span>任务，
+            标注类型为<span th:text="${taskVo.dataType}" style="text-decoration: underline"></span>，
+            总任务量为<span th:text="${taskVo.corpussize}" style="text-decoration: underline"></span>条
+            您已标注<span id="tagNum" th:text="${userVo.tagNum}" style="text-decoration: underline" >0</span>条
         </h4>
     </div>
     <div>
         <div class="row">
             <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
-                <div id="lbl_obj" th:text="${instance.item}"></div>
+                <div id="lbl_obj" th:text="${instanceVo.item}"></div>
+                <input type="hidden" id="instanceId" th:value="${instanceVo.id}"/>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
                 <div align="center">
                     <p>
-                        <label class="radio-inline" th:each="tag : ${tags}">
+                        <label class="radio-inline" th:each="tag : ${taskVo.tagSet}">
                             <input type="radio" name="tag" class="radio_tag" th:value="${tag}" th:text="${tag}"/>
                         </label>
                     </p>

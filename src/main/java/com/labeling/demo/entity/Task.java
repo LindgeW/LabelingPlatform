@@ -3,13 +3,13 @@ package com.labeling.demo.entity;
 public class Task {
 //    private Integer taskId;
 
-    private String taskname;
+    protected String taskname;
 
-    private Short datatype;
+    protected Short datatype;
 
-    private Integer corpussize;
+    protected Integer corpussize;
 
-    private String tags;
+    protected String tags;
 
     public Task(String taskname, Short datatype, Integer corpussize, String tags) {
         this.taskname = taskname;

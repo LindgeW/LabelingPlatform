@@ -30,6 +30,7 @@ import java.util.zip.ZipInputStream;
 public class DataController {
     private static final String tempDir = "src/main/resources/temp";
     private static final int BATCHSIZE  = 50;
+    private Long counter = 0L;
 
     private InstanceService instanceService;
     private TaskService taskService;
@@ -43,6 +44,7 @@ public class DataController {
     @GetMapping("/upload")
     @RequiresRoles("admin")
     public String toUpload(){
+        counter = instanceService.count();
         return "upload";
     }
 
@@ -118,7 +120,9 @@ public class DataController {
         if (!instSet.isEmpty()){
             ArrayList<Instance> insts = new ArrayList<>(BATCHSIZE);
             for(String item: instSet){
-                insts.add(new Instance(taskName, item, "", 0, 0));
+
+                insts.add(new Instance(counter, taskName, item, "", "", 0, 0));
+                counter ++;
                 if (insts.size() == BATCHSIZE){
                     instanceService.saveAll(insts);
                     insts.clear();

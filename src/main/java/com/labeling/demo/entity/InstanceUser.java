@@ -5,14 +5,14 @@ public class InstanceUser {
 
     private String username;
 
-    private Integer instance_id;
+    private Long instanceId;
 
     private String tag;
 
-    public InstanceUser(Integer id, String username, Integer instance_id, String tag) {
+    public InstanceUser(Integer id, String username, Long instanceId, String tag) {
         this.id = id;
         this.username = username;
-        this.instance_id = instance_id;
+        this.instanceId = instanceId;
         this.tag = tag;
     }
 
@@ -36,12 +36,12 @@ public class InstanceUser {
         this.username = username == null ? null : username.trim();
     }
 
-    public Integer getInstance_id() {
-        return instance_id;
+    public Long getInstanceId() {
+        return instanceId;
     }
 
-    public void setInstance_id(Integer instance_id) {
-        this.instance_id = instance_id;
+    public void setInstanceId(Long instanceId) {
+        this.instanceId = instanceId;
     }
 
     public String getTag() {

@@ -44,8 +44,8 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
 
-    public long countByUsername(String username) {
-        return  this.instanceuserMapper.CountByUsername(username);
+    public Integer countByUsername(String username) {
+        return  this.instanceuserMapper.countByUsername(username);
     }
 
 

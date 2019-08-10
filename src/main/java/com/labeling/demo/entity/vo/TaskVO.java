@@ -1,0 +1,38 @@
+package com.labeling.demo.entity.vo;
+
+import com.labeling.demo.entity.DataType;
+import com.labeling.demo.entity.Task;
+import org.apache.commons.lang3.StringUtils;
+
+public class TaskVO extends Task {
+    private String dataType;    //标注类型
+    private String[] tagSet;    //标签集
+
+    public TaskVO(Task task) {
+        super(task.getTaskname(), task.getDatatype(), task.getCorpussize(), task.getTags());
+        this.dataType = DataType.getTypeByID(task.getDatatype());
+        this.tagSet = StringUtils.split(task.getTags(), ";");
+    }
+
+    public TaskVO(String taskname, Short datatype, Integer corpussize, String tags) {
+        super(taskname, datatype, corpussize, tags);
+        this.dataType = DataType.getTypeByID(datatype);
+        this.tagSet = StringUtils.split(tags, ";");
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String[] getTagSet() {
+        return tagSet;
+    }
+
+    public void setTagSet(String[] tagSet) {
+        this.tagSet = tagSet;
+    }
+}
