@@ -38,6 +38,7 @@
         input[type="radio"]{
             width: 20px;
             height: 20px;
+            display: inline;
         }
     </style>
 
@@ -46,14 +47,17 @@
             randSelect();
         });
 
+        function goldSelect(goldTag) {
+            var tag_radios = $(".radio_tag");
+            tag_radios.each(function (i, tr) {
+                if (goldTag === tr.value){
+                    $(this).checked = true;
+                }
+            });
+        }
+
         function randSelect() {
             var tag_radios = $(".radio_tag");
-            // var tags = [];
-            // tag_radios.each(function (i, tr) {
-            //     // tags.push($(this).value);
-            //     tags.push(tr.value);
-            // });
-
             var randNum = parseInt(Math.random() * tag_radios.length);
             tag_radios[randNum].checked = true;
         }
@@ -69,18 +73,32 @@
                 return;
             }
 
+            var sendData = {
+                "username": username,
+                "instanceId": instId,
+                "tag": tag,
+                "tagNum": tagNum,
+                "cmd": cmd
+            };
+
             $.ajax({
                 type: "POST",
                 url: "/annotate",
-                data: {"username": username, "instanceId": instId, "tag": tag, "tagNum": tagNum, "cmd": cmd},
+                data: sendData,
                 dataType: "json",
                 cache: "false",
                 success: function (resp) {
-                    if (resp.code == 200){
-                        $("#instanceId").val(resp.data.instId);
-                        $("#lbl_obj").text(resp.data.item);
-                        $("#tagNum").text(resp.data.tagNum);
-                    }else if(resp.code == 201){
+                    if (resp.code === 200){
+                        $("#tagNum").text(resp.data.curUser.tagNum);
+                        $("#instanceId").val(resp.data.nextInst.instanceId);
+                        $("#lbl_obj").text(resp.data.nextInst.item);
+                        var goldTag = resp.data.nextInst.tag;
+                        if (goldTag == null || goldTag === ''){
+                            randSelect();
+                        }else{
+                            goldSelect(goldTag);
+                        }
+                    }else if(resp.code === 201){
                         $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
                     }
                 },
@@ -88,8 +106,6 @@
                     alert("error: "+msg);
                 }
             });
-
-            randSelect();
         }
 
     </script>
@@ -150,14 +166,14 @@
         <div class="row">
             <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
                 <div id="lbl_obj" th:text="${instanceVo.item}"></div>
-                <input type="hidden" id="instanceId" th:value="${instanceVo.id}"/>
+                <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
                 <div align="center">
                     <p>
-                        <label class="radio-inline" th:each="tag : ${taskVo.tagSet}">
+                        <label class="radio-inline" th:each="tag : ${taskVo.tagSet}" style="padding: 10px;">
                             <input type="radio" name="tag" class="radio_tag" th:value="${tag}" th:text="${tag}"/>
                         </label>
                     </p>

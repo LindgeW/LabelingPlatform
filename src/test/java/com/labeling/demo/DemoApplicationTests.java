@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 class Student {
-    protected Integer id;
-    protected String name;
+    private Integer id;
+    private String name;
 
     public Student(Integer id, String name) {
         this.id = id;

@@ -1,7 +1,7 @@
 package com.labeling.demo.entity.vo;
 
 public class InstanceVO {
-    private Long id;       // 数据编号
+    private Long instanceId;       // 数据编号
     private String item;  //数据项
     private String tag;    //标签值
 
@@ -9,18 +9,18 @@ public class InstanceVO {
         super();
     }
 
-    public InstanceVO(Long id, String item, String tag) {
-        this.id = id;
+    public InstanceVO(Long instanceId, String item, String tag) {
+        this.instanceId = instanceId;
         this.item = item;
         this.tag = tag;
     }
 
-    public Long getId() {
-        return id;
+    public Long getInstanceId() {
+        return instanceId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setInstanceId(Long instanceId) {
+        this.instanceId = instanceId;
     }
 
     public String getItem() {
@@ -37,5 +37,14 @@ public class InstanceVO {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public String toString() {
+        return "InstanceVO{" +
+                "instanceId=" + instanceId +
+                ", item='" + item + '\'' +
+                ", tag='" + tag + '\'' +
+                '}';
     }
 }

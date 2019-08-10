@@ -4,6 +4,8 @@ import com.labeling.demo.entity.DataType;
 import com.labeling.demo.entity.Task;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+
 public class TaskVO extends Task {
     private String dataType;    //标注类型
     private String[] tagSet;    //标签集
@@ -34,5 +36,13 @@ public class TaskVO extends Task {
 
     public void setTagSet(String[] tagSet) {
         this.tagSet = tagSet;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskVO{" +
+                "dataType='" + dataType + '\'' +
+                ", tagSet=" + Arrays.toString(tagSet) +
+                '}';
     }
 }

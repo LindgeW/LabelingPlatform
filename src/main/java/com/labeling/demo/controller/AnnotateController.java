@@ -18,12 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class AnnotateController {
-//    private List<Instance> instanceList = null;
+//    private List<InstanceUser> instUserList = null;
     private InstanceService instanceService;
     private TaskService taskService;
     private TeamService teamService;
@@ -35,6 +37,7 @@ public class AnnotateController {
         this.taskService = taskService;
         this.teamService = teamService;
         this.instanceUserService = instanceUserService;
+//        instUserList = new ArrayList<>();
     }
 
     @GetMapping("/annotate")
@@ -52,15 +55,22 @@ public class AnnotateController {
             if (StringUtils.isBlank(teamName)){
                 return "no_anno";
             }
+
+            // 分页读取！
+            Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
+            Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
+//            System.out.println(pageData.isLast());
+//            System.out.println(pageData.hasContent());
+//            System.out.println(pageData.hasNext());
+            if (!pageData.hasContent() || pageData.isLast()){  // 判断当前用户是否已经完成任务
+                return "no_anno";
+            }
+            Instance firstInstance = pageData.getContent().get(0);
+
             //找到该小组分配的任务
             Team team = teamService.findByName(teamName);
             //获取该任务对应的标注数据
             Task task = taskService.findByName(team.getTaskName());
-            // 分页读取！
-//            instanceList = instanceService.findByTaskName(taskName);
-            Integer tagNum = instanceUserService.countByUsername(username);  //统计用户工作量
-            Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
-            Instance firstInstance = pageData.getContent().get(0);
 
             TaskVO taskVo = new TaskVO(task);
             UserVO userVO = new UserVO(username, tagNum);
@@ -75,31 +85,31 @@ public class AnnotateController {
 
     @PostMapping("/annotate")
     @ResponseBody
-    public RespEntity annotate(@RequestParam("username") String username,
-                               @RequestParam("instanceId") Long instId,
-                               @RequestParam("tag") String tag,
-                               @RequestParam("tagNum") Integer tagNum,
-                               @RequestParam("cmd") String cmd){
-        System.out.println(tag);
+    public RespEntity annotate(UserVO userVO, InstanceVO instanceVO, @RequestParam("cmd") String cmd){
+        System.out.println(userVO);
+        System.out.println(instanceVO);
 
         //记录用户对此数据标注的标签
         InstanceUser instanceUser = new InstanceUser();
-        instanceUser.setInstanceId(instId);
-        instanceUser.setUsername(username);
-        instanceUser.setTag(tag);
+        instanceUser.setUsername(userVO.getUsername());
+        instanceUser.setInstanceId(instanceVO.getInstanceId());
+        instanceUser.setTag(instanceVO.getTag());
         instanceUserService.addInstanceUser(instanceUser);
 
         // 取下一个数据
-        tagNum ++;
-        Instance nextInstance = instanceService.findPageData(PageRequest.of(tagNum, 1)).getContent().get(0);
-        if (nextInstance == null){
+        int tagNum = userVO.getTagNum() + 1;
+        Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));
+        if (!pageData.hasContent() || pageData.isLast()){
             return new RespEntity(RespStatus.Over);
         }
 
+        Instance nextInstance = pageData.getContent().get(0);
         Map<String, Object> respMap = new HashMap<>();
-        respMap.put("instId", nextInstance.getInstanceId());
-        respMap.put("item", nextInstance.getItem());
-        respMap.put("tagNum", tagNum);
+        UserVO curUser = new UserVO(userVO.getUsername(), tagNum);
+        InstanceVO nextInst = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getItem(), nextInstance.getTag());
+        respMap.put("curUser", curUser);
+        respMap.put("nextInst", nextInst);
+
         return new RespEntity<>(RespStatus.SUCCESS, respMap);
     }
 }

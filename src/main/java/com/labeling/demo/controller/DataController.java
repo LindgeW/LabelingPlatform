@@ -29,7 +29,7 @@ import java.util.zip.ZipInputStream;
 @Controller
 public class DataController {
     private static final String tempDir = "src/main/resources/temp";
-    private static final int BATCHSIZE  = 50;
+    private static final int BATCHSIZE  = 100;
     private Long counter = 0L;
 
     private InstanceService instanceService;

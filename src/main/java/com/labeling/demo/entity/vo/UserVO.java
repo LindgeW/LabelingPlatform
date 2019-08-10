@@ -27,4 +27,12 @@ public class UserVO {
     public void setTagNum(Integer tagNum) {
         this.tagNum = tagNum;
     }
+
+    @Override
+    public String toString() {
+        return "UserVO{" +
+                "username='" + username + '\'' +
+                ", tagNum=" + tagNum +
+                '}';
+    }
 }

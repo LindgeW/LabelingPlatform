@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class LoginController {
 
-//    @GetMapping(value = {"", "/", "/index"})
-//    public String index(){
-//        return "index";
-//    }
+    @GetMapping(value = {"", "/", "/index"})
+    public String index(){
+        return "index";
+    }
 
     @GetMapping("/register")
     public String toRegister(){
