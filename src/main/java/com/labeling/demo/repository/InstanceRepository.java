@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InstanceRepository extends MongoRepository<Instance, ObjectId> {
+public interface InstanceRepository extends MongoRepository<Instance, String> {
     List<Instance> findByTaskName(String taskName);
 
 }

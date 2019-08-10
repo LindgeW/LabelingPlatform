@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>小组任务完成！</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bg/icons.css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css">
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!--&lt;!&ndash;Scripts js&ndash;&gt;-->
+    <script src="/js/scripts.js"></script>
+
+    <!--<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">-->
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/messages_zh.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="navbar-text">
+                            <i class="fa fa-user-circle"></i> <span th:text="${username}"></span>
+                        </li>
+                        <!--<li class="nav-item">-->
+                            <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                                <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                                <!--<span id="fullscreen-button">全屏</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 100px; text-align: center;">
+        <h2>恭喜你，你已经完成了小组标注任务！</h2>
+    </div>
+
+</body>
+</html>

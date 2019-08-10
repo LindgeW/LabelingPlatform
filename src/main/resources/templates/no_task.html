@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>标注平台</title>
+    <title>未进入任何小组！</title>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -11,23 +11,6 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bg/icons.css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css">
-    <style>
-        #lbl_obj{
-            /*text-align: center;*/
-            margin-top: 10%;
-            min-height: 100px;
-            padding-top: 30px;
-            padding-bottom: 30px;
-            font-size: 20px;
-            font-family: 微软雅黑, serif;
-            /*border: #ff0000 1px dotted;*/
-        }
-
-        input[type="radio"]{
-            width: 20px;
-            height: 20px;
-        }
-    </style>
 
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -41,29 +24,6 @@
     <script src="/js/messages_zh.min.js"></script>
     <script src="/js/bootbox.min.js"></script>
 
-    <script>
-        function goto(cmd) {
-            tag = $('input:radio:checked').val();
-            $.ajax({
-                type: "POST",
-                url: "/annotate",
-                data: {"tag": tag, "cmd": cmd},
-                dataType: "json",
-                cache: "false",
-                success: function (resp) {
-                    if (resp.code == 200){
-                        $("#lbl_obj").text(resp.data.item);
-                    }else if(resp.code == 201){
-                        $("#lbl_obj").html("<span style='font-weight: bold;color: #ff0000;'>"+resp.message+"</span>");
-                    }
-                },
-                error: function () {
-                    alert("error");
-                }
-            })
-        }
-
-    </script>
 </head>
 
 <body>
@@ -109,7 +69,7 @@
         </nav>
     </header>
 
-    <div class="container" style="margin-top: 100px;">
+    <div class="container" style="margin-top: 100px; text-align: center">
         <h2>你还没有加入任何标注小组，请先联系管理员！</h2>
     </div>
 

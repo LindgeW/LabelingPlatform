@@ -43,6 +43,11 @@ public class InstanceUserServiceImpl implements InstanceUserService {
         return this.instanceuserMapper.updateByPrimaryKeySelective(instanceuser) >= 1;
     }
 
+    @Override
+    public boolean save(InstanceUser instanceUser) {
+        return this.instanceuserMapper.save(instanceUser) >= 1;
+    }
+
 
     public Integer countByUsername(String username) {
         return  this.instanceuserMapper.countByUsername(username);

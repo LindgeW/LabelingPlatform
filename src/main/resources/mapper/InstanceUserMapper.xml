@@ -32,10 +32,18 @@
     delete from tb_instance_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <insert id="save" parameterType="com.labeling.demo.entity.InstanceUser">
+    insert into tb_instance_user (id, username, instanceId, tag)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER},
+      #{tag,jdbcType=VARCHAR})
+    ON DUPLICATE KEY UPDATE
+    username = #{username,jdbcType=VARCHAR},
+    instanceId = #{instanceId,jdbcType=INTEGER},
+    tag = #{tag,jdbcType=VARCHAR}
+  </insert>
   <insert id="insert" parameterType="com.labeling.demo.entity.InstanceUser">
-    insert into tb_instance_user (id, username, instanceId, 
-      tag)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER}, 
+    insert into tb_instance_user (id, username, instanceId, tag)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER},
       #{tag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.InstanceUser">

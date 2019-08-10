@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "corpus")
 public class Instance {  //不建议自己设主键，MongoDB自动生成一个唯一主键
+    @Id
+    private String id;
     private Long instanceId;
     private String taskName; //隶属于哪个任务
 //    @Indexed  提高检索速度

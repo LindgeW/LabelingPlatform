@@ -2,6 +2,7 @@ package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.InstanceUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -22,4 +23,9 @@ public interface InstanceUserMapper {
     List<InstanceUser> findAll();
 
     int countByUsername(String username);
+
+    int save(InstanceUser instanceUser);
+
+//    @Select("select * from tb_instance_user where username = #{0}")
+//    List<InstanceUser> findByUserName(String username);
 }
