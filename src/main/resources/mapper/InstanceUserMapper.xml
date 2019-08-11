@@ -5,7 +5,7 @@
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="instanceId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="instanceId" javaType="java.lang.Long" jdbcType="INTEGER" />
       <arg column="tag" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
@@ -16,6 +16,11 @@
     select
     <include refid="Base_Column_List" />
     from tb_instance_user
+  </select>
+  <select id="findInstanceUserById"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from tb_instance_user where instanceId = #{instanceid}
   </select>
   <select id="countByUsername"  parameterType="java.lang.String" resultType="java.lang.Integer">
     SELECT
@@ -99,4 +104,17 @@
       tag = #{tag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <insert id="saveBatch" parameterType="java.util.List">
+    insert into tb_instance_user (
+    id, username, instanceId,tag
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      #{item.id,jdbcType=INTEGER}, #{item.username,jdbcType=VARCHAR}, #{item.instanceId,jdbcType=INTEGER},
+      #{item.tag,jdbcType=VARCHAR}
+      )
+    </foreach>
+
+  </insert>
 </mapper>

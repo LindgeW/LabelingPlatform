@@ -53,5 +53,15 @@ public class InstanceUserServiceImpl implements InstanceUserService {
         return  this.instanceuserMapper.countByUsername(username);
     }
 
+    @Override
+    public boolean saveBtach(List<InstanceUser> list) {
+        return this.instanceuserMapper.saveBatch(list);
+    }
+
+    @Override
+    public List<InstanceUser> findInstanceUserById(Long instanceid) {
+        return this.instanceuserMapper.findInstanceUserById(instanceid);
+    }
+
 
 }

@@ -17,4 +17,9 @@ public interface InstanceUserService {
     boolean save(InstanceUser instanceUser);
 
     Integer countByUsername(String username);
+
+    boolean saveBtach (List<InstanceUser>list);
+
+    //查找一条数据被所有用户的标注情况
+    List<InstanceUser>findInstanceUserById(Long instanceid);
 }

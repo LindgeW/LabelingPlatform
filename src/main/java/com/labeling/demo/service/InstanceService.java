@@ -15,6 +15,8 @@ public interface InstanceService {
 
     Page<Instance> findPageData(Pageable instPage);
 
+    Instance findInstById(Long id);
+
     List<Instance> findByTaskName(String taskName);
 
     long count();

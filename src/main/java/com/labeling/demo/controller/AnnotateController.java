@@ -8,6 +8,7 @@ import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
 import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
+import com.labeling.demo.util.FindMostElm;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -88,14 +91,49 @@ public class AnnotateController {
     public RespEntity annotate(UserVO userVO, InstanceVO instanceVO){
         System.out.println(userVO);
         System.out.println(instanceVO);
-
+        ArrayList<String> taglist = new ArrayList<String>();
         //记录用户对此数据标注的标签
         InstanceUser instanceUser = new InstanceUser();
         instanceUser.setUsername(userVO.getUsername());
         instanceUser.setInstanceId(instanceVO.getInstanceId());
         instanceUser.setTag(instanceVO.getTag());
         instanceUserService.addInstanceUser(instanceUser);
+        //批量插入(待解决)
+       /* batch_list.add(instanceUser);
+        if (batch_list.size() == batch_size)
+        {
+            instanceUserService.saveBtach(batch_list);
 
+        }*/
+
+
+        Instance instance = instanceService.findInstById(instanceVO.getInstanceId());
+
+        //如果当前数据未标满，则tagnum+1
+        instance.setTagNum(instance.getTagNum()+1);
+        instanceService.save(instance);
+        if (instance.getTagNum() == 3) {
+            List<InstanceUser> instTaglist =  instanceUserService.findInstanceUserById(instanceVO.getInstanceId());
+            //为数据打上最终标签且改变状态
+            for(InstanceUser item :instTaglist){
+                System.out.println(item.getTag());
+                taglist.add(item.getTag());
+            }
+
+            FindMostElm findmostElm = new FindMostElm();
+            //找到最终的标签
+            String finaltag = findmostElm.findfinaltag(taglist);
+            System.out.println(finaltag);
+            //为此数据打上最终标签并修改它的状态
+            instance.setTag(finaltag);
+            //1为已标状态
+            instance.setStatus(1);
+            instanceService.save(instance);
+
+
+        }
+
+        // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
         UserVO curUser = new UserVO(userVO.getUsername(), tagNum);
 

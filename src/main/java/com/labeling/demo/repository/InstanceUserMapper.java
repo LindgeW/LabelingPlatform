@@ -26,6 +26,10 @@ public interface InstanceUserMapper {
 
     int save(InstanceUser instanceUser);
 
+    boolean saveBatch(List<InstanceUser>list);
+
+    List<InstanceUser>findInstanceUserById(Long instanceid);
+
 //    @Select("select * from tb_instance_user where username = #{0}")
 //    List<InstanceUser> findByUserName(String username);
 }

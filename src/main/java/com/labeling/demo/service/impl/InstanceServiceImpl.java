@@ -44,6 +44,11 @@ public class InstanceServiceImpl implements InstanceService {
     }
 
     @Override
+    public Instance findInstById(Long id) {
+        return instanceRepository.findByInstanceId(id);
+    }
+
+    @Override
     public List<Instance> findByTaskName(String taskName) {
         return instanceRepository.findByTaskName(taskName);
     }

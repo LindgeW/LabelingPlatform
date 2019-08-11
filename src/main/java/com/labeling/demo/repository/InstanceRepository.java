@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface InstanceRepository extends MongoRepository<Instance, String> {
     List<Instance> findByTaskName(String taskName);
+    Instance findByInstanceId(Long id);
 
 }
