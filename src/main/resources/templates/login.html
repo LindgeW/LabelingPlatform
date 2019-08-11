@@ -1,30 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>登录</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>标注平台登录页面</title>
+    <!--<meta name="viewport"-->
+    <!--content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">-->
+    <meta name="description" content="Free HTML5 Template by FreeHTML5.co"/>
+    <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:title" content=""/>
+    <meta property="og:image" content=""/>
+    <meta property="og:url" content=""/>
+    <meta property="og:site_name" content=""/>
+    <meta property="og:description" content=""/>
+    <meta name="twitter:title" content=""/>
+    <meta name="twitter:image" content=""/>
+    <meta name="twitter:url" content=""/>
+    <meta name="twitter:card" content=""/>
+
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
     <script src="/js/messages_zh.min.js"></script>
     <script src="/js/bootbox.min.js"></script>
 
-    <style>
-        .login_box{
-            /*width: 30%;*/
-            /*height: auto;*/
-            /*background-color: #ffffff;*/
-        }
-    </style>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="css/animate/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Modernizr JS -->
+    <script src="js/modernizr-2.6.2.min.js" type=“text/javascript”></script>
+    <!-- FOR IE9 below -->
+    <!--[if lt IE 9]>
+    <script src="js/respond.min.js" type=“text/javascript”></script>
+
+    <![endif]-->
+
+
     <script>
         $.validator.setDefaults({
-            submitHandler: function() {
+            submitHandler: function () {
                 ajaxLogin();
             }
         });
@@ -33,7 +64,7 @@
             validateRule();
         });
 
-        function validateRule(){
+        function validateRule() {
             $("#loginForm").validate({
                 rules: {
                     username: {
@@ -58,7 +89,7 @@
             });
         }
 
-        function ajaxLogin(){
+        function ajaxLogin() {
             $.ajax({
                 type: "POST",
                 url: "/login",
@@ -66,9 +97,9 @@
                 data: $('#loginForm').serialize(),
                 dataType: "json",
                 success: function (data) {
-                    if(data.code == 200){
+                    if (data.code == 200) {
                         window.location.href = data.data;
-                    }else{
+                    } else {
                         bootbox.alert({
                             title: '错误',
                             className: 'rubberBand animated',
@@ -86,34 +117,55 @@
             });
         }
     </script>
-
     <style>
-        .error{
-            color:red;
+        .error {
+            color: red;
             /*font-size: 5px;*/
         }
     </style>
+
 </head>
-<body>
-    <div class="container">
-        <div class="login_box">
-            <h2 class="text-center">标注平台登录</h2>
-            <form id="loginForm" class="form-group">
-                <p>
-                    <label for="username">用户名：</label>
-                    <input type="text" id="username" name="username" class="form-control" value="zsf123" />
-                </p>
-                <p>
-                    <label for="password">密码：</label>
-                    <input type="password" id="password" name="password" class="form-control" value="123123" />
-                </p>
-                <p>
-                    <button type="submit" class="btn btn-primary">登录</button>
-                </p>
+<body class="style-3">
+
+<div class="container">
+    <div id="logo" class="pull-left">
+        <img src="/img/login_title.png" title="" height="100" width="200"/></img>
+    </div>
+    <div class="row">
+        <div class="col-4" style="left: 10%">
+            <img src="/img/login_logo.png" title=""
+                 style="height: 80%;width: 120%;"/></img>
+        </div>
+        <div class="col-6" style="left: 20%">
+            <!-- Start Sign In Form -->
+            <form id="loginForm" class="fh5co-form animate-box" data-animate-effect="fadeInRight">
+                <h2>欢迎登录标注平台</h2>
+                <div class="form-group">
+                    <label for="username" class="sr-only">用户名</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="用户名"
+                           autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">密码</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码"
+                           autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="remember"><input type="checkbox" id="remember"> 记住我</label>
+                </div>
+                <div class="form-group">
+                    <p>还没注册？<a href="/register">注册</a> | <a href="forgot3.html">忘记密码？</a></p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <button type="submit" class="btn btn-primary">登录</button>
+                    </p>
+                </div>
             </form>
-            没有账号? <a href="/register">立即注册</a>
+            <!-- END Sign In Form -->
         </div>
     </div>
+</div>
 </body>
-
 </html>
+

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>标注平台登录页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/messages_zh.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+
+    <style>
+        .login_box{
+            /*width: 30%;*/
+            /*height: auto;*/
+            /*background-color: #ffffff;*/
+        }
+    </style>
+    <script>
+        $.validator.setDefaults({
+            submitHandler: function() {
+                ajaxLogin();
+            }
+        });
+
+        $(function () {
+            validateRule();
+        });
+
+        function validateRule(){
+            $("#loginForm").validate({
+                rules: {
+                    username: {
+                        required: true,
+//                        minlength: 2
+                    },
+                    password: {
+                        required: true,
+//                        minlength: 5
+                    }
+                },
+                messages: {
+                    username: {
+                        required: " *请输入用户名* ",
+//                        minlength: "用户名长度太短！"
+                    },
+                    password: {
+                        required: " *请输入密码* ",
+//                        minlength: "密码长度太短"
+                    }
+                }
+            });
+        }
+
+        function ajaxLogin(){
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                cache: false,
+                data: $('#loginForm').serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if(data.code == 200){
+                        window.location.href = data.data;
+                    }else{
+                        bootbox.alert({
+                            title: '错误',
+                            className: 'rubberBand animated',
+                            message: data.message
+                        });
+                    }
+                },
+                error: function () {
+                    bootbox.alert({
+                        title: 'Error',
+                        className: 'rubberBand animated',
+                        message: 'Unknown Error!'
+                    });
+                }
+            });
+        }
+    </script>
+
+    <style>
+        .error{
+            color:red;
+            /*font-size: 5px;*/
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div id="logo" class="pull-left">
+                <img src="img/logoin_title.png" class="img-thumbnail" title="" height="300" width="200"/>
+            </div>
+        </div>
+        <div class="login_box">
+            <h2 class="text-center">标注平台登录</h2>
+            <form id="loginForm" class="form-group" >
+                <p>
+                    <label for="username">用户名：</label>
+                    <input type="text" id="username" name="username" class="form-control" value="zsf123" />
+                </p>
+                <p>
+                    <label for="password">密码：</label>
+                    <input type="password" id="password" name="password" class="form-control" value="123123" />
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </p>
+            </form>
+            没有账号? <a href="/register">立即注册</a>
+        </div>
+    </div>
+</body>
+
+</html>

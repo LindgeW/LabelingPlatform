@@ -1,150 +1,184 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>注册</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>注册页面</title>
+    <meta name="description" content="Free HTML5 Template by FreeHTML5.co"/>
+    <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:title" content=""/>
+    <meta property="og:image" content=""/>
+    <meta property="og:url" content=""/>
+    <meta property="og:site_name" content=""/>
+    <meta property="og:description" content=""/>
+    <meta name="twitter:title" content=""/>
+    <meta name="twitter:image" content=""/>
+    <meta name="twitter:url" content=""/>
+    <meta name="twitter:card" content=""/>
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="css/animate/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
     <script src="/js/messages_zh.min.js"></script>
     <script src="/js/bootbox.min.js"></script>
 
-    <style>
-        .login_box{
-            /*width: 30%;*/
-            /*height: auto;*/
-            /*background-color: #ffffff;*/
-        }
+    <!-- Modernizr JS -->
+    <script src="js/modernizr-2.6.2.min.js" type=“text/javascript”></script>
+    <!-- FOR IE9 below -->
+    <!--[if lt IE 9]>
+    <script src="js/respond.min.js" type=“text/javascript”></script>
+    <![endif]-->
 
-    </style>
-    <script>
-        $.validator.setDefaults({
-            submitHandler: function() {
-                ajaxRegister();
+</head>
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            ajaxRegister();
+        }
+    });
+
+    $(function () {
+        validateRule();
+    });
+
+    function validateRule() {
+        $("#registerForm").validate({
+            rules: {
+                username: {
+                    required: true,
+                    // minlength: 6
+                    // rangelength: [5, 10]
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                    // rangelength: [5, 10]
+                },
+                confirm_pwd: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: "#password"
+                    // rangelength: [5, 10]
+                }
+            },
+            messages: {
+                username: {
+                    required: "*请输入用户名*",
+                    minlength: "用户名长度太短！"
+                },
+                password: {
+                    required: "*请输入密码*",
+                    minlength: "密码长度太短！"
+                },
+                confirm_pwd: {
+                    required: "*请输入密码*",
+                    minlength: "密码长度太短！",
+                    equalTo: "两次输入的密码不一致！"
+                }
             }
         });
+    }
 
-        $(function () {
-            validateRule();
-        });
-
-        function validateRule(){
-            $("#registerForm").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        // minlength: 6
-                        // rangelength: [5, 10]
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6
-                        // rangelength: [5, 10]
-                    },
-                    confirm_pwd: {
-                        required: true,
-                        minlength: 6,
-                        equalTo: "#password"
-                        // rangelength: [5, 10]
-                    }
-                },
-                messages: {
-                    username: {
-                        required: "*请输入用户名*",
-                        minlength: "用户名长度太短！"
-                    },
-                    password: {
-                        required: "*请输入密码*",
-                        minlength: "密码长度太短！"
-                    },
-                    confirm_pwd: {
-                        required: "*请输入密码*",
-                        minlength: "密码长度太短！",
-                        equalTo: "两次输入的密码不一致！"
-                    }
-                }
-            });
-        }
-
-        function ajaxRegister(){
-            $.ajax({
-                type: "POST",
-                url: "/register",
-                cache: false,
-                data: $('#registerForm').serialize(),
-                dataType: "json",
-                success: function (data) {
-                    if(data.code == 200){
-                        bootbox.alert({
-                            title: '提示',
-                            className: 'rubberBand animated',
-                            message: '恭喜你，注册成功！'
-                        });
-                        window.location.href = "/login";
-
-                        // 通过调用 DOM 中的reset方法来重置表单
-                        // $("#registerForm")[0].reset();
-                    }else{
-                        bootbox.alert({
-                            title: '错误',
-                            className: 'rubberBand animated',
-                            message: data.message
-                        });
-                    }
-                },
-                error: function () {
+    function ajaxRegister() {
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            cache: false,
+            data: $('#registerForm').serialize(),
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
                     bootbox.alert({
-                        title: 'Error',
+                        title: '提示',
                         className: 'rubberBand animated',
-                        message: 'Unknown Error!'
+                        message: '恭喜你，注册成功！'
+                    });
+                    window.location.href = "/login";
+
+                    // 通过调用 DOM 中的reset方法来重置表单
+                    // $("#registerForm")[0].reset();
+                } else {
+                    bootbox.alert({
+                        title: '错误',
+                        className: 'rubberBand animated',
+                        message: data.message
                     });
                 }
-            });
-        }
-    </script>
+            },
+            error: function () {
+                bootbox.alert({
+                    title: 'Error',
+                    className: 'rubberBand animated',
+                    message: 'Unknown Error!'
+                });
+            }
+        });
+    }
+</script>
 
-    <style>
-        .error{
-            color:red;
-            /*font-size: 5px;*/
-        }
-    </style>
-</head>
-<body>
+<body class="style-3">
 <div class="container">
-    <div class="login_box">
-        <h2>注册</h2>
-        <form id="registerForm" class="form-group">
-            <p>
-                <label for="username">用户名：</label>
-                <input type="text" id="username" name="username" class="form-control" />
-            </p>
-            <p>
-                <label for="password">密码：</label>
-                <input type="password" id="password" name="password" class="form-control" />
-            </p>
-            <p>
-                <label for="confirm_pwd">确认密码：</label>
-                <input type="password" id="confirm_pwd" name="confirm_pwd" class="form-control" />
-            </p>
-            <p>
-                <button type="reset" class="btn btn-success">重置</button>
-                <button type="submit" class="btn btn-primary">注册</button>
-            </p>
-        </form>
-        <!--发短信，winphone系统无效-->
-        <!--<a href="sms:15797768303">发短信了</a>-->
-        <!--<a href="mailto:ncu151wlz@qq.com?subject=忘记密码">点击我发邮件</a>-->
-
-        已有账号? <a href="/login">立即登录</a>
+    <div class="row">
+        <div class="col-md-6" style="left: 25%;">
+            <!-- Start Sign In Form -->
+            <form id="registerForm" action="#" class="fh5co-form animate-box" data-animate-effect="fadeInRight">
+                <h2>欢迎注册标注平台</h2>
+                <div class="form-group">
+                    <label for="username" class="sr-only">用户名</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="用户名"
+                           autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="sr-only">邮箱</label>
+                    <input type="email" class="form-control" id="email" placeholder="邮箱" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">密码</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码"
+                           autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="confirm_pwd" class="sr-only">再次输入密码</label>
+                    <input type="password" class="form-control" id="confirm_pwd" name="confirm_pwd" placeholder="再次输入密码"
+                           autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <p>已经注册过？ <a href="/login">登录</a></p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <button type="reset" class="btn btn-primary">重置</button>
+                        <button type="submit" class="btn btn-primary">注册</button>
+                    </p>
+                </div>
+            </form>
+            <!-- END Sign In Form -->
+        </div>
     </div>
 </div>
-</body>
 
+</body>
 </html>
+
