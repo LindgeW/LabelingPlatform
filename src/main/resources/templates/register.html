@@ -9,12 +9,12 @@
 <html class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>注册页面</title>
     <meta name="description" content="Free HTML5 Template by FreeHTML5.co"/>
     <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
-    <meta name="viewport"
-          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
@@ -45,10 +45,10 @@
     <script src="/js/bootbox.min.js"></script>
 
     <!-- Modernizr JS -->
-    <script src="js/modernizr-2.6.2.min.js" type=“text/javascript”></script>
+    <script src="js/modernizr-2.6.2.min.js" type="text/javascript"></script>
     <!-- FOR IE9 below -->
     <!--[if lt IE 9]>
-    <script src="js/respond.min.js" type=“text/javascript”></script>
+    <script src="js/respond.min.js" type="text/javascript"></script>
     <![endif]-->
 
 </head>
@@ -140,34 +140,34 @@
 
 <body class="style-3">
 <div class="container">
+    <div id="logo" class="pull-left">
+        <img src="/img/login_title.png" title="" height="100" width="200"/></img>
+    </div>
     <div class="row">
-        <div class="col-md-6" style="left: 25%;">
+        <div class="col-md-4 offset-md-4">
             <!-- Start Sign In Form -->
             <form id="registerForm" action="#" class="fh5co-form animate-box" data-animate-effect="fadeInRight">
-                <h2>欢迎注册标注平台</h2>
+                <h2 class="text-center">欢迎注册标注平台</h2>
                 <div class="form-group">
                     <label for="username" class="sr-only">用户名</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="用户名"
-                           autocomplete="off">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="用户名" autocomplete="off">
                 </div>
-                <div class="form-group">
-                    <label for="email" class="sr-only">邮箱</label>
-                    <input type="email" class="form-control" id="email" placeholder="邮箱" autocomplete="off">
-                </div>
+                <!--<div class="form-group">-->
+                    <!--<label for="email" class="sr-only">邮箱</label>-->
+                    <!--<input type="email" class="form-control" id="email" placeholder="邮箱" autocomplete="off">-->
+                <!--</div>-->
                 <div class="form-group">
                     <label for="password" class="sr-only">密码</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="密码"
-                           autocomplete="off">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="confirm_pwd" class="sr-only">再次输入密码</label>
-                    <input type="password" class="form-control" id="confirm_pwd" name="confirm_pwd" placeholder="再次输入密码"
-                           autocomplete="off">
+                    <input type="password" class="form-control" id="confirm_pwd" name="confirm_pwd" placeholder="再次输入密码" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <p>已经注册过？ <a href="/login">登录</a></p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align: center;">
                     <p>
                         <button type="reset" class="btn btn-primary">重置</button>
                         <button type="submit" class="btn btn-primary">注册</button>

@@ -58,5 +58,10 @@ public class InstanceServiceImpl implements InstanceService {
         return instanceRepository.count();
     }
 
+    @Override
+    public Instance findById(Long instanceId) {
+        return instanceRepository.findByInstanceId(instanceId);
+    }
+
 
 }

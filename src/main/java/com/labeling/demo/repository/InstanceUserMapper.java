@@ -2,7 +2,9 @@ package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.InstanceUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,14 +24,16 @@ public interface InstanceUserMapper {
 
     List<InstanceUser> findAll();
 
+    List<InstanceUser> findByPage(String username, @Param("pager") Pageable pageable);
+
     int countByUsername(String username);
 
     int save(InstanceUser instanceUser);
 
-    boolean saveBatch(List<InstanceUser>list);
+    boolean saveBatch(List<InstanceUser> list);
 
     List<InstanceUser>findInstanceUserById(Long instanceid);
 
-//    @Select("select * from tb_instance_user where username = #{0}")
-//    List<InstanceUser> findByUserName(String username);
+    @Select("select * from tb_instance_user where username = #{username}")
+    List<InstanceUser> findByUserName(String username);
 }

@@ -4,6 +4,7 @@ import com.labeling.demo.entity.InstanceUser;
 import com.labeling.demo.repository.InstanceUserMapper;
 import com.labeling.demo.service.InstanceUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,16 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
+    public List<InstanceUser> findByPage(String username, Pageable pageable) {
+        return instanceuserMapper.findByPage(username, pageable);
+    }
+
+    @Override
+    public List<InstanceUser> findByUserName(String username) {
+        return instanceuserMapper.findByUserName(username);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addInstanceUser(InstanceUser instanceuser) {
         return this.instanceuserMapper.insertSelective(instanceuser) >= 1;
@@ -44,6 +55,7 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean save(InstanceUser instanceUser) {
         return this.instanceuserMapper.save(instanceUser) >= 1;
     }

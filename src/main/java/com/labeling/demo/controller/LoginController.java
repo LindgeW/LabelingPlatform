@@ -10,9 +10,15 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class LoginController {
@@ -29,14 +35,37 @@ public class LoginController {
 
 
     @GetMapping("/login")
-    public String toLogin(){
+    public String toLogin(HttpServletRequest request, Model model){
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null && cookies.length > 1){
+            for (Cookie cookie : cookies) {
+                String name = cookie.getName();
+                if(name.equalsIgnoreCase("RememberMe")){
+                    model.addAttribute("remember", cookie.getValue());
+                } else if (name.equalsIgnoreCase("username")){
+                    model.addAttribute("username", cookie.getValue());
+                } else if (name.equalsIgnoreCase("password")){
+                    model.addAttribute("password", cookie.getValue());
+                }
+            }
+        }
+
         return "login";
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public RespEntity login(User user){
-        System.out.println(user);
+    public RespEntity login(User user, @RequestParam("remember") String rememberme, HttpServletResponse httpServletResponse){
+
+        if (!rememberme.equals("0")){
+            httpServletResponse.addCookie(new Cookie("RememberMe", "checked"));
+            httpServletResponse.addCookie(new Cookie("username", user.getUsername()));
+            httpServletResponse.addCookie(new Cookie("password", user.getPassword()));
+        } else {
+            httpServletResponse.addCookie(new Cookie("RememberMe", null));
+            httpServletResponse.addCookie(new Cookie("username", null));
+            httpServletResponse.addCookie(new Cookie("password", null));
+        }
 
         //创建Subject实例
         Subject subject = SecurityUtils.getSubject();

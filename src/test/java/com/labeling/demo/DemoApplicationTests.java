@@ -6,6 +6,9 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Student {
     private Integer id;
     private String name;
@@ -84,5 +87,17 @@ public class DemoApplicationTests {
         System.out.println(sv.getAge());
         System.out.println(sv.getName());
         System.out.println(sv.getId());
+    }
+
+    @Test
+    public void contains(){
+//        System.out.println(StringUtils.contains("I love you", "you"));
+        List<String> arrLst = new ArrayList<>();
+        arrLst.add("asda");
+        arrLst.add("fdga");
+        arrLst.add("vads");
+        arrLst.add("griore");
+
+        System.out.println(arrLst.subList(0, 5));
     }
 }

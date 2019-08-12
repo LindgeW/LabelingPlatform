@@ -1,16 +1,19 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <!-- Favicons -->
     <link href="/img/logo.png" rel="icon">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bg/icons.css">
     <link href="/css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">
-
+    <link href="/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
     <script src="/js/jquery-3.4.1.min.js"></script>
+
     <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
-    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="/js/popper.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/bootstrap-table/bootstrap-table.js"></script>
@@ -21,42 +24,38 @@
 
     <title>评论汇总</title>
     <script>
-        var urls = new Array(0);
-        urls['list'] = '/list';
-        urls['updateOne'] = '/admin/update_one';
-        urls['updateMany'] = '/admin/update_remarks';
-        urls['delOne'] = '/admin/del_one';
-        urls['delMany'] = '/admin/del_remarks';
+        var inputOpts = [];
 
         $(function() {
-            initTable();
+            initTable("/list");
         });
 
-        function initTable(){
-            $("#table").bootstrapTable({
-                url: urls['list'],
+        function initTable(url){
+            var $table = $("#dataTable");
+            $table.bootstrapTable({
+                url: url,
                 method: 'POST',
                 cache: false,  //禁用缓存
                 toolbar: '#toolbar',  //工具按钮用哪个容器
                 pagination: true,  //是否显示分页
-                sidePagination: "client", //server
-                sortable: true,  //是否启用排序
-                sortOrder: "asc", //排序方式
+                sidePagination: "server", //client
+                // sortable: true,  //是否启用排序
+                // sortOrder: "asc", //排序方式
                 pageNumber: 1, //初始化加载第一页
                 pageSize: 5, //每页的记录行数
                 pageList: [5, 10, 15, 20], //可供选择的每页的行数
                 search: true, //是否显示表格搜索（模糊）
                 strictSearch: false,  //完全匹配
-                showExport: true,
-                exportDataType: "all",
-                exportTypes: ["csv", "txt", "excel"],
-                exportOptions:{
-                    ignoreColumn: [0, 4, 5],  //忽略某一列的索引
-                    fileName: '评论数据'  //文件名称设置
-                },
+                // showExport: true,
+                // exportDataType: "all",
+                // exportTypes: ["csv", "txt", "excel"],
+                // exportOptions:{
+                //     ignoreColumn: [0, 4, 5],  //忽略某一列的索引
+                //     fileName: '评论数据'  //文件名称设置
+                // },
                 showColumns: true, //是否显示所有的列（选择显示的列）
                 showRefresh: true, //是否显示刷新按钮
-                uniqueId: "id",  //每一行的唯一标识，一般为主键列
+                // uniqueId: "id",  //每一行的唯一标识，一般为主键列
                 contentType: "application/x-www-form-urlencoded",
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,  //点击选中行
@@ -65,40 +64,38 @@
                 cardView: false,  //是否显示详细视图
                 detailView: false, //是否显示父子表
                 queryParams: function queryParams(params) { //设自定义查询参数
-                    var params = {
+                    var pars = {
+                        // offset: params.offset,  //偏移量
                         limit: params.limit,   //页面大小
-                        offset: params.offset  //页码
+                        pageNum: params.offset / params.limit,  //当前页
+                        username: $("#username").text(),
+                        search: params.search   //搜索框查询关键字
+                        // sortName: this.sortName,
+                        // sortOrder: this.sortOrder
                     };
-                    return params;
+                    return pars;
                 },
                 columns:[
-                    {checkbox: true},
                     {title: '序号', align: 'center', formatter: function (value, row, index) {
-                        return index + 1;
-//                        var pageSize = $table.bootstrapTable('getOptions').pageSize;     //每页多少条
-//                        var pageNumber = $table.bootstrapTable('getOptions').pageNumber; //当前第几页
-//                        alert(pageSize+" "+pageNumber+" "+index);
-//                        return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号：每页条数 *（当前页 - 1 ）+ 序号
+                        // return index + 1;
+                       var pageSize = $table.bootstrapTable('getOptions').pageSize;     //每页多少条
+                       var pageNumber = $table.bootstrapTable('getOptions').pageNumber; //当前第几页
+                       return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号：每页条数 *（当前页 - 1 ）+ 序号
                     }},
                     {field: 'id', title: 'ID', visible: false},
-                    {field: 'content', title: '评论', sortable: true, formatter: function (value, row, index) {
-                        var topLen = 300;
+                    {field: 'item', title: '数据', sortable: true, formatter: function (value, row, index) {
+                        var topLen = 100;
                         if(value.length > topLen){
                             return value.substr(0, topLen) + "...";
                         }else{
                             return value;
                         }
                     }},
-                    {field: 'emotion', title: '极性', sortable: true, align: 'center', edit:true},
-//                    {field: 'imgUrl', title: 'url', visible: false}
+                    {field: 'tag', title: '标签值', sortable: true, align: 'center', edit:true},
                     {title: '编辑', formatter: function(value, row, index){
                         //HTML中函数对象传递只能转为JSON来传
                         var jsonObj = JSON.stringify(row).replace(/"/g, '&quot;'); //将所有"替换成&quot;
-                        return '<a href="#" class="btn btn-xs btn-info tableEditor" onclick="editOne(' + jsonObj + ')"><i class="far fa-edit"></i></a>';
-                    }},
-                    {title: '删除', formatter: function(value, row, index){
-                        var jsonObj = JSON.stringify(row).replace(/"/g, '&quot;'); //将所有"替换成&quot;
-                        return '<a href="#" class="btn btn-xs btn-danger tableDelete" onclick="delOne('+ jsonObj + ')"><i class="fas fa-trash-alt"></i></a>';
+                        return '<a href="#" class="btn btn-xs btn-info tableEditor" onclick="editOne(' + jsonObj + ')"><i class="fa fa-edit"></i></a>';
                     }}
                 ],
                 formatLoadingMessage: function () {
@@ -108,7 +105,16 @@
                     return '无符合条件的记录';
                 },
                 onLoadSuccess: function () {
-//                    showTips("数据加载成功！");
+                   // alert("数据加载成功！");
+                    $.post("/fetchTags", function (respData, status) {
+                        if (status === 'success') {
+                            var tags = respData.data.tagSet;
+                            inputOpts = [];
+                            $.each(tags, function (i, val) {
+                                inputOpts.push({text: val, value: val})
+                            });
+                        }
+                    });
                 },
                 onLoadError: function () {
                     bootbox.alert({
@@ -120,24 +126,98 @@
             });
         }
 
-        function refresh(){
-            $("#table").bootstrapTable('refresh', {url: urls['list']});
+        function editOne(row){
+            if (inputOpts < 1){
+                return;
+            }
+
+            bootbox.prompt({
+                title: "编辑标签",
+                size: 'large',
+                message: '<p>请重新选择标签:</p>',
+                inputType: 'radio',
+                inputOptions: inputOpts,
+                callback: function (result) {
+                    if(result == null){
+                        return;
+                    }
+                    row.tag = result;
+                    editSave(row, "/update");
+                }
+            });
+        }
+
+        function editSave(row, url){
+            // alert(JSON.stringify(row));
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(row),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function(data, status) {
+                    if (status === 'success') {
+                        // refresh();
+                        $("#dataTable").bootstrapTable('refresh');
+                    }
+                },
+                error: function(){
+                    alert('error');
+                }
+            });
         }
 
     </script>
 </head>
 <body>
-    <div class="container" style="padding-top:50px; min-height:800px;">
-        <div id="toolbar" class="btn-group">
-            <button id="edit" class="btn btn-light" title="添加">
-                <i class="fas fa-edit"></i> 编辑
-            </button>
-            <button id="del" class="btn btn-light" title="删除">
-                <i class="fas fa-minus"></i> 删除
-            </button>
-        </div>
-        <div id="table" data-mobile-responsive="true">
-            <table class="table">
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="navbar-text">
+                            <i class="fa fa-user-circle"></i> <span th:text="${username}" id="username"></span>
+                        </li>
+                        <!--<li class="nav-item">-->
+                        <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                        <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                        <!--<span id="fullscreen-button">全屏</span>-->
+                        <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid" style="min-height:800px;">
+        <div id="dataTable" class="table-responsive">
+            <table class="table" data-mobile-responsive="true">
             </table>
         </div>
     </div>

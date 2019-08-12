@@ -57,6 +57,13 @@ public class AnnotateController {
                 return "no_task";
             }
 
+            //找到该小组分配的任务
+            Team team = teamService.findByName(teamName);
+            //获取该任务对应的标注数据
+            Task task = taskService.findByName(team.getTaskName());
+            TaskVO taskVo = new TaskVO(task);
+            curSubj.getSession().setAttribute("myTask", taskVo);
+
             // 判断当前用户是否已经完成小组任务
             Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
             Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
@@ -67,15 +74,10 @@ public class AnnotateController {
                 model.addAttribute("username", username);
                 return "finished";
             }
+
             Instance firstInstance = pageData.getContent().get(0);
             InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), firstInstance.getItem(), firstInstance.getTag());
 
-            //找到该小组分配的任务
-            Team team = teamService.findByName(teamName);
-            //获取该任务对应的标注数据
-            Task task = taskService.findByName(team.getTaskName());
-
-            TaskVO taskVo = new TaskVO(task);
             UserVO userVO = new UserVO(username, tagNum);
 
             model.addAttribute("taskVo", taskVo);
@@ -129,8 +131,6 @@ public class AnnotateController {
             //1为已标状态
             instance.setStatus(1);
             instanceService.save(instance);
-
-
         }
 
         // 取下一个数据

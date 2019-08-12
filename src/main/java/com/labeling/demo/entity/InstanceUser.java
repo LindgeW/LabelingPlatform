@@ -51,4 +51,14 @@ public class InstanceUser {
     public void setTag(String tag) {
         this.tag = tag == null ? null : tag.trim();
     }
+
+    @Override
+    public String toString() {
+        return "InstanceUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", instanceId=" + instanceId +
+                ", tag='" + tag + '\'' +
+                '}';
+    }
 }

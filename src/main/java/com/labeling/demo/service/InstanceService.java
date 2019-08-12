@@ -20,4 +20,6 @@ public interface InstanceService {
     List<Instance> findByTaskName(String taskName);
 
     long count();
+
+    Instance findById(Long instanceId);
 }

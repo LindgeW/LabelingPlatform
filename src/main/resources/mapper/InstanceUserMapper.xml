@@ -22,10 +22,16 @@
     <include refid="Base_Column_List" />
     from tb_instance_user where instanceId = #{instanceid}
   </select>
+  <select id="findByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_instance_user WHERE username = #{username}
+    limit #{pager.offset}, #{pager.pageSize}
+  </select>
   <select id="countByUsername"  parameterType="java.lang.String" resultType="java.lang.Integer">
     SELECT
     COUNT(username)
-    FROM tb_instance_user WHERE username = #{username};
+    FROM tb_instance_user WHERE username = #{username}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
