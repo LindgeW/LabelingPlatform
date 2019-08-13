@@ -3,6 +3,7 @@ package com.labeling.demo.controller;
 import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.InstanceVO;
 import com.labeling.demo.entity.vo.TaskVO;
+import com.labeling.demo.entity.vo.TempoVO;
 import com.labeling.demo.entity.vo.UserVO;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
@@ -11,6 +12,7 @@ import com.labeling.demo.service.TeamService;
 import com.labeling.demo.util.FindMostElm;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,13 +64,20 @@ public class AnnotateController {
 
         //找到该小组分配的任务
         Team team = teamService.findByName(teamName);
+        //将小组信息存入session
+        curSubj.getSession().setAttribute("team", team);
         //获取该任务对应的标注数据
         Task task = taskService.findByName(team.getTaskName());
         TaskVO taskVo = new TaskVO(task);
         curSubj.getSession().setAttribute("myTask", taskVo);
 
+
+
         // 判断当前用户是否已经完成小组任务
         Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
+        //将当前部分用户信息存入session
+        TempoVO tempoVO = new TempoVO(username,teamName,team.getTaskName(),tagNum,task.getCorpussize());
+        curSubj.getSession().setAttribute("tempoVO", tempoVO);
 
         UserVO userVO = new UserVO(username, role, tagNum);
 
@@ -141,6 +150,33 @@ public class AnnotateController {
         Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));
 //        System.out.println(pageData.hasContent());
         if (!pageData.hasContent()){
+
+            Session session = SecurityUtils.getSubject().getSession();
+            TempoVO tempoVO = (TempoVO) session.getAttribute("tempoVO");
+            List<Instance>instanceList = instanceService.findByTaskName(tempoVO.getTaskName());
+            boolean flag = true;
+            for(Instance item:instanceList){
+                if (item.getStatus() == 0)
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag){
+
+                //获取当前队伍信息
+                Session teamSession = SecurityUtils.getSubject().getSession();
+                Team team = (Team) teamSession.getAttribute("team");
+                Session taskSession = SecurityUtils.getSubject().getSession();
+                TaskVO taskVO = (TaskVO) teamSession.getAttribute("myTask");
+                //任务完成将队伍和任务的状态都改变
+                team.setStatus(true);
+                taskVO.setStatus(true);
+                teamService.updateByTeamName(team);
+                taskService.updateByname(taskVO);
+
+            }
+
             return new RespEntity<>(RespStatus.Over, curUser);
         }
         Instance nextInstance = pageData.getContent().get(0);
@@ -149,7 +185,6 @@ public class AnnotateController {
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("curUser", curUser);
         respMap.put("nextInst", nextInst);
-
         return new RespEntity<>(RespStatus.SUCCESS, respMap);
     }
 }

@@ -10,4 +10,6 @@ public interface TeamService {
     List<Team> findAll();
 
     Team findByName(String teamName);
+
+    boolean updateByTeamName(Team team);
 }

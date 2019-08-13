@@ -28,4 +28,6 @@ public interface InstanceUserService {
 
     //查找一条数据被所有用户的标注情况
     List<InstanceUser>findInstanceUserById(Long instanceid);
+
+    List<InstanceUser>findInstanceUserByUsername(String username);
 }

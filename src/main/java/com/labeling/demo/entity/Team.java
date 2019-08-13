@@ -7,28 +7,28 @@ public class Team {
 
     private String taskName;
 
-    private Short memberNum;
+    private String members;
 
     private Boolean status;
 
-    public Team(String teamName, String taskName, Short memberNum) {
+    public Team(String teamName, String taskName,String members) {
         this.teamName = teamName;
         this.taskName = taskName;
-        this.memberNum = memberNum;
+        this.members = members;
     }
 
-    public Team(Integer teamId, String teamName, String taskName, Short memberNum) {
+    public Team(Integer teamId, String teamName, String taskName, String members) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.taskName = taskName;
-        this.memberNum = memberNum;
+        this.members = members;
     }
 
-    public Team(Integer teamId, String teamName, String taskName, Short memberNum, Boolean status) {
+    public Team(Integer teamId, String teamName, String taskName, String members, Boolean status) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.taskName = taskName;
-        this.memberNum = memberNum;
+        this.members = members;
         this.status = status;
     }
 
@@ -60,12 +60,12 @@ public class Team {
         this.taskName = taskName == null ? null : taskName.trim();
     }
 
-    public Short getMemberNum() {
-        return memberNum;
+    public String getMembers() {
+        return members;
     }
 
-    public void setMemberNum(Short memberNum) {
-        this.memberNum = memberNum;
+    public void setMembers(String members) {
+        this.members = members;
     }
 
     public Boolean getStatus() {

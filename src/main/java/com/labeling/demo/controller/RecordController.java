@@ -6,9 +6,11 @@ import com.labeling.demo.entity.RespStatus;
 import com.labeling.demo.entity.User;
 import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.entity.vo.TaskVO;
+import com.labeling.demo.entity.vo.TempoVO;
 import com.labeling.demo.entity.vo.UserVO;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
+import com.labeling.demo.util.DataTransfer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -40,7 +42,28 @@ public class RecordController {
     @RequestMapping("/history")
     public String history(Model model){
         User user = (User)SecurityUtils.getSubject().getPrincipal();
+        String username = user.getUsername();
+        //获取当前用户的任务信息
+        Session session = SecurityUtils.getSubject().getSession();
+        TempoVO tempoVO = (TempoVO) session.getAttribute("tempoVO");
+
+        //计算用户正确率
+        Integer correcNum = 0;
+        List<InstanceUser>list = instanceUserService.findInstanceUserByUsername(username);
+        for (InstanceUser item : list)
+        {
+            String finalTag = instanceService.findById(item.getInstanceId()).getTag();
+            if (item.getTag().equals(finalTag))
+            {
+                correcNum++;
+            }
+        }
+        Integer totalNum = tempoVO.getCorpusSize();
+        DataTransfer dataTransfer = new DataTransfer();
+        String correctRate = dataTransfer.dataTrans(correcNum,totalNum);
         model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
+        model.addAttribute("correctRate",correctRate);
+        model.addAttribute("tempoVO",tempoVO);
         return "history";
     }
 

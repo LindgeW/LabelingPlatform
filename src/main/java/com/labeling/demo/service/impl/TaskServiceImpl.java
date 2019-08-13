@@ -33,4 +33,11 @@ public class TaskServiceImpl implements TaskService {
     public Task findByName(String taskName) {
         return taskMapper.selectByPrimaryKey(taskName);
     }
+
+    @Override
+    public int updateByname(Task task) {
+        return taskMapper.updateByPrimaryKey(task);
+    }
+
+
 }

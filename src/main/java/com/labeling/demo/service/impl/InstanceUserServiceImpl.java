@@ -75,5 +75,10 @@ public class InstanceUserServiceImpl implements InstanceUserService {
         return this.instanceuserMapper.findInstanceUserById(instanceid);
     }
 
+    @Override
+    public List<InstanceUser> findInstanceUserByUsername(String username) {
+        return this.instanceuserMapper.findByUserName(username);
+    }
+
 
 }

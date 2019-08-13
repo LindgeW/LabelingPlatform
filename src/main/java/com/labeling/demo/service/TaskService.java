@@ -10,4 +10,6 @@ public interface TaskService {
     List<Task> findAll();
 
     Task findByName(String taskName);
+
+    int updateByname(Task task);
 }

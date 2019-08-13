@@ -34,4 +34,11 @@ public class TeamServiceImpl implements TeamService {
     public Team findByName(String teamName) {
         return teamMapper.findByName(teamName);
     }
+
+    @Override
+    public boolean updateByTeamName(Team team) {
+        return teamMapper.updateByTeamName(team);
+    }
+
+
 }

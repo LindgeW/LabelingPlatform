@@ -219,6 +219,31 @@
     </header>
 
     <div class="container-fluid" style="min-height:800px;">
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>总任务量</th>
+                    <th>已完成任务量</th>
+                    <th>正确率</th>
+                    <th>所在任务</th>
+                    <th>所在小组</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text = "${tempoVO.corpusSize}"></td>
+                    <td th:text = "${tempoVO.tagNum}"></td>
+                    <td  th:text="${correctRate}"></td>
+                    <td th:text="${tempoVO.taskName}"></td>
+                    <td th:text="${tempoVO.teamName}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
         <div id="dataTable" class="table-responsive">
             <!--<table class="table" data-mobile-responsive="true">-->
             <!--</table>-->

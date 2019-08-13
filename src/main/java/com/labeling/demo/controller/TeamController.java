@@ -64,7 +64,7 @@ public class TeamController {
         }
 
         // 保存团队信息
-        teamService.save(new Team(teamName, taskName, (short)memberLst.length));
+        teamService.save(new Team(teamName, taskName, members));
 
         model.addAttribute("isBuilt", true);
         return "forward:/build";

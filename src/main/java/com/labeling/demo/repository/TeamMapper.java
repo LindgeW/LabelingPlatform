@@ -22,6 +22,9 @@ public interface TeamMapper {
 
     int updateByPrimaryKey(Team record);
 
+    boolean updateByTeamName(Team record);
+
     @Select("select * from tb_team")
     List<Team> findAll();
+
 }
