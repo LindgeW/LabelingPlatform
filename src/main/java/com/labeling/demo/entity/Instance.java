@@ -1,19 +1,21 @@
 package com.labeling.demo.entity;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document(collection = "corpus")
 public class Instance {  //不建议自己设主键，MongoDB自动生成一个唯一主键
-    @Id
-    private String id;
-    private Long instanceId;
-    private String taskName; //隶属于哪个任务
-//    @Indexed  提高检索速度
+    private String id;  // MongoDB自带ObjectId主键
+    @Indexed  //提高检索速度
+    private Long instanceId;    //自定义主键
+    private String taskName; //属于哪个任务
     private String item;   //一个数据项
-    private String tag;     //标签值
-    private String tagMine; //“地雷”
+    private String tag;     //标签值 - 用户标签
+    private String tagMine; //“地雷”- 专家标签
+    private List<String> tagModel;  //模型预测标签
+
     private Integer tagNum;  //被标的次数，只有被标了指定次数才算被标
     private Integer status; //状态：无效(-1)、未标(0)、已标(1)
 

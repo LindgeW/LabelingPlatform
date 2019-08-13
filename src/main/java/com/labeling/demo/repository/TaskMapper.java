@@ -2,6 +2,7 @@ package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -15,9 +16,10 @@ public interface TaskMapper {
 
     Task selectByPrimaryKey(String taskname);
 
-    List<Task> findAll();
-
     int updateByPrimaryKeySelective(Task record);
 
     int updateByPrimaryKey(Task record);
+
+    @Select("select * from tb_task")
+    List<Task> findAll();
 }

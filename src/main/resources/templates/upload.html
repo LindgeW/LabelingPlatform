@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -28,6 +28,10 @@
             initUpload('/upload');
         });
 
+        function getFileType(path) {
+            return path.substring(path.lastIndexOf('.')+1, path.length).toLowerCase();
+        }
+
         function initUpload(url){
             $("#uploadFile").fileinput({  //初始化上传控件
                 language: 'zh',    // 中文显示
@@ -45,7 +49,7 @@
 //                uploadLabel: '上传附件',    // 上传按钮内容
 //                browseLabel: '选择附件',    // 浏览按钮内容
                 hideThumbnailContent: true, // 是否隐藏文件内容
-                allowedFileExtensions: ['txt', 'csv', 'zip'],
+                allowedFileExtensions: ['txt', 'csv', 'zip', 'json'],
                 // textEncoding: 'GBK',
                 maxFileCount: 1,
                 minFileCount: 1,
@@ -68,6 +72,13 @@
                     message: "文件上传失败！\n\n"+msg
                 });
             }).on("fileuploaded", function(event, data, previewId, index) {
+
+            }).on("filebatchselected", function(event, files) {
+                // 上传json格式化文件，则不需要输入标签集
+                var fileName = files[0].name;
+                if(getFileType(fileName) === 'json'){
+                    $("#tags").attr("disabled", true);
+                }
             });
         }
 
@@ -80,20 +91,23 @@
                 return false;
             }
 
-            if (tags === ""){
-                alert('标签值不能为空！');
-                return false;
+            if (getFileType($("#uploadFile").val()) !== 'json'){
+                if (tags === ""){
+                    alert('标签值不能为空！');
+                    return false;
+                }
+
+                var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
+                var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
+                if (eng_reg.test(tags) || ch_reg.test(tags)){
+                    return true
+                }else {
+                    alert('标签值格式有误！');
+                    return false;
+                }
             }
 
-            var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
-            var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
-            if (eng_reg.test(tags) || ch_reg.test(tags)){
-                return true
-            }else {
-                alert('标签值格式有误！');
-                return false;
-            }
-
+            return true;
         }
 
         function submitAll() {
@@ -120,7 +134,11 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <span style="color: #ff0000"><strong>* 请选择上传数据集</strong></span>
+            <span style="color: #ff0000">
+                <strong>
+                    注：管理员标注请上传原始文件(txt/csv/zip)，普通用户标注请上传json格式化文件！
+                </strong>
+            </span>
         </div>
         <div class="card-body">
             <div id="upload_data">

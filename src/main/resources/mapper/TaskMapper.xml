@@ -7,16 +7,12 @@
       <arg column="datatype" javaType="java.lang.Short" jdbcType="SMALLINT" />
       <arg column="corpussize" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tags" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    taskname, datatype, corpussize, tags
+    taskname, datatype, corpussize, tags, status
   </sql>
-  <select id="findAll" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from tb_task
-  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -29,9 +25,9 @@
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task (taskname, datatype, corpussize, 
-      tags)
+      tags, status)
     values (#{taskname,jdbcType=VARCHAR}, #{datatype,jdbcType=SMALLINT}, #{corpussize,jdbcType=INTEGER}, 
-      #{tags,jdbcType=VARCHAR})
+      #{tags,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task
@@ -48,6 +44,9 @@
       <if test="tags != null">
         tags,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="taskname != null">
@@ -61,6 +60,9 @@
       </if>
       <if test="tags != null">
         #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -76,6 +78,9 @@
       <if test="tags != null">
         tags = #{tags,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
     </set>
     where taskname = #{taskname,jdbcType=VARCHAR}
   </update>
@@ -83,7 +88,8 @@
     update tb_task
     set datatype = #{datatype,jdbcType=SMALLINT},
       corpussize = #{corpussize,jdbcType=INTEGER},
-      tags = #{tags,jdbcType=VARCHAR}
+      tags = #{tags,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT}
     where taskname = #{taskname,jdbcType=VARCHAR}
   </update>
 </mapper>

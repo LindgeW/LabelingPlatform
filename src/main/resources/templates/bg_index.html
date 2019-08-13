@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>后台主页</title>
 
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container" style="min-height: 800px;">
@@ -14,6 +17,29 @@
                 <li>为了保证数据标注的正确性和规范性，管理员需要按要求管理后台</li>
                 <li>每位标注员只能参与一个标注任务！</li>
             </ol>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>用户名</th>
+                        <th>所属团队</th>
+                        <th>标注任务</th>
+                        <th>工作进度(完成量/总量)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tempo: ${tempos}">
+                        <td th:text="${tempo.userName}"></td>
+                        <td th:text="${tempo.teamName}"></td>
+                        <td th:text="${tempo.taskName}"></td>
+                        <td th:text="${tempo.completion}">
+                            <!--<span th:text="${tempo.tagNum}"></span>/<span th:text="${tempo.corpusSize}"></span>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

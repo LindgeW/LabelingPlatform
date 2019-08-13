@@ -184,7 +184,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                     <ul class="navbar-nav">
                         <li class="navbar-text">
-                            <i class="fa fa-user-circle"></i> <span th:text="${username}" id="username"></span>
+                            <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>
                         </li>
                         <!--<li class="nav-item">-->
                         <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
@@ -197,6 +197,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item" th:if="${userVo.role} == admin">
+                            <a class="nav-link" href="/bg">后台管理</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -217,8 +220,8 @@
 
     <div class="container-fluid" style="min-height:800px;">
         <div id="dataTable" class="table-responsive">
-            <table class="table" data-mobile-responsive="true">
-            </table>
+            <!--<table class="table" data-mobile-responsive="true">-->
+            <!--</table>-->
         </div>
     </div>
 </body>

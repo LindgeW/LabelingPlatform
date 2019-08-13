@@ -39,7 +39,16 @@ public class TeamController {
         model.addAttribute("tasks", tasks);
         model.addAttribute("users", users);
 
-        return "team";
+        return "build_team";
+    }
+
+    @RequestMapping("/browse")
+    @RequiresRoles("admin")
+    public String browseTeam(Model model){
+        List<Team> teamLst = teamService.findAll();
+
+        model.addAttribute("teams", teamLst);
+        return "browse_team";
     }
 
     @PostMapping("/build_team")

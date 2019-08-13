@@ -1,8 +1,6 @@
 package com.labeling.demo.entity;
 
 public class Task {
-//    private Integer taskId;
-
     private String taskname;
 
     private Short datatype;
@@ -11,11 +9,21 @@ public class Task {
 
     private String tags;
 
+    private Boolean status;
+
     public Task(String taskname, Short datatype, Integer corpussize, String tags) {
         this.taskname = taskname;
         this.datatype = datatype;
         this.corpussize = corpussize;
         this.tags = tags;
+    }
+
+    public Task(String taskname, Short datatype, Integer corpussize, String tags, Boolean status) {
+        this.taskname = taskname;
+        this.datatype = datatype;
+        this.corpussize = corpussize;
+        this.tags = tags;
+        this.status = status;
     }
 
     public Task() {
@@ -52,5 +60,13 @@ public class Task {
 
     public void setTags(String tags) {
         this.tags = tags == null ? null : tags.trim();
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

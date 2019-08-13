@@ -40,8 +40,7 @@ public class RecordController {
     @RequestMapping("/history")
     public String history(Model model){
         User user = (User)SecurityUtils.getSubject().getPrincipal();
-        String username = user.getUsername();
-        model.addAttribute("username", username);
+        model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
         return "history";
     }
 
@@ -62,7 +61,6 @@ public class RecordController {
 
         Integer totalNum;
         List<InstanceUserVO> instanceUserVOs = new ArrayList<>();
-
         if(StringUtils.isBlank(search)){
             Pageable pageable = PageRequest.of(pageNum, limit);
             totalNum = instanceUserService.countByUsername(username);

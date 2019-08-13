@@ -9,6 +9,8 @@ public class Team {
 
     private Short memberNum;
 
+    private Boolean status;
+
     public Team(String teamName, String taskName, Short memberNum) {
         this.teamName = teamName;
         this.taskName = taskName;
@@ -20,6 +22,14 @@ public class Team {
         this.teamName = teamName;
         this.taskName = taskName;
         this.memberNum = memberNum;
+    }
+
+    public Team(Integer teamId, String teamName, String taskName, Short memberNum, Boolean status) {
+        this.teamId = teamId;
+        this.teamName = teamName;
+        this.taskName = taskName;
+        this.memberNum = memberNum;
+        this.status = status;
     }
 
     public Team() {
@@ -56,5 +66,13 @@ public class Team {
 
     public void setMemberNum(Short memberNum) {
         this.memberNum = memberNum;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

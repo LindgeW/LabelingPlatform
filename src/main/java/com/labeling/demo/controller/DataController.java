@@ -1,5 +1,8 @@
 package com.labeling.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.RespEntity;
 import com.labeling.demo.entity.RespStatus;
@@ -7,20 +10,24 @@ import com.labeling.demo.entity.Task;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.TaskService;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jws.WebParam;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -48,6 +55,22 @@ public class DataController {
         return "upload";
     }
 
+    @GetMapping("/export")
+    @RequiresRoles("admin")
+    public String toExport(Model model){
+        List<Task> tasks = taskService.findAll();
+        model.addAttribute("tasks", tasks);
+        return "export";
+    }
+
+    @PostMapping("/export")
+    @ResponseBody
+    @RequiresRoles("admin")
+    public void export(){
+
+    }
+
+
     @PostMapping("/upload")
     @ResponseBody
     @RequiresRoles("admin")
@@ -63,6 +86,7 @@ public class DataController {
         System.out.println(multiFile.getName());
         System.out.println(multiFile.getContentType());
         System.out.println(multiFile.getSize());
+        System.out.println(tags);
 
         Set<String> instSet = new HashSet<>(0);
         if (multiFile.getOriginalFilename().endsWith("zip")) {
@@ -75,7 +99,6 @@ public class DataController {
             }
 
             FileUtils.cleanDirectory(tmpDir);
-
             File tmpFile = new File(tmpDir.getAbsolutePath(), multiFile.getOriginalFilename());
             multiFile.transferTo(tmpFile);
 
@@ -114,13 +137,23 @@ public class DataController {
                     instSet.add(line);
                 }
             }
+        } else if(multiFile.getOriginalFilename().endsWith("json")){
+            String jsonStr = IOUtils.toString(multiFile.getInputStream());
+            JSONArray jsonArray = JSON.parseArray(jsonStr);
+
+            for (int i = 0, len=jsonArray.size(); i < len; i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                System.out.println(jsonObject.getString("raw"));
+                System.out.println(jsonObject.getString("expert"));
+                System.out.println(StringUtils.join(jsonObject.getJSONArray("model"), ";"));
+//                System.out.println(StringUtils.join(jsonObject.get("model"), ";"));
+            }
         }
 
         // 分批次将数据保存到MongoDB中
         if (!instSet.isEmpty()){
             ArrayList<Instance> insts = new ArrayList<>(BATCHSIZE);
             for(String item: instSet){
-
                 insts.add(new Instance(counter, taskName, item, "", "", 0, 0));
                 counter ++;
                 if (insts.size() == BATCHSIZE){
@@ -131,9 +164,10 @@ public class DataController {
             if (!insts.isEmpty())
                 instanceService.saveAll(insts);
 
-            taskService.save(new Task(taskName, dataType, instSet.size(), tags));
+            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false));
         }
 
         return new RespEntity(RespStatus.SUCCESS);
     }
+
 }

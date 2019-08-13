@@ -26,49 +26,51 @@
 </head>
 
 <body style="background: #ededed">
-<header class="header">
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="/img/logo.png" alt="LOGO" style="width:50px;">
-                <span class="navbar-text">天大数据标注平台</span>
-            </a>
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"
-                    aria-expanded="false">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="navbar-text">
-                        <i class="fa fa-user-circle"></i> <span th:text="${username}"></span>
-                    </li>
-                    <!--<li class="nav-item">-->
-                    <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
-                    <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
-                    <!--<span id="fullscreen-button">全屏</span>-->
-                    <!--</a>-->
-                    <!--</li>-->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/annotate">我的任务</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/history">标注统计</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            设置
-                        </a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
-                            <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
-                        </div>
-                    </li>
-                </ul>
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="navbar-text">
+                            <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}"></span>
+                        </li>
+                        <!--<li class="nav-item">-->
+                            <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                                <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                                <!--<span id="fullscreen-button">全屏</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item" th:if="${userVo.role} == admin">
+                            <a class="nav-link" href="/bg">后台管理</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
     </nav>
 </header>
 

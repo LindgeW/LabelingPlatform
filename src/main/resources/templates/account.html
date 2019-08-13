@@ -102,7 +102,7 @@
     </script>
 </head>
 
-<body>
+<body style="background: #ededed">
     <header class="header">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container">
@@ -117,7 +117,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                     <ul class="navbar-nav">
                         <li class="navbar-text">
-                            <i class="fa fa-user-circle"></i> <span th:text="${username}"></span>
+                            <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}"></span>
                         </li>
                         <!--<li class="nav-item">-->
                         <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
@@ -127,6 +127,12 @@
                         <!--</li>-->
                         <li class="nav-item">
                             <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item" th:if="${userVo.role} == admin">
+                            <a class="nav-link" href="/bg">后台管理</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">

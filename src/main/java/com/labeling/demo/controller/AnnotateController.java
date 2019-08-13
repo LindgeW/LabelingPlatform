@@ -44,48 +44,50 @@ public class AnnotateController {
     public String toAnnotate(Model model){
         Subject curSubj = SecurityUtils.getSubject();
 
-        if (curSubj.hasRole("admin")){
-            return "redirect:/bg";
-        } else {
-            User curUser = (User) curSubj.getPrincipal();
-            String username = curUser.getUsername();
+//        if (curSubj.hasRole("admin")){
+//            return "redirect:/bg";
+//        }
 
-            //判断当前用户是否加入小组（没有，则返回空页面）
-            String teamName = curUser.getTeamName();
-            if (StringUtils.isBlank(teamName)){
-                model.addAttribute("username", username);
-                return "no_task";
-            }
+        User curUser = (User) curSubj.getPrincipal();
+        String username = curUser.getUsername();
+        String role = curUser.getRole();
+        System.out.println("当前用户："+curUser);
 
-            //找到该小组分配的任务
-            Team team = teamService.findByName(teamName);
-            //获取该任务对应的标注数据
-            Task task = taskService.findByName(team.getTaskName());
-            TaskVO taskVo = new TaskVO(task);
-            curSubj.getSession().setAttribute("myTask", taskVo);
+        //判断当前用户是否加入小组（没有，则返回空页面）
+        String teamName = curUser.getTeamName();
+        if (StringUtils.isBlank(teamName)){
+            model.addAttribute("userVo", new UserVO(username, role));
+            return "no_task";
+        }
 
-            // 判断当前用户是否已经完成小组任务
-            Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
-            Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
+        //找到该小组分配的任务
+        Team team = teamService.findByName(teamName);
+        //获取该任务对应的标注数据
+        Task task = taskService.findByName(team.getTaskName());
+        TaskVO taskVo = new TaskVO(task);
+        curSubj.getSession().setAttribute("myTask", taskVo);
+
+        // 判断当前用户是否已经完成小组任务
+        Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
+
+        UserVO userVO = new UserVO(username, role, tagNum);
+
+        Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
 //            System.out.println(pageData.isLast());
 //            System.out.println(pageData.hasContent());
 //            System.out.println(pageData.hasNext());
-            if (!pageData.hasContent()){
-                model.addAttribute("username", username);
-                return "finished";
-            }
-
-            Instance firstInstance = pageData.getContent().get(0);
-            InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), firstInstance.getItem(), firstInstance.getTag());
-
-            UserVO userVO = new UserVO(username, tagNum);
-
-            model.addAttribute("taskVo", taskVo);
+        if (!pageData.hasContent()){
             model.addAttribute("userVo", userVO);
-            model.addAttribute("instanceVo", instanceVO);
-
-            return "annotate";
+            return "finished";
         }
+
+        Instance firstInstance = pageData.getContent().get(0);
+        InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), firstInstance.getItem(), firstInstance.getTag());
+
+        model.addAttribute("userVo", userVO);
+        model.addAttribute("taskVo", taskVo);
+        model.addAttribute("instanceVo", instanceVO);
+        return "annotate";
     }
 
     @PostMapping("/annotate")
@@ -107,7 +109,6 @@ public class AnnotateController {
             instanceUserService.saveBtach(batch_list);
 
         }*/
-
 
         Instance instance = instanceService.findInstById(instanceVO.getInstanceId());
 
@@ -135,7 +136,7 @@ public class AnnotateController {
 
         // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
-        UserVO curUser = new UserVO(userVO.getUsername(), tagNum);
+        UserVO curUser = new UserVO(userVO.getUsername(), userVO.getRole(), tagNum);
 
         Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));
 //        System.out.println(pageData.hasContent());

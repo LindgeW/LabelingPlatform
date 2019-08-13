@@ -1,0 +1,20 @@
+[
+  {
+    "raw": "I come from China!",
+    "default": "pos",
+    "expert": "gen",
+    "model": ""
+  },
+  {
+    "raw": "I like eating apple!",
+    "default": "pos",
+    "expert": "pos",
+    "model": ["pos","neg"]
+  },
+  {
+    "raw": "I hate eating apple!",
+    "default": "gen",
+    "expert": "neg",
+    "model": ["gen","pos", "neg"]
+  }
+]

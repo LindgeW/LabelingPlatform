@@ -1,9 +1,13 @@
 package com.labeling.demo.controller;
 
-import com.labeling.demo.entity.RespEntity;
-import com.labeling.demo.entity.RespStatus;
-import com.labeling.demo.entity.User;
+import com.labeling.demo.entity.*;
+import com.labeling.demo.entity.vo.TempoVO;
+import com.labeling.demo.entity.vo.UserVO;
+import com.labeling.demo.service.InstanceUserService;
+import com.labeling.demo.service.TaskService;
+import com.labeling.demo.service.TeamService;
 import com.labeling.demo.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -15,18 +19,46 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class UserController {
-    private final UserService userService;
+    private UserService userService;
+    private TaskService taskService;
+    private TeamService teamService;
+    private InstanceUserService instanceUserService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TaskService taskService, TeamService teamService, InstanceUserService instanceUserService) {
         this.userService = userService;
+        this.taskService = taskService;
+        this.teamService = teamService;
+        this.instanceUserService = instanceUserService;
     }
 
     @GetMapping("/bg_index")
     @RequiresRoles("admin")
-    public  String bgIndex(){
+    public  String bgIndex(Model model){
+        // 哪个任务，哪个团队中的哪个成员的工作进展
+        List<User> allUsers = userService.findAll();
+
+        List<TempoVO> tempos = new ArrayList<>();  //保存当前正在进行的用户进度信息
+        for (User user: allUsers) {
+            String username = user.getUsername();
+            String teamName = user.getTeamName();
+            if (StringUtils.isNotBlank(teamName)){
+                Team team = teamService.findByName(teamName);
+                String taskName = team.getTaskName();
+                Task task = taskService.findByName(taskName);
+                Integer tagNum = instanceUserService.countByUsername(username);
+                Integer corpusSize = task.getCorpussize();
+                tempos.add(new TempoVO(username, teamName, taskName, tagNum, corpusSize));
+            }
+        }
+
+        model.addAttribute("tempos", tempos);
+
         return "bg_index";
     }
 
@@ -34,16 +66,15 @@ public class UserController {
     @RequiresRoles("admin")
 //    @RequiresPermissions("login:annotate:bg")
     public String background(Model model){
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        System.out.println(user);
-        model.addAttribute("username", user.getUsername());
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        model.addAttribute("username", curUser.getUsername());
         return "bg";
     }
 
     @GetMapping("/account")
     public String account(Model model){
         User user = (User)SecurityUtils.getSubject().getPrincipal();
-        model.addAttribute("username", user.getUsername());
+        model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
         return "account";
     }
 

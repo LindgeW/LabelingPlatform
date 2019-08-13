@@ -2,6 +2,9 @@ package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.Team;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface TeamMapper {
@@ -18,4 +21,7 @@ public interface TeamMapper {
     int updateByPrimaryKeySelective(Team record);
 
     int updateByPrimaryKey(Team record);
+
+    @Select("select * from tb_team")
+    List<Team> findAll();
 }
