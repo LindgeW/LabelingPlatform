@@ -8,39 +8,188 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/echarts/echarts.js"></script>
 </head>
 <body>
-    <div class="container" style="min-height: 800px;">
-        <h4>管理员须知</h4>
-        <div>
-            <ol>
-                <li>为了保证数据标注的正确性和规范性，管理员需要按要求管理后台</li>
-                <li>每位标注员只能参与一个标注任务！</li>
-            </ol>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>标注员</th>
-                        <th>所属团队</th>
-                        <th>标注任务</th>
-                        <th>工作进度(完成量/总量)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="tempo: ${tempos}">
-                        <td th:text="${tempo.userName}"></td>
-                        <td th:text="${tempo.teamName}"></td>
-                        <td th:text="${tempo.taskName}"></td>
-                        <td>
-                            <span th:text="${#numbers.formatDecimal(100.0 * tempo.tagNum / tempo.corpusSize, 1, 2)}">0</span>%
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="container" style="min-height: 800px;">
+    <h4>管理员须知</h4>
+    <div>
+        <ol>
+            <li>为了保证数据标注的正确性和规范性，管理员需要按要求管理后台</li>
+            <li>每个团队只参与一个标注任务！</li>
+            <li>每位标注员属于一个团队！</li>
+        </ol>
     </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>标注员</th>
+                <th>所属团队</th>
+                <th>标注任务</th>
+                <th>工作进度(完成量/总量)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tempo: ${tempos}">
+                <td th:text="${tempo.userName}"></td>
+                <td th:text="${tempo.teamName}"></td>
+                <td th:text="${tempo.taskName}"></td>
+                <td>
+                    <span th:text="${#numbers.formatDecimal(100.0 * tempo.tagNum / tempo.corpusSize, 1, 2)}">0</span>%
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="main" style="width: 600px;height:400px;left: 20%"></div>
+    <script type="text/javascript">
+        $(function () {
+            var myChart = echarts.init(document.getElementById('main'));
+            $.ajax({
+                url: "/usersInfo",
+                type: "post",
+                success: function (data) {
+                    datar = usersData(data);
+                    var option = {
+                            // backgroundColor: "#f0f0f0",
+                            color: ['#3398DB'],
+                            tooltip: {
+                                show: true
+                            },
+                            grid: {
+                                left: '0%',
+                                right: '0%',
+                                bottom: '5%',
+                                top: '7%',
+                                height: '85%',
+                                containLabel: true,
+                                z: 22
+                            },
+                            title: {
+                                text: datar.teamName + datar.taskName + "完成比",
+                                textStyle: {
+                                    color: "#000000",
+                                    fontSize: 12
+                                }
+                            },
+                            xAxis: [{
+                                type: 'category',
+                                gridIndex: 0,
+                                data:
+                                datar.nameList,
+                                axisTick:
+                                    {
+                                        alignWithLabel: true
+                                    }
+                                ,
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#000000'
+                                    }
+                                }
+                                ,
+                                axisLabel: {
+                                    show: true,
+                                    color:
+                                        'rgb(170,170,170)',
+                                    fontSize:
+                                        16
+                                }
+                            }],
+                            yAxis: [{
+                                type: 'value',
+
+                                gridIndex: 0,
+                                splitLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                max: 1,
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#000000'
+                                    }
+                                },
+                                axisLabel: {
+                                    color: 'rgb(170,170,170)',
+                                    formatter: '{value} '
+                                }
+                            }
+                            ],
+                            series:
+                                [{
+                                    name: '完成比',
+                                    type: 'bar',
+                                    barWidth: '30%',
+                                    xAxisIndex: 0,
+                                    yAxisIndex: 0,
+                                    itemStyle: {
+                                        normal: {
+                                            // barBorderRadius: 30,
+                                            color: new echarts.graphic.LinearGradient(
+                                                0, 0, 0, 1, [{
+                                                    offset: 0,
+                                                    color: '#0253bf'
+                                                },
+                                                    {
+                                                        offset: 0.5,
+                                                        color: '#027eff'
+                                                    },
+                                                    {
+                                                        offset: 1,
+                                                        color: '#0284ff'
+                                                    }
+                                                ]
+                                            )
+                                        }
+                                    },
+                                    data: datar.tagNumList,
+                                    zlevel: 11,
+                                    markLine: {
+                                        symbol: 'none',
+                                        data: [{
+                                            name: "目标值",
+                                            yAxis: 1,
+                                            lineStyle: {
+                                                color: "#ee2e00"
+                                            }
+                                        }]
+                                    }
+
+                                }
+                                ]
+                        }
+                    ;
+                    myChart.setOption(option);
+                }
+            });
+
+            function usersData(datar) {
+                var nameList = [];
+                var tagNumList = [];
+                var taskName = datar[0]["taskName"];
+                var teamName = datar[0]["teamName"];
+                for (var item in datar) {
+                    nameList.push(datar[item]["userName"])
+                    tagNumList.push((datar[item]["tagNum"] / datar[item]["corpusSize"]).toFixed(2))
+                }
+                return {
+                    nameList: nameList,
+                    tagNumList: tagNumList,
+                    taskName: taskName,
+                    teamName: teamName
+                };
+            };
+
+        });
+
+
+    </script>
+</div>
 </body>
 </html>
