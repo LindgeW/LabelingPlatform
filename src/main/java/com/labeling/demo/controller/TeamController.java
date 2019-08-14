@@ -56,17 +56,18 @@ public class TeamController {
     public String buildTeam(@RequestParam("task") String taskName,
                             @RequestParam("teamName") String teamName,
                             @RequestParam("members") String members, Model model){
+        // 保存团队信息
+        Boolean isBuilt = teamService.save(new Team(teamName, taskName, members));
 
-        String[] memberLst = StringUtils.split(members, ";");
-        // 修改用户状态
-        for (String m: memberLst) {
-            userService.updateUser(new User(m, teamName));
+        if(isBuilt){
+            String[] memberLst = StringUtils.split(members, ";");
+            // 修改用户状态
+            for (String m: memberLst) {
+                userService.updateUser(new User(m, teamName));
+            }
         }
 
-        // 保存团队信息
-        teamService.save(new Team(teamName, taskName, members));
-
-        model.addAttribute("isBuilt", true);
+        model.addAttribute("isBuilt", isBuilt);
         return "forward:/build";
     }
 

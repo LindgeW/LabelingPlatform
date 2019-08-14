@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService {
         return isOk;
     }
 
+    @Override
+    public List<User> findByTeam(String teamName) {
+        return userMapper.findAllByTeam(teamName);
+    }
+
 }

@@ -33,14 +33,14 @@
                     clearTimeout(timeIframe);
                 }
 
-                timeIframe = setTimeout(GetIframeStatus, 100);
+                timeIframe = setTimeout(GetIframeStatus, 300);
             };
 
             function GetIframeStatus() {
                 var iframe = document.getElementById("iframe");
                 var iframeWindow = iframe.contentWindow;
                 //内容是否加载完
-                if (iframeWindow.document.readyState == "complete") {
+                if (iframeWindow.document.readyState === "complete") {
                     var iframeHeight;
                     //获取Iframe的内容实际高度
 //                    iframeHeight = iframeWindow.document.documentElement.scrollHeight;
@@ -101,7 +101,7 @@
 							<a class="side-menu__item" href="/bg_index" target="right"><i class="side-menu__icon fa fa-home"></i><span class="side-menu__label">首页</span></a>
 						</li>
 						<li>
-							<a class="side-menu__item" href="/upload" target="right"><i class="side-menu__icon fa fa-comment"></i><span class="side-menu__label">上传数据</span></a>
+							<a class="side-menu__item" href="/upload" target="right"><i class="side-menu__icon fa fa-upload"></i><span class="side-menu__label">上传数据</span></a>
 						</li>
 						<!--<li class="slide">-->
 							<!--<a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon fa fa-server"></i><span class="side-menu__label">标注设置</span><i class="angle fa fa-angle-right"></i></a>-->

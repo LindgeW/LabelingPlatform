@@ -2,6 +2,7 @@ package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    @Select("select * from tb_user where teamName = #{teamName}")
+    List<User> findAllByTeam(String teamName);
 }

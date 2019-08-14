@@ -23,7 +23,7 @@
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th>用户名</th>
+                        <th>标注员</th>
                         <th>所属团队</th>
                         <th>标注任务</th>
                         <th>工作进度(完成量/总量)</th>
@@ -34,8 +34,8 @@
                         <td th:text="${tempo.userName}"></td>
                         <td th:text="${tempo.teamName}"></td>
                         <td th:text="${tempo.taskName}"></td>
-                        <td th:text="${tempo.completion}">
-                            <!--<span th:text="${tempo.tagNum}"></span>/<span th:text="${tempo.corpusSize}"></span>-->
+                        <td>
+                            <span th:text="${#numbers.formatDecimal(100.0 * tempo.tagNum / tempo.corpusSize, 1, 2)}">0</span>%
                         </td>
                     </tr>
                 </tbody>

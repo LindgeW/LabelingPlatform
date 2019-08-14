@@ -1,12 +1,18 @@
 package com.labeling.demo.entity.vo;
 
 public class InstanceVO {
-    private Long instanceId;       // 数据编号
+    private Long instanceId;    // 数据编号
     private String item;  //数据项
-    private String tag;    //标签值
+    private String tag;    //用户标签
 
     public InstanceVO() {
         super();
+    }
+
+
+    public InstanceVO(Long instanceId, String item) {
+        this.instanceId = instanceId;
+        this.item = item;
     }
 
     public InstanceVO(Long instanceId, String item, String tag) {

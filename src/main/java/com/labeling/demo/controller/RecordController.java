@@ -14,6 +14,7 @@ import com.labeling.demo.util.DataTransfer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,28 +42,31 @@ public class RecordController {
 
     @RequestMapping("/history")
     public String history(Model model){
-        User user = (User)SecurityUtils.getSubject().getPrincipal();
-        String username = user.getUsername();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User)subject.getPrincipal();
+
         //获取当前用户的任务信息
-        Session session = SecurityUtils.getSubject().getSession();
+        Session session = subject.getSession();
         TempoVO tempoVO = (TempoVO) session.getAttribute("tempoVO");
 
         //计算用户正确率
-        Integer correcNum = 0;
-        List<InstanceUser>list = instanceUserService.findInstanceUserByUsername(username);
-        for (InstanceUser item : list)
-        {
-            String finalTag = instanceService.findById(item.getInstanceId()).getTag();
-            if (item.getTag().equals(finalTag))
-            {
-                correcNum++;
-            }
-        }
-        Integer totalNum = tempoVO.getCorpusSize();
-        DataTransfer dataTransfer = new DataTransfer();
-        String correctRate = dataTransfer.dataTrans(correcNum,totalNum);
+//        String username = user.getUsername();
+//        Integer correcNum = 0;
+//        List<InstanceUser>list = instanceUserService.findInstanceUserByUsername(username);
+//        for (InstanceUser item : list)
+//        {
+//            String finalTag = instanceService.findById(item.getInstanceId()).getTag();
+//            if (item.getTag().equals(finalTag))
+//            {
+//                correcNum++;
+//            }
+//        }
+
+//        Integer totalNum = tempoVO.getCorpusSize();
+//        DataTransfer dataTransfer = new DataTransfer();
+//        String correctRate = dataTransfer.dataTrans(correcNum,totalNum);
+//        model.addAttribute("correctRate",correctRate);
         model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
-        model.addAttribute("correctRate",correctRate);
         model.addAttribute("tempoVO",tempoVO);
         return "history";
     }

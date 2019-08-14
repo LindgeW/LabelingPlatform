@@ -8,6 +8,11 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
 
+    <style>
+        .adminClass{
+            color: #ff473d;
+        }
+    </style>
     <script>
         var memberLst = new Array(0);
 
@@ -87,13 +92,13 @@
             <div th:case="true">
                 <div class="alert alert-success alert-dismissible fade show">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>恭喜，团队创建成功!</strong>
+                    <strong>恭喜，团队创建成功！</strong>
                 </div>
             </div>
             <div th:case="false">
                 <div class="alert alert-danger alert-dismissible fade show">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>抱歉，团队创建失败!</strong>
+                    <strong>抱歉，团队创建失败！</strong>该团队已存在
                 </div>
             </div>
         </div>
@@ -112,7 +117,7 @@
                 <div class="form-group">
                     <label for="users">选择待添加的成员（可按shift键多选）：</label>
                     <select class="form-control" id="users" multiple>
-                        <option th:each="user: ${users}" th:value="${user.username}" th:text="${user.username}">无</option>
+                        <option th:each="user: ${users}" th:value="${user.username}" th:text="${user.username}" th:class="${user.role}==admin ? adminClass">无</option>
                     </select>
 
                     <button type="button" onclick="addMember()" class="btn btn-primary"> 添加 </button>
@@ -120,6 +125,7 @@
                     <button type="button" onclick="deleteMember()" class="btn btn-primary"> 撤回 </button>
 
                     <input type="hidden" name="members" id="members">
+
                     <textarea rows="5" class="form-control" placeholder="添加后的小组成员" id='member_box' style="background-color: #ffffff;" readonly="readonly"></textarea>
                 </div>
                 <div style="text-align: center">

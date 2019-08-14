@@ -13,8 +13,14 @@
   },
   {
     "raw": "I hate eating apple!",
-    "default": "gen",
     "expert": "neg",
+    "default": "gen",
     "model": ["gen","pos", "neg"]
+  },
+  {
+    "raw": "I hate eating apple!",
+    "expert": "neg",
+    "张三": "gen",
+    "李四": "neg"
   }
 ]

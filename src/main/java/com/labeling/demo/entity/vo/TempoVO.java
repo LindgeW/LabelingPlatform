@@ -6,8 +6,7 @@ public class TempoVO {
     private String teamName;
     private String taskName;
     private Integer tagNum;     //当前用户标的数量
-    private Integer corpusSize;
-    private String completion;
+    private Integer corpusSize;  //标注数据集大小
 
     public TempoVO(String userName, String teamName, String taskName, Integer tagNum, Integer corpusSize) {
         this.userName = userName;
@@ -15,10 +14,6 @@ public class TempoVO {
         this.taskName = taskName;
         this.tagNum = tagNum;
         this.corpusSize = corpusSize;
-    }
-
-    public String getCompletion() {
-        return String.format("%.2f%%", 100.0 * tagNum / corpusSize);
     }
 
     public String getTeamName() {

@@ -20,8 +20,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(Task task) {
-        taskMapper.insertSelective(task);
+    public Boolean save(Task task) {
+        if(findByName(task.getTaskname()) == null) {
+            taskMapper.insertSelective(task);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -35,9 +40,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public int updateByname(Task task) {
+    public int updateByName(Task task) {
         return taskMapper.updateByPrimaryKey(task);
     }
-
 
 }

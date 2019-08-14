@@ -22,4 +22,5 @@ public interface TaskMapper {
 
     @Select("select * from tb_task")
     List<Task> findAll();
+
 }

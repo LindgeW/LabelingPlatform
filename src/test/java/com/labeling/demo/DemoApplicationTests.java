@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Student {
     private Integer id;
@@ -40,6 +40,33 @@ class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Student{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                '}';
+//    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode() * id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }else if(obj == this){
+            return true;
+        }else if(obj instanceof Student){
+            Student stu = (Student) obj;
+            return (id.equals(stu.getId()) && name.equals(stu.getName()));
+        }
+
+        return false;
     }
 }
 
@@ -97,6 +124,17 @@ public class DemoApplicationTests {
 
     @Test
     public void contextLoads() {
+        String[] ss = new String[]{"ad", "fwe", "gwrw"};
+        List<String> sLst = new ArrayList<>();
+        Collections.addAll(sLst, ss);
+        System.out.println(sLst);
+
+        Random rand = new Random();
+        for (int i = 0; i < 5; i++) {
+            System.out.println(rand.nextInt(ss.length));
+        }
+
+//        System.out.println(StringUtils.join(ss, ";"));
     }
 
     @Test
@@ -137,6 +175,8 @@ public class DemoApplicationTests {
 //        arrLst.add("griore");
 //        System.out.println(arrLst.subList(0, 5));
         System.out.println(String.format("%.2f%%", 100*2.0/3));
+        String x = "aaaa";
+        System.out.println(String.format("name=%s.json", x));
     }
 
     @Test
@@ -179,7 +219,17 @@ public class DemoApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
+    @Test
+    public void testObj(){
+        Student stu1 = new Student(312, "aaa");
+        Student stu2 = new Student(312, "aaa");
+        System.out.println(stu1.hashCode());
+        System.out.println(stu2.hashCode());
+        Set<Student> ss = new HashSet<>();
+        ss.add(stu1);
+        ss.add(stu2);
+        System.out.println(ss);
     }
 }

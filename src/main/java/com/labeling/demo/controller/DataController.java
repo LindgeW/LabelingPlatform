@@ -3,17 +3,16 @@ package com.labeling.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.labeling.demo.entity.Instance;
-import com.labeling.demo.entity.RespEntity;
-import com.labeling.demo.entity.RespStatus;
-import com.labeling.demo.entity.Task;
-import com.labeling.demo.service.InstanceService;
-import com.labeling.demo.service.TaskService;
+import com.labeling.demo.entity.*;
+import com.labeling.demo.entity.vo.ExportVO;
+import com.labeling.demo.service.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.jws.WebParam;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,16 +37,20 @@ import java.util.zip.ZipInputStream;
 @Controller
 public class DataController {
     private static final String tempDir = "src/main/resources/temp";
-    private static final int BATCHSIZE  = 100;
+    private static final int BatchSize  = 100;
     private Long counter = 0L;
 
     private InstanceService instanceService;
     private TaskService taskService;
+    private TeamService teamService;
+    private InstanceUserService instanceUserService;
 
     @Autowired
-    public DataController(InstanceService instanceService, TaskService taskService) {
+    public DataController(InstanceService instanceService, TaskService taskService, TeamService teamService, InstanceUserService instanceUserService) {
         this.instanceService = instanceService;
         this.taskService = taskService;
+        this.teamService = teamService;
+        this.instanceUserService = instanceUserService;
     }
 
     @GetMapping("/upload")
@@ -63,11 +68,39 @@ public class DataController {
         return "export";
     }
 
-    @PostMapping("/export")
-    @ResponseBody
+    @GetMapping("/exportData")
     @RequiresRoles("admin")
-    public void export(){
+    public void exportData(@RequestParam("task") String taskName, HttpServletResponse response) throws IOException {
+        System.out.println(taskName);
+        /*
+            原始数据
+            专家标签
+            用户标签
+            模型标签（暂不需要）
+         */
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);  //APPLICATION_OCTET_STREAM_VALUE
+        response.setHeader("Content-Disposition", String.format("attachment; filename=%s.json", new String(taskName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1)));
+        BufferedOutputStream bufOs = new BufferedOutputStream(response.getOutputStream());
 
+        //根据任务查团队
+        Team team = teamService.findByTaskName(taskName);
+        //根据团队找成员
+        String[] userNames = StringUtils.split(team.getMembers(),";");
+        //根据成员找标注记录
+        Set<ExportVO> exportVOs = new HashSet<>();
+        for (String username: userNames) {
+            List<InstanceUser> records = instanceUserService.findByUserName(username);
+            for (InstanceUser record: records) {
+                Instance instance = instanceService.findById(record.getInstanceId());
+                ExportVO exportVO = new ExportVO(instance.getItem(), instance.getTagExpert(), record.getUsername(), record.getTag());
+                exportVOs.add(exportVO);
+            }
+        }
+
+//        bufOs.write(JSON.toJSONBytes(exportVOs));
+        bufOs.write(JSONArray.toJSONBytes(exportVOs));
+        bufOs.flush();
+        bufOs.close();
     }
 
 
@@ -88,7 +121,8 @@ public class DataController {
         System.out.println(multiFile.getSize());
         System.out.println(tags);
 
-        Set<String> instSet = new HashSet<>(0);
+//        Set<String> instSet = new HashSet<>(0);
+        Set<Instance> instSet = new HashSet<>(0);
         if (multiFile.getOriginalFilename().endsWith("zip")) {
             File tmpDir = new File(tempDir);
             if (!tmpDir.exists()){
@@ -113,7 +147,9 @@ public class DataController {
                     while ((line = br.readLine()) != null) {
                         line = StringUtils.trimToEmpty(line);  //过滤两端空格
                         if (!StringUtils.isAllBlank(line)){
-                            instSet.add(line);
+//                            instSet.add(line);
+                            instSet.add(new Instance(counter, taskName, line, "", "", 0, 0));
+                            counter ++;
                         }
                     }
                 }
@@ -121,53 +157,74 @@ public class DataController {
 
         } else if(multiFile.getOriginalFilename().endsWith("txt") || multiFile.getOriginalFilename().endsWith("csv")){
             // 读取普通的txt和csv文件
-//        BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
-//          byte[] buffer = new byte[1024];
-//        int len;
-//        while((len=bis.read(buffer)) != -1){
-//            String res = new String(buffer, 0, len, "GBK");
-//            System.out.println(res);
-//        }
-
             BufferedReader br = new BufferedReader(new InputStreamReader(multiFile.getInputStream(), Charset.forName("gbk")));
             String line;
             while ((line=br.readLine()) != null){
                 line = StringUtils.trimToEmpty(line);
                 if (!StringUtils.isAllBlank(line)){
-                    instSet.add(line);
+//                    instSet.add(line);
+                    instSet.add(new Instance(counter, taskName, line, "", "", 0, 0));
+                    counter ++;
                 }
             }
+
         } else if(multiFile.getOriginalFilename().endsWith("json")){
             String jsonStr = IOUtils.toString(multiFile.getInputStream());
             JSONArray jsonArray = JSON.parseArray(jsonStr);
 
             for (int i = 0, len=jsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                System.out.println(jsonObject.getString("raw"));
-                System.out.println(jsonObject.getString("expert"));
-                System.out.println(StringUtils.join(jsonObject.getJSONArray("model"), ";"));
-//                System.out.println(StringUtils.join(jsonObject.get("model"), ";"));
+                String item = jsonObject.getString("raw");
+                String tagExpert = jsonObject.getString("expert");
+                if(StringUtils.isBlank(tagExpert)){
+                    tagExpert = "";
+                }
+                JSONArray tagModelArr = jsonObject.getJSONArray("model");
+                String tagModel = "";
+                if (tagModelArr != null){
+                    tagModel = StringUtils.join(tagModelArr, ";");
+                }
+                instSet.add(new Instance(counter, taskName, item, tagExpert, tagModel, 0, 0));
+                counter ++;
             }
         }
 
+        Boolean isOk = false;
         // 分批次将数据保存到MongoDB中
         if (!instSet.isEmpty()){
-            ArrayList<Instance> insts = new ArrayList<>(BATCHSIZE);
-            for(String item: instSet){
-                insts.add(new Instance(counter, taskName, item, "", "", 0, 0));
-                counter ++;
-                if (insts.size() == BATCHSIZE){
-                    instanceService.saveAll(insts);
-                    insts.clear();
+            ArrayList<Instance> instBuf = new ArrayList<>(BatchSize);
+            for(Instance inst: instSet){
+                instBuf.add(inst);
+                if (instBuf.size() == BatchSize){
+                    instanceService.saveAll(instBuf);
+                    instBuf.clear();
                 }
             }
-            if (!insts.isEmpty())
-                instanceService.saveAll(insts);
+            if (!instBuf.isEmpty()) {
+                instanceService.saveAll(instBuf);
+            }
 
-            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false));
+            isOk = taskService.save(new Task(taskName, dataType, instSet.size(), tags, false));
         }
 
-        return new RespEntity(RespStatus.SUCCESS);
+//        if (!instSet.isEmpty()){
+//            ArrayList<Instance> insts = new ArrayList<>(BatchSize);
+//            for(String item: instSet){
+//                insts.add(new Instance(counter, taskName, item, "", "", 0, 0));
+//                counter ++;
+//                if (insts.size() == BatchSize){
+//                    instanceService.saveAll(insts);
+//                    insts.clear();
+//                }
+//            }
+//            if (!insts.isEmpty()) {
+//                instanceService.saveAll(insts);
+//            }
+//
+//            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false));
+//        }
+
+        return new RespEntity<>(RespStatus.SUCCESS, isOk);
     }
 
 }

@@ -23,31 +23,25 @@
     <style>
     </style>
     <title>导出数据</title>
-    <script>
-        $(function () {
-        });
 
-        function exportData() {
-            alert($("#tasks").val())
-        }
-
-    </script>
 </head>
 <body>
 <div class="container" style="margin-top:100px; min-height: 800px;">
-    <div class="row">
-        <div class="col-4 offset-4">
-            <div class="form-inline">
-                <label for="tasks">选择标注任务：</label>
-                <select class="form-control" id="tasks" name="task">
-                    <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
-                </select>
+    <form action="/exportData" method="get">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <div class="form-inline">
+                    <label for="tasks">选择标注任务：</label>
+                    <select class="form-control" id="tasks" name="task">
+                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
-    <div style="text-align: center; margin: 20px;">
-        <button type="button" class="btn btn-primary btn-lg" onclick="exportData()">导出数据</button>
-    </div>
+        <div style="text-align: center; margin: 20px;">
+            <button type="submit" class="btn btn-primary btn-lg">导出数据</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>

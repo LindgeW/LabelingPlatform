@@ -72,12 +72,14 @@
                     message: "文件上传失败！\n\n"+msg
                 });
             }).on("fileuploaded", function(event, data, previewId, index) {
-
+                alert(data.data);
             }).on("filebatchselected", function(event, files) {
                 // 上传json格式化文件，则不需要输入标签集
                 var fileName = files[0].name;
                 if(getFileType(fileName) === 'json'){
                     $("#tags").attr("disabled", true);
+                } else{
+                    $("#tags").attr("disabled", false);
                 }
             });
         }
@@ -154,7 +156,6 @@
                 <label for="tags">标签设置：</label>
                 <textarea class="form-control" rows="5" id="tags" placeholder="标签值用英文;隔开，如：正面;中立;负面"></textarea>
             </div>
-        <!--    <strong>* 建议打包上传文件!!!</strong>-->
         </div>
     </div>
     <div style="padding-top: 20px; text-align: center;">

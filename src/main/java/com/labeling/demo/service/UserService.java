@@ -15,4 +15,6 @@ public interface UserService {
     boolean updateUser(User user);
 
     boolean updateBatchUser(List<User> users);
+
+    List<User> findByTeam(String teamName);
 }
