@@ -53,7 +53,6 @@ public class DataController {
     @GetMapping("/upload")
     @RequiresRoles("admin")
     public String toUpload(){
-//        counter = instanceService.count();
         return "upload";
     }
 
@@ -81,19 +80,6 @@ public class DataController {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);  //APPLICATION_OCTET_STREAM_VALUE
         response.setHeader("Content-Disposition", String.format("attachment; filename=%s.json", new String(taskName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1)));
         BufferedOutputStream bufOs = new BufferedOutputStream(response.getOutputStream());
-
-        //根据团队找成员
-//        String[] userNames = StringUtils.split(team.getMembers(),";");
-//        //根据成员找标注记录
-//        Set<ExportVO> exportVOs = new HashSet<>();
-//        for (String username: userNames) {
-//            List<InstanceUser> records = instanceUserService.findByUserName(username);
-//            for (InstanceUser record: records) {
-//                Instance instance = instanceService.findById(record.getInstanceId());
-//                ExportVO exportVO = new ExportVO(instance.getItem(), instance.getTagExpert(), record.getUsername(), record.getTag());
-//                exportVOs.add(exportVO);
-//            }
-//        }
 
         //根据任务查团队(一个团队一个任务，一个任务可以多个团队)
         List<Instance> taskInsts = instanceService.findByTaskName(taskName);

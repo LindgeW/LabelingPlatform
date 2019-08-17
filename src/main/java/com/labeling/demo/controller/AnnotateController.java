@@ -13,7 +13,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,9 +76,9 @@ public class AnnotateController {
         User curUser = (User) curSubj.getPrincipal();
         String username = curUser.getUsername();
         String role = curUser.getRole();
+        String teamName = curUser.getTeamName();
 
         //判断当前用户是否加入小组（没有，则返回空页面）
-        String teamName = curUser.getTeamName();
         if (StringUtils.isBlank(teamName)){
             model.addAttribute("userVo", new UserVO(username, role));
             return "no_task";
@@ -101,7 +100,6 @@ public class AnnotateController {
         UserVO userVO = new UserVO(username, role, tagNum);
         //当前页 pageNum, 每页大小 pageSize
         List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), PageRequest.of(tagNum, 1));
-
 //            System.out.println(pageData.isLast());
 //            System.out.println(pageData.hasContent());
 //            System.out.println(pageData.hasNext());
@@ -159,6 +157,7 @@ public class AnnotateController {
         }
         instanceService.save(instance);
 
+        //保存标注记录
         InstanceUser instanceUser = new InstanceUser();
         instanceUser.setInstanceId(instanceId);
         instanceUser.setUsername(username);

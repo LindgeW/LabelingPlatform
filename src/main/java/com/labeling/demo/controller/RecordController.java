@@ -20,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class RecordController {
@@ -41,6 +38,7 @@ public class RecordController {
     public String history(Model model){
         Subject subject = SecurityUtils.getSubject();
         User user = (User)subject.getPrincipal();
+        UserVO userVo = new UserVO(user.getUsername(), user.getRole());
 
         //获取当前用户的任务信息
         Session session = subject.getSession();
@@ -67,7 +65,7 @@ public class RecordController {
 
         model.addAttribute("team", team);
         model.addAttribute("taskVo", taskVO);
-        model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
+        model.addAttribute("userVo", userVo);
         return "history";
     }
 
@@ -105,6 +103,7 @@ public class RecordController {
                     instanceUserLst.add(new InstanceUserVO(instanceUser, item));
                 }
             }
+
             totalNum = instanceUserLst.size();
             if (totalNum == 0){
                 instanceUserVOs = instanceUserLst;
@@ -126,6 +125,7 @@ public class RecordController {
     @ResponseBody
     public RespEntity update(@RequestBody InstanceUser instanceUser){
         System.out.println(instanceUser);
+        instanceUser.setTagTime(new Date());
         instanceUserService.updateInstanceUser(instanceUser);
         return new RespEntity(RespStatus.SUCCESS);
     }

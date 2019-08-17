@@ -218,33 +218,14 @@
         </nav>
     </header>
 
-    <div class="container-fluid" style="min-height:800px;">
-        <!--<div>-->
-            <!--<table class="table table-bordered">-->
-                <!--<thead>-->
-                    <!--<tr>-->
-                        <!--&lt;!&ndash;<th>正确率</th>&ndash;&gt;-->
-                        <!--<th>标注任务</th>-->
-                        <!--<th>所在小组</th>-->
-                        <!--<th>已完成量/总任务量</th>-->
-                    <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                    <!--<tr>-->
-                        <!--&lt;!&ndash;<td  th:text="${correctRate}"></td>&ndash;&gt;-->
-                        <!--<td th:text="${tempoVO.taskName}"></td>-->
-                        <!--<td th:text="${tempoVO.teamName}"></td>-->
-                        <!--<td>-->
-                            <!--<span th:text="${tempoVO.tagNum}"></span> / <span th:text="${tempoVO.corpusSize}"></span>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
-        <!--</div>-->
-
+    <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
         <h5>
-            任务：<span th:text="${taskVo.taskname}" style="text-decoration: underline"></span>
-            小组：<span th:text="${team.teamName}" style="text-decoration: underline"></span>
+            <p>
+                <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline"></span>
+            </p>
+            <p>
+                <strong>小组：</strong><span th:text="${team.teamName}" style="text-decoration: underline"></span>
+            </p>
         </h5>
         <div id="dataTable" class="table-responsive">
             <!--<table class="table" data-mobile-responsive="true">-->

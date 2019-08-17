@@ -235,10 +235,12 @@ public class DemoApplicationTests {
         System.out.println(ss);
     }
 
-    @Autowired
-    InstanceService instanceService;
+//    @Autowired
+//    InstanceService instanceService;
     @Test
     public void testTask(){
-        List<Instance> insts = instanceService.findPageDataByTaskName("车评标注", PageRequest.of(3, 1));
+//        List<Instance> insts = instanceService.findPageDataByTaskName("车评标注", PageRequest.of(3, 1));
+
+        System.out.println(new Date());
     }
 }

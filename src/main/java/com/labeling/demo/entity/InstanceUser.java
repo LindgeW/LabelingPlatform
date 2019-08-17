@@ -23,6 +23,15 @@ public class InstanceUser {
         this.taskname = taskname;
     }
 
+    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname, Date tagTime) {
+        this.id = id;
+        this.username = username;
+        this.instanceId = instanceId;
+        this.tag = tag;
+        this.taskname = taskname;
+        this.tagTime = tagTime;
+    }
+
     public InstanceUser() {
         super();
     }
