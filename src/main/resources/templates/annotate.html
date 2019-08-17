@@ -100,7 +100,9 @@
                     } else if (resp.code === 201) {
                         $("#tagNum").text(resp.data.tagNum);
                         $("#lbl_obj").html("<div style='font-weight: bold;color: #ff0000; text-align: center;'>" + resp.message + "</div>");
-                        $("#saveBtn").attr('disabled', true);
+                        // $("#saveBtn").attr('disabled', true);
+                        $("#saveBtn").hide();
+                        $("#lblArea").hide();
                     }
                 },
                 error: function (msg) {
@@ -184,21 +186,17 @@
     <div class="row">
         <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
             <div align="center">
-                <p>
+                <div id="lblArea">
                     <label class="radio-inline" th:each="tag : ${taskVo.tagSet}"
                            style="padding: 10px;">
                         <input type="radio" name="tag" class="radio_tag" th:value="${tag}" th:text="${tag}"/>
                     </label>
-                </p>
-                <p>
+                </div>
+                <div>
                     <button type="button" class="btn btn-primary" style="background-color: #1677b3;" id="saveBtn" onclick="save()">
                         保 存
                     </button>
-                </p>
-
-                <!--<button type="button" class="btn btn-primary" value="1" onclick="submitAnswer(this.value)">正面</button>-->
-                <!--<button type="button" class="btn btn-primary" value="2" onclick="submitAnswer(this.value)">反面</button>-->
-                <!--<button type="button" class="btn btn-primary" value="3" onclick="submitAnswer(this.value)">中立</button>-->
+                </div>
             </div>
         </div>
     </div>
