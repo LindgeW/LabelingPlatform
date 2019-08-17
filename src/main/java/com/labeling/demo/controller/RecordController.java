@@ -1,9 +1,6 @@
 package com.labeling.demo.controller;
 
-import com.labeling.demo.entity.InstanceUser;
-import com.labeling.demo.entity.RespEntity;
-import com.labeling.demo.entity.RespStatus;
-import com.labeling.demo.entity.User;
+import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.entity.vo.TaskVO;
 import com.labeling.demo.entity.vo.TempoVO;
@@ -47,7 +44,8 @@ public class RecordController {
 
         //获取当前用户的任务信息
         Session session = subject.getSession();
-        TempoVO tempoVO = (TempoVO) session.getAttribute("tempoVO");
+        TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
+        Team team = (Team) session.getAttribute("team");
 
         //计算用户正确率
 //        String username = user.getUsername();
@@ -66,8 +64,10 @@ public class RecordController {
 //        DataTransfer dataTransfer = new DataTransfer();
 //        String correctRate = dataTransfer.dataTrans(correcNum,totalNum);
 //        model.addAttribute("correctRate",correctRate);
+
+        model.addAttribute("team", team);
+        model.addAttribute("taskVo", taskVO);
         model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
-        model.addAttribute("tempoVO",tempoVO);
         return "history";
     }
 
@@ -75,7 +75,7 @@ public class RecordController {
     @ResponseBody
     public RespEntity fetchTags(){
         Session session = SecurityUtils.getSubject().getSession();
-        TaskVO myTask = (TaskVO) session.getAttribute("myTask");
+        TaskVO myTask = (TaskVO) session.getAttribute("taskVo");
         return new RespEntity<>(RespStatus.SUCCESS, myTask);
     }
 

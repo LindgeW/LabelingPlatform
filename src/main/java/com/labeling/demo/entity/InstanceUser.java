@@ -1,7 +1,9 @@
 package com.labeling.demo.entity;
 
+import java.util.Date;
+
 public class InstanceUser {
-    private Integer id;
+    private Long id;
 
     private String username;
 
@@ -9,22 +11,27 @@ public class InstanceUser {
 
     private String tag;
 
-    public InstanceUser(Integer id, String username, Long instanceId, String tag) {
+    private String taskname;
+
+    private Date tagTime;
+
+    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname) {
         this.id = id;
         this.username = username;
         this.instanceId = instanceId;
         this.tag = tag;
+        this.taskname = taskname;
     }
 
     public InstanceUser() {
         super();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -52,6 +59,22 @@ public class InstanceUser {
         this.tag = tag == null ? null : tag.trim();
     }
 
+    public String getTaskname() {
+        return taskname;
+    }
+
+    public void setTaskname(String taskname) {
+        this.taskname = taskname == null ? null : taskname.trim();
+    }
+
+    public Date getTagTime() {
+        return tagTime;
+    }
+
+    public void setTagTime(Date tagTime) {
+        this.tagTime = tagTime;
+    }
+
     @Override
     public String toString() {
         return "InstanceUser{" +
@@ -59,6 +82,8 @@ public class InstanceUser {
                 ", username='" + username + '\'' +
                 ", instanceId=" + instanceId +
                 ", tag='" + tag + '\'' +
+                ", taskname='" + taskname + '\'' +
+                ", tagTime=" + tagTime +
                 '}';
     }
 }

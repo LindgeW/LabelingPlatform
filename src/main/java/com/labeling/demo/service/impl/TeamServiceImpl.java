@@ -46,7 +46,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team findByTaskName(String taskName) {
+    public List<Team> findByTaskName(String taskName) {
         return teamMapper.findByTaskName(taskName);
     }
 

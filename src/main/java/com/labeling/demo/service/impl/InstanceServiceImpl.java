@@ -1,7 +1,7 @@
 package com.labeling.demo.service.impl;
 
 import com.labeling.demo.entity.Instance;
-import com.labeling.demo.repository.InstanceRepository;
+import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.service.InstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,55 +13,60 @@ import java.util.List;
 
 @Service
 public class InstanceServiceImpl implements InstanceService {
-
-    private InstanceRepository instanceRepository;
+    private InstanceMapper instanceMapper;
 
     @Autowired
-    public InstanceServiceImpl(InstanceRepository instanceRepository) {
-        this.instanceRepository = instanceRepository;
+    public InstanceServiceImpl(InstanceMapper instanceMapper) {
+        this.instanceMapper = instanceMapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(Instance instance) {
-        instanceRepository.save(instance);
+        this.instanceMapper.save(instance);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveAll(Iterable<Instance> instances) {
-        instanceRepository.saveAll(instances);
+        for (Instance inst: instances) {
+            System.out.println(inst);
+        }
+        this.instanceMapper.saveAll(instances);
     }
 
     @Override
     public List<Instance> findAll() {
-        return instanceRepository.findAll();
+        return instanceMapper.findAll();
     }
 
-    @Override
-    public Page<Instance> findPageData(Pageable instPage) {
-        return instanceRepository.findAll(instPage);
-    }
+//    @Override
+//    public Page<Instance> findPageData(Pageable instPage) {
+//        return instanceMapper.findPageData(instPage);
+//    }
 
     @Override
-    public Instance findInstById(Long id) {
-        return instanceRepository.findByInstanceId(id);
+    public List<Instance> findPageDataByTaskName(String taskName, Pageable pageable) {
+        return instanceMapper.findPageDataByTaskName(taskName, pageable);
     }
+
+//    @Override
+//    public Instance findInstById(Long id) {
+//        return instanceMapper.findById(id);
+//    }
 
     @Override
     public List<Instance> findByTaskName(String taskName) {
-        return instanceRepository.findByTaskName(taskName);
+        return instanceMapper.findByTaskName(taskName);
     }
 
     @Override
     public long count() {
-        return instanceRepository.count();
+        return instanceMapper.count();
     }
 
     @Override
     public Instance findById(Long instanceId) {
-        return instanceRepository.findByInstanceId(instanceId);
+        return instanceMapper.findById(instanceId);
     }
-
-
 }

@@ -13,5 +13,5 @@ public interface TeamService {
 
     boolean updateByTeamName(Team team);
 
-    Team findByTaskName(String taskName);
+    List<Team> findByTaskName(String taskName);
 }

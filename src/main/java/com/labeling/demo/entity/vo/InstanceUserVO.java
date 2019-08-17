@@ -10,12 +10,7 @@ public class InstanceUserVO extends InstanceUser {
     }
 
     public InstanceUserVO(InstanceUser instanceUser, String item) {
-        super(instanceUser.getId(), instanceUser.getUsername(), instanceUser.getInstanceId(), instanceUser.getTag());
-        this.item = item;
-    }
-
-    public InstanceUserVO(Integer id, String username, Long instanceId, String tag, String item) {
-        super(id, username, instanceId, tag);
+        super(instanceUser.getId(), instanceUser.getUsername(), instanceUser.getInstanceId(), instanceUser.getTag(), instanceUser.getTaskname());
         this.item = item;
     }
 

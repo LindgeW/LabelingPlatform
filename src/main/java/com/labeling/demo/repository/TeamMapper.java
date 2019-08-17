@@ -28,5 +28,5 @@ public interface TeamMapper {
     List<Team> findAll();
 
     @Select("select * from tb_team where taskName = #{taskName}")
-    Team findByTaskName(String taskName);
+    List<Team> findByTaskName(String taskName);
 }

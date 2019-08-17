@@ -40,28 +40,25 @@ public class UserController {
     @RequiresRoles("admin")
     public String bgIndex(Model model) {
         // 哪个任务，哪个团队中的哪个成员的工作进展
-        List<User> allUsers = userService.findAll();
-
-        List<TempoVO> tempos = new ArrayList<>();  //保存当前正在进行的用户进度信息
-        for (User user : allUsers) {
-            String username = user.getUsername();
-            String teamName = user.getTeamName();
-            if (StringUtils.isNotBlank(teamName)) {
-                Team team = teamService.findByName(teamName);
-                String taskName = team.getTaskName();
-                Task task = taskService.findByName(taskName);
-                Integer tagNum = instanceUserService.countByUsername(username);
-                Integer corpusSize = task.getCorpussize();
-                tempos.add(new TempoVO(username, teamName, taskName, tagNum, corpusSize));
-            }
-        }
-
-        model.addAttribute("tempos", tempos);
-
+//        List<User> allUsers = userService.findAll();
+//        List<TempoVO> tempos = new ArrayList<>();  //保存当前正在进行的用户进度信息
+//        for (User user : allUsers) {
+//            String username = user.getUsername();
+//            String teamName = user.getTeamName();
+//            if (StringUtils.isNotBlank(teamName)) {
+//                Team team = teamService.findByName(teamName);
+//                String taskName = team.getTaskName();
+//                Task task = taskService.findByName(taskName);
+//                Integer tagNum = instanceUserService.countByUsername(username);
+//                Integer corpusSize = task.getCorpussize();
+//                tempos.add(new TempoVO(username, teamName, taskName, tagNum, corpusSize));
+//            }
+//        }
+//        model.addAttribute("tempos", tempos);
         return "bg_index";
     }
 
-    @PostMapping("/usersInfo")
+    @PostMapping("/tempoInfo")
     @ResponseBody
     @RequiresRoles("admin")
     public List<TempoVO> usersInfo() {
@@ -121,7 +118,6 @@ public class UserController {
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
         String username = curUser.getUsername();
         String password = curUser.getPassword();
-//        User real = userService.findUser(curUser.getUsername());
         System.out.println(curUser);
         if (!oldPwd.equals(password)) {
             return new RespEntity(RespStatus.UNAUTHEN);

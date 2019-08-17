@@ -2,6 +2,7 @@ package com.labeling.demo.entity.vo;
 
 public class InstanceVO {
     private Long instanceId;    // 数据编号
+    private String taskName;  //任务名
     private String item;  //数据项
     private String tag;    //用户标签
 
@@ -9,14 +10,9 @@ public class InstanceVO {
         super();
     }
 
-
-    public InstanceVO(Long instanceId, String item) {
+    public InstanceVO(Long instanceId, String taskName, String item, String tag) {
         this.instanceId = instanceId;
-        this.item = item;
-    }
-
-    public InstanceVO(Long instanceId, String item, String tag) {
-        this.instanceId = instanceId;
+        this.taskName = taskName;
         this.item = item;
         this.tag = tag;
     }
@@ -27,6 +23,14 @@ public class InstanceVO {
 
     public void setInstanceId(Long instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public String getItem() {
@@ -49,6 +53,7 @@ public class InstanceVO {
     public String toString() {
         return "InstanceVO{" +
                 "instanceId=" + instanceId +
+                ", taskName='" + taskName + '\'' +
                 ", item='" + item + '\'' +
                 ", tag='" + tag + '\'' +
                 '}';

@@ -1,36 +1,41 @@
 package com.labeling.demo.entity;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class Instance {
+    private Long instanceId;
 
+    private String taskName;
 
-@Document(collection = "corpus")
-public class Instance {  //不建议自己设主键，MongoDB自动生成一个唯一主键
-    private String id;  // MongoDB自带ObjectId主键
-    @Indexed  //提高检索速度
-    private Long instanceId;    //自定义主键（便于查询）
-    private String taskName; //属于哪个任务
+    private String tagExpert;
 
-    private String item;        // 数据项
-//    private String tag;     // 标签
-    private String tagExpert; // 专家标签
-    private String tagModel;  // 模型预测标签(; 隔开)
+    private String tagModel;
 
-    private Integer tagNum;  //被标的次数，只有被标了指定次数才算被标
-    private Integer status; //状态：无效(-1)、未标(0)、已标(1)
+    private Integer status;
+
+    private Integer tagNum;
+
+    private String item;
+
+    public Instance(String taskName, String item, String tagExpert, String tagModel, Integer status, Integer tagNum) {
+        this.taskName = taskName;
+        this.item = item;
+        this.tagExpert = tagExpert;
+        this.tagModel = tagModel;
+        this.status = status;
+        this.tagNum = tagNum;
+    }
 
     public Instance() {
         super();
     }
 
-    public Instance(Long instanceId, String taskName, String item, String tagExpert, String tagModel, Integer tagNum, Integer status) {
+    public Instance(Long instanceId, String taskName, String tagExpert, String tagModel, Integer status, Integer tagNum, String item) {
         this.instanceId = instanceId;
         this.taskName = taskName;
-        this.item = item;
         this.tagExpert = tagExpert;
         this.tagModel = tagModel;
-        this.tagNum = tagNum;
         this.status = status;
+        this.tagNum = tagNum;
+        this.item = item;
     }
 
     public Long getInstanceId() {
@@ -46,15 +51,7 @@ public class Instance {  //不建议自己设主键，MongoDB自动生成一个�
     }
 
     public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public String getItem() {
-        return item;
-    }
-
-    public void setItem(String item) {
-        this.item = item;
+        this.taskName = taskName == null ? null : taskName.trim();
     }
 
     public String getTagExpert() {
@@ -62,7 +59,7 @@ public class Instance {  //不建议自己设主键，MongoDB自动生成一个�
     }
 
     public void setTagExpert(String tagExpert) {
-        this.tagExpert = tagExpert;
+        this.tagExpert = tagExpert == null ? null : tagExpert.trim();
     }
 
     public String getTagModel() {
@@ -70,15 +67,7 @@ public class Instance {  //不建议自己设主键，MongoDB自动生成一个�
     }
 
     public void setTagModel(String tagModel) {
-        this.tagModel = tagModel;
-    }
-
-    public Integer getTagNum() {
-        return tagNum;
-    }
-
-    public void setTagNum(Integer tagNum) {
-        this.tagNum = tagNum;
+        this.tagModel = tagModel == null ? null : tagModel.trim();
     }
 
     public Integer getStatus() {
@@ -89,18 +78,32 @@ public class Instance {  //不建议自己设主键，MongoDB自动生成一个�
         this.status = status;
     }
 
+    public Integer getTagNum() {
+        return tagNum;
+    }
+
+    public void setTagNum(Integer tagNum) {
+        this.tagNum = tagNum;
+    }
+
+    public String getItem() {
+        return item;
+    }
+
+    public void setItem(String item) {
+        this.item = item == null ? null : item.trim();
+    }
+
     @Override
     public String toString() {
         return "Instance{" +
                 "instanceId=" + instanceId +
                 ", taskName='" + taskName + '\'' +
-                ", item='" + item + '\'' +
                 ", tagExpert='" + tagExpert + '\'' +
                 ", tagModel='" + tagModel + '\'' +
-                ", tagNum=" + tagNum +
                 ", status=" + status +
+                ", tagNum=" + tagNum +
+                ", item='" + item + '\'' +
                 '}';
     }
 }
-
-

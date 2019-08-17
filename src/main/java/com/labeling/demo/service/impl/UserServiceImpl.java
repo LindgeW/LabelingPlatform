@@ -56,5 +56,4 @@ public class UserServiceImpl implements UserService {
     public List<User> findByTeam(String teamName) {
         return userMapper.findAllByTeam(teamName);
     }
-
 }

@@ -64,13 +64,17 @@
 
         function save() {
             var username = $("#username").text();
+            var taskName = $("#taskName").text();
+            var role = $('#role').val();
             var instId = $("#instanceId").val();
             var tagNum = parseInt($("#tagNum").text());
             var tag = $("input:radio:checked").val();
 
             var sendData = {
                 "username": username,
+                "role": role,
                 "instanceId": instId,
+                "taskName": taskName,
                 "tag": tag,
                 "tagNum": tagNum
             };
@@ -157,10 +161,10 @@
         </nav>
     </header>
 
-<div class="container">
+<div class="container" style="padding-top: 20px;">
     <h5 class="text-center">
         <embed src="img/annotate_task_logo.svg" type="image/svg+xml" width="25" height="25"/>
-        您现在进行的是<span th:text="${taskVo.taskname}" style="text-decoration: underline;color: #1677b3"></span>任务，
+        您现在进行的是<span id="taskName" th:text="${taskVo.taskname}" style="text-decoration: underline;color: #1677b3"></span>任务，
         标注类型为<span th:text="${taskVo.dataType}" style="text-decoration: underline;color: #1677b3"></span>
     </h5>
     <h5 class="text-center">
@@ -174,6 +178,7 @@
         <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
             <div id="lbl_obj" th:text="${instanceVo.item}" class="container"></div>
             <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
+            <input type="hidden" id="role" th:value="${userVo.role}"/>
         </div>
     </div>
     <div class="row">

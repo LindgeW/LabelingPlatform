@@ -23,7 +23,7 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
-    public InstanceUser findInstanceUser(int id) {
+    public InstanceUser findInstanceUser(Long id) {
         return this.instanceuserMapper.selectByPrimaryKey(id);
     }
 
@@ -57,18 +57,18 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(InstanceUser instanceUser) {
-        return this.instanceuserMapper.save(instanceUser) >= 1;
+        return this.instanceuserMapper.save(instanceUser);
     }
 
 
     public Integer countByUsername(String username) {
-        return  this.instanceuserMapper.countByUsername(username);
+        return  this.instanceuserMapper.countByUserName(username);
     }
 
-    @Override
-    public boolean saveBtach(List<InstanceUser> list) {
-        return this.instanceuserMapper.saveBatch(list);
-    }
+//    @Override
+//    public boolean saveBtach(List<InstanceUser> list) {
+//        return this.instanceuserMapper.saveBatch(list);
+//    }
 
     @Override
     public List<InstanceUser> findInstanceUserById(Long instanceid) {
@@ -78,6 +78,11 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     @Override
     public List<InstanceUser> findInstanceUserByUsername(String username) {
         return this.instanceuserMapper.findByUserName(username);
+    }
+
+    @Override
+    public Integer countByTask(String username, String taskname) {
+        return instanceuserMapper.countByTask(username, taskname);
     }
 
 

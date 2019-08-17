@@ -1,14 +1,12 @@
 package com.labeling.demo.service;
 
-import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.InstanceUser;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface InstanceUserService {
-    InstanceUser findInstanceUser(int id);
+    InstanceUser findInstanceUser(Long id);
 
     List<InstanceUser> findAll();
 
@@ -24,10 +22,12 @@ public interface InstanceUserService {
 
     Integer countByUsername(String username);
 
-    boolean saveBtach (List<InstanceUser>list);
+//    boolean saveBtach (List<InstanceUser>list);
 
     //查找一条数据被所有用户的标注情况
     List<InstanceUser>findInstanceUserById(Long instanceid);
 
     List<InstanceUser>findInstanceUserByUsername(String username);
+
+    Integer countByTask(String username, String taskname);
 }

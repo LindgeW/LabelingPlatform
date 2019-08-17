@@ -2,6 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <!-- Favicons -->
     <link href="/img/logo.png" rel="icon">
@@ -72,15 +75,22 @@
                     message: "文件上传失败！\n\n"+msg
                 });
             }).on("fileuploaded", function(event, data, previewId, index) {
-                alert(data.data);
+                if (data.response.data === 'false'){
+                    bootbox.alert({
+                        title: 'Error',
+                        className: 'rubberBand animated',
+                        message: "该任务已存在！"
+                    });
+                }
+
             }).on("filebatchselected", function(event, files) {
                 // 上传json格式化文件，则不需要输入标签集
-                var fileName = files[0].name;
-                if(getFileType(fileName) === 'json'){
-                    $("#tags").attr("disabled", true);
-                } else{
-                    $("#tags").attr("disabled", false);
-                }
+                // var fileName = files[0].name;
+                // if(getFileType(fileName) === 'json'){
+                //     $("#tags").attr("disabled", true);
+                // } else{
+                //     $("#tags").attr("disabled", false);
+                // }
             });
         }
 
@@ -93,20 +103,18 @@
                 return false;
             }
 
-            if (getFileType($("#uploadFile").val()) !== 'json'){
-                if (tags === ""){
-                    alert('标签值不能为空！');
-                    return false;
-                }
+            if (tags === ""){
+                alert('标签值不能为空！');
+                return false;
+            }
 
-                var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
-                var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
-                if (eng_reg.test(tags) || ch_reg.test(tags)){
-                    return true
-                }else {
-                    alert('标签值格式有误！');
-                    return false;
-                }
+            var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
+            var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
+            if (eng_reg.test(tags) || ch_reg.test(tags)){
+                return true
+            }else {
+                alert('标签值格式有误！');
+                return false;
             }
 
             return true;

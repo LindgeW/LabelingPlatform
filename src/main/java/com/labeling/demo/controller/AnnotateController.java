@@ -3,13 +3,11 @@ package com.labeling.demo.controller;
 import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.InstanceVO;
 import com.labeling.demo.entity.vo.TaskVO;
-import com.labeling.demo.entity.vo.TempoVO;
 import com.labeling.demo.entity.vo.UserVO;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
 import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
-import com.labeling.demo.util.FindMostElm;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -44,14 +42,28 @@ public class AnnotateController {
         return random.nextInt(bound);
     }
 
+    //生产随机标签
     private String randTag(Instance instance){
-        String tagExpert = instance.getTagExpert();
-        // 模型预测的k-best结果
-        String[] tagModel = StringUtils.split(instance.getTagModel(), ";");
         List<String> tagLst = new ArrayList<>();
-        Collections.addAll(tagLst, tagModel);
-        tagLst.add(tagExpert);
-         return tagLst.get(randGenerator(tagLst.size()));
+        String tagExpert = instance.getTagExpert();
+        String tagModels = instance.getTagModel();
+
+        if (StringUtils.isNotBlank(tagExpert)) {
+            tagLst.add(tagExpert);
+        }
+
+        if (StringUtils.isNotBlank(tagModels)){
+            // 模型预测的k-best结果
+            String[] tagModel = StringUtils.split(tagModels, ";");
+            Collections.addAll(tagLst, tagModel);
+        }
+
+        if (tagLst.isEmpty()) {
+            return "";
+        }
+
+        System.out.println("gold标签：" + tagLst);
+        return tagLst.get(randGenerator(tagLst.size()));
     }
 
     @GetMapping("/annotate")
@@ -78,29 +90,29 @@ public class AnnotateController {
         //获取该任务对应的标注数据
         Task task = taskService.findByName(team.getTaskName());
         TaskVO taskVo = new TaskVO(task);
-        // 判断当前用户是否已经完成小组任务
-        Integer tagNum = instanceUserService.countByUsername(username);  //统计当前用户已标记的数量
-        //将当前部分用户信息存入session
-        TempoVO tempoVO = new TempoVO(username,teamName,team.getTaskName(),tagNum,task.getCorpussize());
+
+        Integer tagNum = instanceUserService.countByTask(username, task.getTaskname());  //统计当前用户对当前任务已标注的数量
 
         //将小组信息存入session
         Session sess = curSubj.getSession();
         sess.setAttribute("team", team);
-        sess.setAttribute("myTask", taskVo);
-        sess.setAttribute("tempoVO", tempoVO);
+        sess.setAttribute("taskVo", taskVo);
 
         UserVO userVO = new UserVO(username, role, tagNum);
-        Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));  //当前页 pageNum, 每页大小 pageSize
+        //当前页 pageNum, 每页大小 pageSize
+        List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), PageRequest.of(tagNum, 1));
+
 //            System.out.println(pageData.isLast());
 //            System.out.println(pageData.hasContent());
 //            System.out.println(pageData.hasNext());
-        if (!pageData.hasContent()){
+        // 判断当前用户是否已经完成小组任务
+        if (pageData.isEmpty()){
             model.addAttribute("userVo", userVO);
             return "finished";
         }
 
-        Instance firstInstance = pageData.getContent().get(0);
-        InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), firstInstance.getItem(), randTag(firstInstance));
+        Instance firstInstance = pageData.get(0);
+        InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), task.getTaskname(), firstInstance.getItem(), randTag(firstInstance));
         model.addAttribute("userVo", userVO);
         model.addAttribute("taskVo", taskVo);
         model.addAttribute("instanceVo", instanceVO);
@@ -114,13 +126,13 @@ public class AnnotateController {
         System.out.println(instanceVO);
 
         //记录用户对此数据标注的标签
-        InstanceUser instanceUser = new InstanceUser();
-        instanceUser.setUsername(userVO.getUsername());
-        instanceUser.setInstanceId(instanceVO.getInstanceId());
-        instanceUser.setTag(instanceVO.getTag());
-        instanceUserService.addInstanceUser(instanceUser);
+        String username = userVO.getUsername();
+        String taskName = instanceVO.getTaskName();
+        String role = userVO.getRole();
+        Long instanceId = instanceVO.getInstanceId();
+        String tag = instanceVO.getTag();
 
-        Instance instance = instanceService.findInstById(instanceVO.getInstanceId());
+        Instance instance = instanceService.findById(instanceId);
         //如果当前数据未标满，则tagnum+1
         instance.setTagNum(instance.getTagNum()+1);
         if (instance.getTagNum() == 3) {
@@ -131,7 +143,6 @@ public class AnnotateController {
 //                System.out.println(item.getTag());
 //                taglist.add(item.getTag());
 //            }
-//
 //            FindMostElm findmostElm = new FindMostElm();
 //            //找到最终的标签
 //            String finaltag = findmostElm.findfinaltag(taglist);
@@ -142,21 +153,30 @@ public class AnnotateController {
             //1为已标状态
             instance.setStatus(1);
         }
+
+        if ("admin".equalsIgnoreCase(role)){
+            instance.setTagExpert(tag);
+        }
         instanceService.save(instance);
+
+        InstanceUser instanceUser = new InstanceUser();
+        instanceUser.setInstanceId(instanceId);
+        instanceUser.setUsername(username);
+        instanceUser.setTaskname(taskName);
+        instanceUser.setTag(tag);
+        instanceUserService.addInstanceUser(instanceUser);
+
 
         // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
-        UserVO curUser = new UserVO(userVO.getUsername(), userVO.getRole(), tagNum);
-
-        Page<Instance> pageData = instanceService.findPageData(PageRequest.of(tagNum, 1));
-//        System.out.println(pageData.hasContent());
-        if (!pageData.hasContent()){
+        UserVO curUser = new UserVO(username, role, tagNum);
+        List<Instance> pageData = instanceService.findPageDataByTaskName(taskName, PageRequest.of(tagNum, 1));
+        if (pageData.isEmpty()){
             Session session = SecurityUtils.getSubject().getSession();
-            TempoVO tempoVO = (TempoVO) session.getAttribute("tempoVO");
             Team team = (Team) session.getAttribute("team");
-            TaskVO taskVO = (TaskVO) session.getAttribute("myTask");
+            TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
 
-            List<Instance>instanceList = instanceService.findByTaskName(tempoVO.getTaskName());
+            List<Instance>instanceList = instanceService.findByTaskName(taskName);
             boolean flag = true;
             for(Instance item: instanceList){
                 if (item.getStatus() == 0){
@@ -175,8 +195,8 @@ public class AnnotateController {
             return new RespEntity<>(RespStatus.Over, curUser);
         }
 
-        Instance nextInstance = pageData.getContent().get(0);
-        InstanceVO nextInst = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getItem(), randTag(nextInstance));
+        Instance nextInstance = pageData.get(0);
+        InstanceVO nextInst = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getTaskName(), nextInstance.getItem(), randTag(nextInstance));
 
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("curUser", curUser);

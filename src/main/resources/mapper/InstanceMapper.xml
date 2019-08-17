@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.labeling.demo.repository.InstanceMapper">
+  <resultMap id="BaseResultMap" type="com.labeling.demo.entity.Instance">
+    <constructor>
+      <idArg column="instanceId" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="tagExpert" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="tagModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="tagNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.labeling.demo.entity.Instance">
+    <constructor>
+      <idArg column="instanceId" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="tagExpert" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="tagModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="tagNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="item" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    instanceId, taskName, tagExpert, tagModel, status, tagNum
+  </sql>
+  <sql id="Blob_Column_List">
+    item
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_instance
+    where instanceId = #{instanceId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_instance
+    where instanceId = #{instanceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.labeling.demo.entity.Instance">
+    insert into tb_instance (instanceId, taskName, tagExpert, 
+      tagModel, status, tagNum, 
+      item)
+    values (#{instanceId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{tagExpert,jdbcType=VARCHAR}, 
+      #{tagModel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tagNum,jdbcType=INTEGER}, 
+      #{item,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.labeling.demo.entity.Instance">
+    insert into tb_instance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="instanceId != null">
+        instanceId,
+      </if>
+      <if test="taskName != null">
+        taskName,
+      </if>
+      <if test="tagExpert != null">
+        tagExpert,
+      </if>
+      <if test="tagModel != null">
+        tagModel,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="tagNum != null">
+        tagNum,
+      </if>
+      <if test="item != null">
+        item,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="instanceId != null">
+        #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagExpert != null">
+        #{tagExpert,jdbcType=VARCHAR},
+      </if>
+      <if test="tagModel != null">
+        #{tagModel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="tagNum != null">
+        #{tagNum,jdbcType=INTEGER},
+      </if>
+      <if test="item != null">
+        #{item,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.labeling.demo.entity.Instance">
+    update tb_instance
+    <set>
+      <if test="taskName != null">
+        taskName = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagExpert != null">
+        tagExpert = #{tagExpert,jdbcType=VARCHAR},
+      </if>
+      <if test="tagModel != null">
+        tagModel = #{tagModel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="tagNum != null">
+        tagNum = #{tagNum,jdbcType=INTEGER},
+      </if>
+      <if test="item != null">
+        item = #{item,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where instanceId = #{instanceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.labeling.demo.entity.Instance">
+    update tb_instance
+    set taskName = #{taskName,jdbcType=VARCHAR},
+      tagExpert = #{tagExpert,jdbcType=VARCHAR},
+      tagModel = #{tagModel,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      tagNum = #{tagNum,jdbcType=INTEGER},
+      item = #{item,jdbcType=LONGVARCHAR}
+    where instanceId = #{instanceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.Instance">
+    update tb_instance
+    set taskName = #{taskName,jdbcType=VARCHAR},
+      tagExpert = #{tagExpert,jdbcType=VARCHAR},
+      tagModel = #{tagModel,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      tagNum = #{tagNum,jdbcType=INTEGER}
+    where instanceId = #{instanceId,jdbcType=BIGINT}
+  </update>
+
+  <select id="findByPage" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_instance
+    limit #{pager.offset}, #{pager.pageSize}
+  </select>
+
+  <select id="findPageDataByTaskName" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_instance WHERE taskName=#{taskName}
+    limit #{pager.offset}, #{pager.pageSize}
+  </select>
+
+  <insert id="save" parameterType="com.labeling.demo.entity.Instance">
+    insert into tb_instance (instanceId, taskName, tagExpert,
+      tagModel, status, tagNum,
+      item)
+    values (#{instanceId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{tagExpert,jdbcType=VARCHAR},
+      #{tagModel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tagNum,jdbcType=INTEGER},
+      #{item,jdbcType=LONGVARCHAR})
+    ON DUPLICATE KEY UPDATE
+    taskName = #{taskName,jdbcType=VARCHAR},
+    tagExpert = #{tagExpert,jdbcType=VARCHAR},
+    tagModel = #{tagModel,jdbcType=VARCHAR},
+    tagNum = #{tagNum,jdbcType=INTEGER},
+    item = #{item,jdbcType=LONGVARCHAR},
+    status = #{status,jdbcType=INTEGER}
+  </insert>
+
+  <insert id="saveAll" parameterType="java.util.List">
+    insert into tb_instance (taskName, item, tagExpert, tagModel, status, tagNum)
+    values
+     <foreach collection="list" item="inst" index="index" separator=",">
+      (
+        #{inst.taskName,jdbcType=VARCHAR},
+        #{inst.item,jdbcType=LONGVARCHAR},
+        #{inst.tagExpert,jdbcType=VARCHAR},
+        #{inst.tagModel,jdbcType=VARCHAR},
+        #{inst.status,jdbcType=INTEGER},
+        #{inst.tagNum,jdbcType=INTEGER}
+        )
+     </foreach>
+  </insert>
+
+</mapper>

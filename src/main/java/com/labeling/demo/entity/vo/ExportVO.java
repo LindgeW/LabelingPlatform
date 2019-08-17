@@ -1,22 +1,25 @@
 package com.labeling.demo.entity.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ExportVO implements Serializable {
-    private String raw;  //原始数据
+    private String raw;       //原始数据
     private String expertTag; //专家标签
-    private String userName;
+    private String userName;    //标注者
     private String userTag;  //用户标签
+    private Date tagTime;  //标注时间
 
     public ExportVO() {
         super();
     }
 
-    public ExportVO(String raw, String expertTag, String userName, String userTag) {
+    public ExportVO(String raw, String expertTag, String userName, String userTag, Date tagTime) {
         this.raw = raw;
         this.expertTag = expertTag;
         this.userName = userName;
         this.userTag = userTag;
+        this.tagTime = tagTime;
     }
 
     public String getRaw() {
@@ -51,6 +54,14 @@ public class ExportVO implements Serializable {
         this.userTag = userTag;
     }
 
+    public Date getTagTime() {
+        return tagTime;
+    }
+
+    public void setTagTime(Date tagTime) {
+        this.tagTime = tagTime;
+    }
+
     @Override
     public String toString() {
         return "ExportVO{" +
@@ -58,6 +69,7 @@ public class ExportVO implements Serializable {
                 ", expertTag='" + expertTag + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userTag='" + userTag + '\'' +
+                ", tagTime=" + tagTime +
                 '}';
     }
 

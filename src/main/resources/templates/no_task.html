@@ -78,8 +78,8 @@
                    type="image/svg+xml"/>
         </div>
         <div style="margin-top: 50px">
-            <h3 th:if="${userVo.role} == admin">你好，管理员！请发布标注任务...</h3>
-            <h3 th:unless="${userVo.role} == admin">你还没有加入任何标注小组，请先联系管理员！</h3>
+            <h4 th:if="${userVo.role} == admin">你好，管理员！请发布标注任务...</h4>
+            <h4 th:unless="${userVo.role} == admin">你还没有加入任何标注小组，请先联系管理员！</h4>
         </div>
     </div>
 
