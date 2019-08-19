@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link href="/css/smartmenu/sm-blue/sm-blue.css" rel="stylesheet">-->
+    <!--<link href="/css/smartmenu/sm-core-css.css" rel="stylesheet">-->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <!--<script src="/js/jquery.smartmenus.js"></script>-->
+
+    <script>
+        //防止右键菜单弹出
+        document.oncontextmenu = function(){return false};
+
+        var tokens = ['我', '来自','湖北','武汉', '武汉', '！'];
+        function getIdx(lbl){
+            return tokens.indexOf(lbl);
+        }
+
+        function drawEntity(spans, color){
+            spans.sort();
+            $.each($('span').slice(spans[0], spans[1]+1), function(){
+                $(this).css('background', color);
+            });
+        }
+
+        $(function(){
+
+            $.each(tokens, function(i, val){
+                $("#panel").append("<span style='padding:10px;' class='"+i+"'>"+val+"</span>")
+            });
+
+            var ls, rs, span = null;
+            var spans = [];
+            $('span').bind('mousedown', function(e){
+                if(e.which === 1){
+                    if (ls == null){
+                        span = [];
+                        ls = $(this).attr('class');
+                        span.push(parseInt(ls));
+                        $(this).css('background','lightgray');
+                    } else{
+                        rs = $(this).attr('class');
+                        span.push(parseInt(rs));
+                        ls = null;
+                        drawEntity(span, 'red');
+                        spans.push(span);
+                    }
+
+                }
+                else if (e.which === 3){
+
+                    drawEntity(span, $("body").css('background'));
+                }
+            });
+        });
+    </script>
+
+
+
+</head>
+<body>
+
+<div id='panel'>
+
+</div>
+</body>
+</html>

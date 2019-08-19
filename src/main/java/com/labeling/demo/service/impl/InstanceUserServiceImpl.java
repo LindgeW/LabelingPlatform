@@ -76,14 +76,7 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
-    public List<InstanceUser> findInstanceUserByUsername(String username) {
-        return this.instanceuserMapper.findByUserName(username);
-    }
-
-    @Override
     public Integer countByTask(String username, String taskname) {
         return instanceuserMapper.countByTask(username, taskname);
     }
-
-
 }

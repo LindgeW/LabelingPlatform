@@ -23,8 +23,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="team: ${teams}">
-                    <td th:text="${team.teamId}"></td>
+                <tr th:each="team, state: ${teams}">
+                    <td th:text="${state.index}"></td>
                     <td th:text="${team.teamName}"></td>
                     <td th:text="${team.taskName}"></td>
                     <td th:text="${team.members}"></td>

@@ -133,7 +133,9 @@ public class AnnotateController {
         Instance instance = instanceService.findById(instanceId);
         //如果当前数据未标满，则tagnum+1
         instance.setTagNum(instance.getTagNum()+1);
-        if (instance.getTagNum() == 3) {
+        Session session = SecurityUtils.getSubject().getSession();
+        Team team = (Team) session.getAttribute("team");
+        if (instance.getTagNum() == StringUtils.split(team.getMembers()).length) {
 //        ArrayList<String> taglist = new ArrayList<String>();
 //            List<InstanceUser> instTaglist =  instanceUserService.findInstanceUserById(instanceVO.getInstanceId());
 //            //为数据打上最终标签且改变状态
@@ -170,9 +172,9 @@ public class AnnotateController {
         int tagNum = userVO.getTagNum() + 1;
         UserVO curUser = new UserVO(username, role, tagNum);
         List<Instance> pageData = instanceService.findPageDataByTaskName(taskName, PageRequest.of(tagNum, 1));
+//        Instance nextInstance = instanceService.findPageDataByTaskNameRand(username ,taskName, PageRequest.of(tagNum, 1));
+
         if (pageData.isEmpty()){
-            Session session = SecurityUtils.getSubject().getSession();
-            Team team = (Team) session.getAttribute("team");
             TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
 
             List<Instance>instanceList = instanceService.findByTaskName(taskName);

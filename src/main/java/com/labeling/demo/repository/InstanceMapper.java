@@ -33,6 +33,8 @@ public interface InstanceMapper {
 
     List<Instance> findPageDataByTaskName(String taskName, @Param("pager") Pageable pageable);
 
+    List<Instance> findPageDataByTaskNameRand(String taskName, @Param("pager") Pageable pageable);
+
     @Select("select * from tb_instance where taskName = #{taskName}")
     List<Instance> findByTaskName(String taskName);
 

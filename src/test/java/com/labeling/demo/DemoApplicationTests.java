@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.labeling.demo.entity.Instance;
+import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.service.InstanceService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -235,12 +236,12 @@ public class DemoApplicationTests {
         System.out.println(ss);
     }
 
-//    @Autowired
-//    InstanceService instanceService;
+    @Autowired
+    InstanceMapper instanceMapper;
+
     @Test
     public void testTask(){
-//        List<Instance> insts = instanceService.findPageDataByTaskName("车评标注", PageRequest.of(3, 1));
 
-        System.out.println(new Date());
+        System.out.println(instanceMapper.findPageDataByTaskNameRand("电商评论", PageRequest.of(1, 3)));
     }
 }

@@ -34,7 +34,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addUser(User user) {
-        return this.userMapper.insertSelective(user) >= 1;
+        if(null == userMapper.selectByPrimaryKey(user.getUsername())){
+            return this.userMapper.insertSelective(user) >= 1;
+        }
+
+        return false;
     }
 
     @Override
@@ -52,8 +56,4 @@ public class UserServiceImpl implements UserService {
         return isOk;
     }
 
-    @Override
-    public List<User> findByTeam(String teamName) {
-        return userMapper.findAllByTeam(teamName);
-    }
 }

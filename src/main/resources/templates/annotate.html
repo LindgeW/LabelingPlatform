@@ -25,14 +25,12 @@
 
     <style>
         #lbl_obj {
-            /*text-align: center;*/
             margin-top: 10%;
             min-height: 100px;
             padding-top: 30px;
             padding-bottom: 30px;
             font-size: 20px;
             font-family: 微软雅黑, serif;
-            /*border: #ff0000 1px dotted;*/
         }
 
         input[type="radio"] {
@@ -43,6 +41,9 @@
     </style>
 
     <script>
+        //防止右键菜单弹出
+        document.oncontextmenu = function(){return false};
+
         $(function () {
             randSelect();
         });
@@ -137,7 +138,7 @@
                                 <!--<span id="fullscreen-button">全屏</span>-->
                             <!--</a>-->
                         <!--</li>-->
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a class="nav-link" href="/annotate">我的任务</a>
                         </li>
                         <li class="nav-item">

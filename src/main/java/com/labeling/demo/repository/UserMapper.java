@@ -22,9 +22,6 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    @Select("select * from tb_user where teamName = #{teamName}")
-    List<User> findAllByTeam(String teamName);
-
 //    @Select("select role from tb_user where username = #{username}")
 //    String findRoleByName(String username);
 }

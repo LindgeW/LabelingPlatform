@@ -159,6 +159,16 @@
     limit #{pager.offset}, #{pager.pageSize}
   </select>
 
+  <select id="findPageDataByTaskNameRand" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_instance as t1 join (select round(rand() * ((select max(instanceId) from tb_instance) - (select min(instanceId) from tb_instance)) + (select min(instanceId) from tb_instance)) as id) as t2
+    WHERE taskName=#{taskName} and t1.instanceId >= t2.id order by t1.instanceId
+    limit #{pager.offset}, #{pager.pageSize}
+  </select>
+
   <insert id="save" parameterType="com.labeling.demo.entity.Instance">
     insert into tb_instance (instanceId, taskName, tagExpert,
       tagModel, status, tagNum,

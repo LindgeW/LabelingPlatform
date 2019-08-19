@@ -17,6 +17,8 @@ public interface InstanceService {
 //    List<Instance> findPageData(Pageable instPage);
     List<Instance> findPageDataByTaskName(String taskName, Pageable pageable);
 
+    Instance findPageDataByTaskNameRand(String userName, String taskName, Pageable pageable);
+
 //    Instance findInstById(Long id);
 
     List<Instance> findByTaskName(String taskName);

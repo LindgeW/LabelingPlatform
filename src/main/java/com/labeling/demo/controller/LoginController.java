@@ -88,7 +88,7 @@ public class LoginController {
         }
 
         //跳转到标注页面
-        return new RespEntity<>(RespStatus.SUCCESS, "/annotate");
+        return new RespEntity<>(RespStatus.SUCCESS, "/ner_annotate");
     }
 
     @GetMapping("/logout")
