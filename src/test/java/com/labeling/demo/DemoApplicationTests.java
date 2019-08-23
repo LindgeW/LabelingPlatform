@@ -241,7 +241,29 @@ public class DemoApplicationTests {
 
     @Test
     public void testTask(){
+        //instanceId, taskName, item, tagExpert, tagModel, status, tagNum
+        Instance inst1 = new Instance();
+        inst1.setInstanceId(2L);
+        inst1.setTagNum(1);
+        inst1.setTagExpert("gen");
+        inst1.setTagModel("gen");
 
-        System.out.println(instanceMapper.findPageDataByTaskNameRand("电商评论", PageRequest.of(1, 3)));
+        Instance inst2 = new Instance();
+        inst2.setInstanceId(3L);
+        inst2.setTagNum(1);
+        inst2.setTagExpert("gen");
+        inst2.setTagModel("pos");
+
+        List<Instance> instLst = new ArrayList<>();
+        instLst.add(inst1);
+        instLst.add(inst2);
+        instanceMapper.saveAll(instLst);
+//        System.out.println(instanceMapper.findPageDataByTaskNameRand("电商评论", PageRequest.of(1, 3)));
+    }
+
+    @Test
+    public void testUnicode(){
+        String us = "1\u3001\u5bf9\u6807\u6ce8\u5458\u51fa\u73b0\u5206\u6b67\u7684\u6807\u6ce8\u7ed3\u679c\u505a\u51b3\u65ad\uff08\u4e13\u5bb6\u4e0d\u80fd\u8bc4\u5b9a\u81ea\u5df1\u6807\u7684\u6570\u636e\uff09";
+        System.out.println(us);
     }
 }

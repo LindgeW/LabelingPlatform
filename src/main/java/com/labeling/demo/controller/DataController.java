@@ -9,6 +9,7 @@ import com.labeling.demo.service.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,7 +53,11 @@ public class DataController {
 
     @GetMapping("/upload")
     @RequiresRoles("admin")
-    public String toUpload(){
+    public String toUpload(Model model){
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        List<String> taskNames = taskService.findByExpertName(curUser.getUsername());
+        Set<String> taskSet = new HashSet<>(taskNames);
+        model.addAttribute("builtTasks", taskSet);
         return "upload";
     }
 
@@ -67,10 +72,8 @@ public class DataController {
     @GetMapping("/exportData")
     @RequiresRoles("admin")
     public void exportData(@RequestParam("task") String taskName,
-                           @RequestParam("type") String type,
                            HttpServletResponse response) throws IOException {
         System.out.println(taskName);
-        System.out.println(type);
         /*
             原始数据
             专家标签
@@ -84,24 +87,26 @@ public class DataController {
         //根据任务查团队(一个团队一个任务，一个任务可以多个团队)
         List<Instance> taskInsts = instanceService.findByTaskName(taskName);
         Set<ExportVO> exportVOs = new HashSet<>();
-        for (Instance instance: taskInsts){
+        for (Instance instance: taskInsts){ //导出相关任务的所有数据
+            //根据数据找到标注者的标注记录
             List<InstanceUser> records = instanceUserService.findInstanceUserById(instance.getInstanceId());
-            if (records.isEmpty()){
-                ExportVO exportVO = new ExportVO(instance.getItem(), instance.getTagExpert(), "", "", null);
-                exportVOs.add(exportVO);
-            } else {
+            if (!records.isEmpty()){
                 for (InstanceUser record : records) {
-                    if("admin".equalsIgnoreCase(type) || !"admin".equalsIgnoreCase(userService.findUser(record.getUsername()).getRole())) {
-                        ExportVO exportVO = new ExportVO(instance.getItem(), instance.getTagExpert(), record.getUsername(), record.getTag(), record.getTagTime());
-                        exportVOs.add(exportVO);
-                    }
+                    String role = userService.findUser(record.getUsername()).getRole();
+                    ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagExpert(), record.getUsername(), record.getTag(), role, record.getTagTime(), record.getResponseTime());
+                    exportVOs.add(exportVO);
                 }
+            } else{ //没有标注记录直接导出
+                ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagExpert(), "", "", "", null, 0f);
+                exportVOs.add(exportVO);
             }
         }
 
-        bufOs.write(JSONArray.toJSONBytes(exportVOs));
-        bufOs.flush();
-        bufOs.close();
+        if (!exportVOs.isEmpty()){
+            bufOs.write(JSONArray.toJSONBytes(exportVOs));
+            bufOs.flush();
+            bufOs.close();
+        }
     }
 
 
@@ -122,13 +127,73 @@ public class DataController {
         System.out.println(multiFile.getSize());
         System.out.println(tags);
 
+        /*
+            插入：
+                任务不存在
+            修改：
+                同一个人创建的任务同名
+            警告：
+                不同人创建的同名任务
+         */
+        // 发布任务的人
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        String username = curUser.getUsername();
+
         Task task = taskService.findByName(taskName);
-        if (task != null){  //任务名已存在
-            return new RespEntity<>(RespStatus.Error, Boolean.FALSE);
+        if (task != null && !username.equals(task.getExpertname())){
+            //任务名已存在且不是同一个人创建的 -> 警告
+            return new RespEntity<>(RespStatus.DuplicateTask, Boolean.FALSE);
         }
 
 //        Set<String> instSet = new HashSet<>(0);
         Set<Instance> instSet = new HashSet<>(0);
+
+        //任务名已存在且是同一个人创建的 -> 修改
+        if (task != null && username.equals(task.getExpertname())){
+            if(multiFile.getOriginalFilename().endsWith("json")){
+                String jsonStr = IOUtils.toString(multiFile.getInputStream());
+                JSONArray jsonArray = JSON.parseArray(jsonStr);
+
+                for (int i = 0, len=jsonArray.size(); i < len; i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Long instanceId = jsonObject.getLong("instanceId");
+                    String tagExpert = jsonObject.getString("expertTag");
+                    if(StringUtils.isBlank(tagExpert)){
+                        tagExpert = "";
+                    }
+                    JSONArray tagModelArr = jsonObject.getJSONArray("modelTag");
+                    String tagModel = "";
+                    if (tagModelArr != null){
+                        tagModel = StringUtils.join(tagModelArr, ";");
+                    }
+                    Instance instance = new Instance();
+                    instance.setInstanceId(instanceId);
+                    instance.setTagExpert(tagExpert);
+                    instance.setTagModel(tagModel);
+                    instSet.add(instance);
+                }
+
+                // 分批次修改数据（修改标签值）
+                if (!instSet.isEmpty()) {
+                    List<Instance> instBuf = new ArrayList<>(BatchSize);
+                    for (Instance inst : instSet) {
+                        instBuf.add(inst);
+                        if (instBuf.size() == BatchSize) {
+                            instanceService.updateAll(instBuf);
+                            instBuf.clear();
+                        }
+                    }
+                    if (!instBuf.isEmpty()) {
+                        instanceService.updateAll(instBuf);
+                    }
+                }
+
+                return new RespEntity<>(RespStatus.SUCCESS, Boolean.TRUE);
+            }
+
+            return new RespEntity<>(RespStatus.InvalidFormat, Boolean.FALSE);
+        }
+
         if (multiFile.getOriginalFilename().endsWith("zip")) {
             File tmpDir = new File(tempDir);
             if (!tmpDir.exists()){
@@ -154,7 +219,7 @@ public class DataController {
                         line = StringUtils.trimToEmpty(line);  //过滤两端空格
                         if (!StringUtils.isAllBlank(line)){
 //                            instSet.add(line);
-                            instSet.add(new Instance(taskName, line, "", "", 0, 0));
+                            instSet.add(new Instance(taskName, "", "", 0, 0, line));
                         }
                     }
                 }
@@ -168,29 +233,30 @@ public class DataController {
                 line = StringUtils.trimToEmpty(line);
                 if (!StringUtils.isAllBlank(line)){
 //                    instSet.add(line);
-                    instSet.add(new Instance(taskName, line, "", "", 0, 0));
+                    instSet.add(new Instance(taskName, "", "", 0, 0, line));
                 }
             }
 
-        } else if(multiFile.getOriginalFilename().endsWith("json")){
-            String jsonStr = IOUtils.toString(multiFile.getInputStream());
-            JSONArray jsonArray = JSON.parseArray(jsonStr);
-
-            for (int i = 0, len=jsonArray.size(); i < len; i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String item = jsonObject.getString("raw");
-                String tagExpert = jsonObject.getString("expertTag");
-                if(StringUtils.isBlank(tagExpert)){
-                    tagExpert = "";
-                }
-                JSONArray tagModelArr = jsonObject.getJSONArray("modelTag");
-                String tagModel = "";
-                if (tagModelArr != null){
-                    tagModel = StringUtils.join(tagModelArr, ";");
-                }
-                instSet.add(new Instance(taskName, item, tagExpert, tagModel, 0, 0));
-            }
         }
+//        else if(multiFile.getOriginalFilename().endsWith("json")){
+//            String jsonStr = IOUtils.toString(multiFile.getInputStream());
+//            JSONArray jsonArray = JSON.parseArray(jsonStr);
+//
+//            for (int i = 0, len=jsonArray.size(); i < len; i++) {
+//                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                String item = jsonObject.getString("raw");
+//                String tagExpert = jsonObject.getString("expertTag");
+//                if(StringUtils.isBlank(tagExpert)){
+//                    tagExpert = "";
+//                }
+//                JSONArray tagModelArr = jsonObject.getJSONArray("modelTag");
+//                String tagModel = "";
+//                if (tagModelArr != null){
+//                    tagModel = StringUtils.join(tagModelArr, ";");
+//                }
+//                instSet.add(new Instance(taskName, item, tagExpert, tagModel, 0, 0));
+//            }
+//        }
 
         // 分批次将数据保存到MongoDB中
         if (!instSet.isEmpty()){
@@ -206,7 +272,8 @@ public class DataController {
                 instanceService.saveAll(instBuf);
             }
 
-            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false));
+            // 保存新任务
+            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false, username));
         }
 
 //        if (!instSet.isEmpty()){

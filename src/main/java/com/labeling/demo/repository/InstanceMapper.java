@@ -47,4 +47,6 @@ public interface InstanceMapper {
     void save(Instance instance);
 
     void saveAll(Iterable<Instance> instances);
+
+    void updateAll(Iterable<Instance> instances);
 }

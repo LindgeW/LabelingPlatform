@@ -15,21 +15,25 @@ public class InstanceUser {
 
     private Date tagTime;
 
-    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname) {
+    private Float responseTime;
+
+    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname, Float responseTime) {
         this.id = id;
         this.username = username;
         this.instanceId = instanceId;
         this.tag = tag;
         this.taskname = taskname;
+        this.responseTime = responseTime;
     }
 
-    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname, Date tagTime) {
+    public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname, Date tagTime, Float responseTime) {
         this.id = id;
         this.username = username;
         this.instanceId = instanceId;
         this.tag = tag;
         this.taskname = taskname;
         this.tagTime = tagTime;
+        this.responseTime = responseTime;
     }
 
     public InstanceUser() {
@@ -84,15 +88,11 @@ public class InstanceUser {
         this.tagTime = tagTime;
     }
 
-    @Override
-    public String toString() {
-        return "InstanceUser{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", instanceId=" + instanceId +
-                ", tag='" + tag + '\'' +
-                ", taskname='" + taskname + '\'' +
-                ", tagTime=" + tagTime +
-                '}';
+    public Float getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Float responseTime) {
+        this.responseTime = responseTime;
     }
 }

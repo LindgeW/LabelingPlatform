@@ -33,10 +33,12 @@ public class InstanceServiceImpl implements InstanceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveAll(Iterable<Instance> instances) {
-        for (Instance inst: instances) {
-            System.out.println(inst);
-        }
         this.instanceMapper.saveAll(instances);
+    }
+
+    @Override
+    public void updateAll(Iterable<Instance> instances) {
+       this.instanceMapper.updateAll(instances);
     }
 
     @Override

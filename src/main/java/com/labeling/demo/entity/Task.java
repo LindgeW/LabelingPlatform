@@ -9,21 +9,17 @@ public class Task {
 
     private String tags;
 
-    private Boolean status;
+    private Boolean status = false;
 
-    public Task(String taskname, Short datatype, Integer corpussize, String tags) {
-        this.taskname = taskname;
-        this.datatype = datatype;
-        this.corpussize = corpussize;
-        this.tags = tags;
-    }
+    private String expertname;
 
-    public Task(String taskname, Short datatype, Integer corpussize, String tags, Boolean status) {
+    public Task(String taskname, Short datatype, Integer corpussize, String tags, Boolean status, String expertname) {
         this.taskname = taskname;
         this.datatype = datatype;
         this.corpussize = corpussize;
         this.tags = tags;
         this.status = status;
+        this.expertname = expertname;
     }
 
     public Task() {
@@ -68,5 +64,13 @@ public class Task {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getExpertname() {
+        return expertname;
+    }
+
+    public void setExpertname(String expertname) {
+        this.expertname = expertname == null ? null : expertname.trim();
     }
 }

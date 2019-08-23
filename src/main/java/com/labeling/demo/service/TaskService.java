@@ -12,4 +12,6 @@ public interface TaskService {
     Task findByName(String taskName);
 
     int updateByName(Task task);
+
+    List<String> findByExpertName(String expertName);
 }

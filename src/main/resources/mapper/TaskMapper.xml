@@ -8,10 +8,11 @@
       <arg column="corpussize" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tags" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="expertname" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    taskname, datatype, corpussize, tags, status
+    taskname, datatype, corpussize, tags, status, expertname
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -25,9 +26,11 @@
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task (taskname, datatype, corpussize, 
-      tags, status)
+      tags, status, expertname
+      )
     values (#{taskname,jdbcType=VARCHAR}, #{datatype,jdbcType=SMALLINT}, #{corpussize,jdbcType=INTEGER}, 
-      #{tags,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
+      #{tags,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{expertname,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task
@@ -47,6 +50,9 @@
       <if test="status != null">
         status,
       </if>
+      <if test="expertname != null">
+        expertname,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="taskname != null">
@@ -63,6 +69,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=BIT},
+      </if>
+      <if test="expertname != null">
+        #{expertname,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -81,6 +90,9 @@
       <if test="status != null">
         status = #{status,jdbcType=BIT},
       </if>
+      <if test="expertname != null">
+        expertname = #{expertname,jdbcType=VARCHAR},
+      </if>
     </set>
     where taskname = #{taskname,jdbcType=VARCHAR}
   </update>
@@ -89,7 +101,8 @@
     set datatype = #{datatype,jdbcType=SMALLINT},
       corpussize = #{corpussize,jdbcType=INTEGER},
       tags = #{tags,jdbcType=VARCHAR},
-      status = #{status,jdbcType=BIT}
+      status = #{status,jdbcType=BIT},
+      expertname = #{expertname,jdbcType=VARCHAR}
     where taskname = #{taskname,jdbcType=VARCHAR}
   </update>
 </mapper>

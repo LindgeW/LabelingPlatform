@@ -9,27 +9,25 @@ public class Team {
 
     private String members;
 
-    private Boolean status;
+    private Boolean status = false;
 
-    public Team(String teamName, String taskName,String members) {
+    private String expertname;
+
+    public Team(String teamName, String taskName, String members, String expertname, Boolean status) {
         this.teamName = teamName;
         this.taskName = taskName;
         this.members = members;
+        this.expertname = expertname;
+        this.status = status;
     }
 
-    public Team(Integer teamId, String teamName, String taskName, String members) {
-        this.teamId = teamId;
-        this.teamName = teamName;
-        this.taskName = taskName;
-        this.members = members;
-    }
-
-    public Team(Integer teamId, String teamName, String taskName, String members, Boolean status) {
+    public Team(Integer teamId, String teamName, String taskName, String members, Boolean status, String expertname) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.taskName = taskName;
         this.members = members;
         this.status = status;
+        this.expertname = expertname;
     }
 
     public Team() {
@@ -65,7 +63,7 @@ public class Team {
     }
 
     public void setMembers(String members) {
-        this.members = members;
+        this.members = members == null ? null : members.trim();
     }
 
     public Boolean getStatus() {
@@ -74,5 +72,13 @@ public class Team {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getExpertname() {
+        return expertname;
+    }
+
+    public void setExpertname(String expertname) {
+        this.expertname = expertname == null ? null : expertname.trim();
     }
 }

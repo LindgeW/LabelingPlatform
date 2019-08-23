@@ -5,6 +5,8 @@ public class Instance {
 
     private String taskName;
 
+    private String item;
+
     private String tagExpert;
 
     private String tagModel;
@@ -13,9 +15,7 @@ public class Instance {
 
     private Integer tagNum;
 
-    private String item;
-
-    public Instance(String taskName, String item, String tagExpert, String tagModel, Integer status, Integer tagNum) {
+    public Instance(String taskName, String tagExpert, String tagModel, Integer status, Integer tagNum, String item) {
         this.taskName = taskName;
         this.item = item;
         this.tagExpert = tagExpert;
@@ -106,4 +106,5 @@ public class Instance {
                 ", item='" + item + '\'' +
                 '}';
     }
+
 }

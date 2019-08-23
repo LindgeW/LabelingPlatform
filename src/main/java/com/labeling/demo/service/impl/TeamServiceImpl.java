@@ -22,12 +22,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean save(Team team) {
-        if (findByName(team.getTeamName()) == null){
-            teamMapper.insertSelective(team);
-            return true;
-        }
-
-        return false;
+        return teamMapper.insertSelective(team) >= 1;
     }
 
     @Override
@@ -41,13 +36,25 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateByTeamName(Team team) {
-        return teamMapper.updateByTeamName(team);
+        return teamMapper.updateByPrimaryKeySelective(team) >= 1;
     }
 
     @Override
     public List<Team> findByTaskName(String taskName) {
         return teamMapper.findByTaskName(taskName);
+    }
+
+    @Override
+    public List<String> findByExpertName(String username) {
+        return teamMapper.findByExpertName(username);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTeam(Team team) {
+        teamMapper.updateByPrimaryKeySelective(team);
     }
 
 

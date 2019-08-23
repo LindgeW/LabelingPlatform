@@ -16,4 +16,5 @@ public interface UserService {
 
     boolean updateBatchUser(List<User> users);
 
+    List<User> findUserWithoutTeam();
 }

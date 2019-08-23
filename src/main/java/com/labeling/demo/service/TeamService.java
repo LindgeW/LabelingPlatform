@@ -14,4 +14,8 @@ public interface TeamService {
     boolean updateByTeamName(Team team);
 
     List<Team> findByTaskName(String taskName);
+
+    List<String> findByExpertName(String username);
+
+    void updateTeam(Team team);
 }

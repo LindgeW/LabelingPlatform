@@ -22,6 +22,7 @@ public interface InstanceUserMapper {
 
     int updateByPrimaryKey(InstanceUser record);
 
+
     @Select("select * from tb_instance_user")
     List<InstanceUser> findAll();
 

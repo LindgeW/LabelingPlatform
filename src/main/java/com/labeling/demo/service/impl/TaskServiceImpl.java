@@ -40,8 +40,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateByName(Task task) {
         return taskMapper.updateByPrimaryKey(task);
+    }
+
+    @Override
+    public List<String> findByExpertName(String expertName) {
+        return taskMapper.findByExpert(expertName);
     }
 
 }

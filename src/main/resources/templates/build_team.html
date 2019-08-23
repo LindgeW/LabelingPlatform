@@ -19,6 +19,12 @@
     <script>
         var memberLst = new Array(0);
 
+        $(function () {
+            $("#builtTeam").change(function () {
+                $("#teamName").val($(this).find("option:selected").text());
+            });
+        });
+
         function contain(arr, val) {
             for (var i=0, len=arr.length; i<len; i++){
                 if (arr[i] === val){
@@ -108,15 +114,24 @@
         <div>
             <form action="/build_team" method="post" id="buildForm">
                 <div class="form-group">
+                    <label for="teamName">小组名称：</label>
+                    <div class="form-inline">
+                        <input type="text" class="form-control" id="teamName" name="teamName" placeholder="输入小组名称">
+                        &nbsp;&nbsp;
+                        <select class="form-control" id="builtTeam">
+                            <option selected disabled>--已创建的小组--</option>
+                            <option th:each="team: ${builtTeams}" th:text="${team}" th:value="${team}">暂无</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="tasks">选择标注任务：</label>
                     <select class="form-control" id="tasks" name="task">
                         <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="teamName">小组名称：</label>
-                    <input type="text" class="form-control" id="teamName" name="teamName" placeholder="输入小组名称">
-                </div>
+
                 <div class="form-group">
                     <label for="users">选择待添加的成员（可按shift键多选）：</label>
                     <select class="form-control" id="users" multiple>
@@ -124,7 +139,7 @@
                     </select>
 
                     <button type="button" onclick="addMember()" class="btn btn-primary"> 添加 </button>
-
+                    &nbsp;&nbsp;
                     <button type="button" onclick="deleteMember()" class="btn btn-primary"> 撤回 </button>
 
                     <input type="hidden" name="members" id="members">

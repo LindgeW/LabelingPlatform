@@ -3,8 +3,9 @@ package com.labeling.demo.entity.vo;
 public class InstanceVO {
     private Long instanceId;    // 数据编号
     private String taskName;  //任务名
-    private String item;  //数据项
-    private String tag;    //用户标签
+    private String item;     //数据项
+    private String tag;      //用户标签
+    private Float responseTime;  //用户标签选择响应时间
 
     public InstanceVO() {
         super();
@@ -49,6 +50,14 @@ public class InstanceVO {
         this.tag = tag;
     }
 
+    public Float getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Float responseTime) {
+        this.responseTime = responseTime;
+    }
+
     @Override
     public String toString() {
         return "InstanceVO{" +
@@ -56,6 +65,7 @@ public class InstanceVO {
                 ", taskName='" + taskName + '\'' +
                 ", item='" + item + '\'' +
                 ", tag='" + tag + '\'' +
+                ", responseTime=" + responseTime +
                 '}';
     }
 }

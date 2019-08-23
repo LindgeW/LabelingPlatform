@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Pragma" content="no-cache">
@@ -29,6 +29,10 @@
     <script>
         $(function () {
             initUpload('/upload');
+
+            $("#builtTask").change(function () {
+                $("#taskName").val($(this).find("option:selected").text());
+            });
         });
 
         function getFileType(path) {
@@ -75,34 +79,41 @@
                     message: "文件上传失败！\n\n"+msg
                 });
             }).on("fileuploaded", function(event, data, previewId, index) {
-                if (data.response.data === 'false'){
+                // 创建的任务已存在或同名任务上传的格式不对
+                if (data.response.code === 203 || data.response.code === 204) {
                     bootbox.alert({
                         title: 'Error',
                         className: 'rubberBand animated',
-                        message: "该任务已存在！"
+                        message: data.response.message
                     });
                 }
-
             }).on("filebatchselected", function(event, files) {
                 // 上传json格式化文件，则不需要输入标签集
-                // var fileName = files[0].name;
-                // if(getFileType(fileName) === 'json'){
-                //     $("#tags").attr("disabled", true);
-                // } else{
-                //     $("#tags").attr("disabled", false);
-                // }
+                var fileName = files[0].name;
+                if(getFileType(fileName) === 'json'){
+                    $("#tags").attr("disabled", true);
+                } else{
+                    $("#tags").attr("disabled", false);
+                }
             });
         }
 
         function validate() {
             var taskName = $.trim($("#taskName").val());
             var tags = $.trim($("#tags").val());
+            var fileName = $("#uploadFile").val();  //获取上传文件的文件路径
 
             if (taskName === ""){
                 alert('任务名不能为空！');
                 return false;
             }
 
+            // 如果是json格式的文件则不用校验标签格式
+            if (getFileType(fileName) === 'json'){
+                return true;
+            }
+
+            // 标签校验
             if (tags === ""){
                 alert('标签值不能为空！');
                 return false;
@@ -133,7 +144,14 @@
     <div>
         <div class="form-group">
             <label for="taskName">标注任务：</label>
-            <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>
+            <div class="form-inline">
+                <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>
+                &nbsp;&nbsp;
+                <select class="form-control" id="builtTask">
+                    <option selected disabled>--已创建的任务--</option>
+                    <option th:each="task: ${builtTasks}" th:text="${task}" th:value="${task}">暂无</option>
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label for="dataType">数据类型：</label>

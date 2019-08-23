@@ -12,6 +12,8 @@ public interface InstanceService {
 
     void saveAll(Iterable<Instance> instances);
 
+    void updateAll(Iterable<Instance> instances);
+
     List<Instance> findAll();
 
 //    List<Instance> findPageData(Pageable instPage);

@@ -129,6 +129,7 @@ public class AnnotateController {
         String role = userVO.getRole();
         Long instanceId = instanceVO.getInstanceId();
         String tag = instanceVO.getTag();
+        Float respTime = instanceVO.getResponseTime();
 
         Instance instance = instanceService.findById(instanceId);
         //如果当前数据未标满，则tagnum+1
@@ -164,6 +165,7 @@ public class AnnotateController {
         instanceUser.setInstanceId(instanceId);
         instanceUser.setUsername(username);
         instanceUser.setTaskname(taskName);
+        instanceUser.setResponseTime(respTime);
         instanceUser.setTag(tag);
         instanceUserService.addInstanceUser(instanceUser);
 

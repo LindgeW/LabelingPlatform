@@ -16,17 +16,19 @@ public interface TeamMapper {
 
     Team selectByPrimaryKey(Integer teamId);
 
-    Team findByName(String teamName);
-
     int updateByPrimaryKeySelective(Team record);
 
     int updateByPrimaryKey(Team record);
-
-    boolean updateByTeamName(Team record);
 
     @Select("select * from tb_team")
     List<Team> findAll();
 
     @Select("select * from tb_team where taskName = #{taskName}")
     List<Team> findByTaskName(String taskName);
+
+    @Select("select * from tb_team where teamName = #{teamName}")
+    Team findByName(String teamName);
+
+    @Select("select teamName from tb_team where expertname = #{expertname}")
+    List<String> findByExpertName(String username);
 }

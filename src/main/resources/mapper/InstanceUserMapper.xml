@@ -9,10 +9,11 @@
       <arg column="tag" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="taskname" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="tagTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="responseTime" javaType="java.lang.Float" jdbcType="REAL" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, username, instanceId, tag, taskname, tagTime
+    id, username, instanceId, tag, taskname, tagTime, responseTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -26,11 +27,10 @@
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.InstanceUser">
     insert into tb_instance_user (id, username, instanceId, 
-      tag, taskname, tagTime
-      )
+      tag, taskname, tagTime, responseTime)
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=BIGINT}, 
-      #{tag,jdbcType=VARCHAR}, #{taskname,jdbcType=VARCHAR}, #{tagTime,jdbcType=TIMESTAMP}
-      )
+      #{tag,jdbcType=VARCHAR}, #{taskname,jdbcType=VARCHAR}, #{tagTime,jdbcType=TIMESTAMP}, 
+      #{responseTime,jdbcType=REAL})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.InstanceUser">
     insert into tb_instance_user
@@ -53,6 +53,9 @@
       <if test="tagTime != null">
         tagTime,
       </if>
+      <if test="responseTime != null">
+        responseTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -72,6 +75,9 @@
       </if>
       <if test="tagTime != null">
         #{tagTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responseTime != null">
+        #{responseTime,jdbcType=REAL},
       </if>
     </trim>
   </insert>
@@ -93,6 +99,9 @@
       <if test="tagTime != null">
         tagTime = #{tagTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="responseTime != null">
+        responseTime = #{responseTime,jdbcType=REAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -102,7 +111,8 @@
       instanceId = #{instanceId,jdbcType=BIGINT},
       tag = #{tag,jdbcType=VARCHAR},
       taskname = #{taskname,jdbcType=VARCHAR},
-      tagTime = #{tagTime,jdbcType=TIMESTAMP}
+      tagTime = #{tagTime,jdbcType=TIMESTAMP},
+      responseTime = #{responseTime,jdbcType=REAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -114,13 +124,14 @@
   </select>
 
   <insert id="save" parameterType="com.labeling.demo.entity.InstanceUser">
-    insert into tb_instance_user (id, username, taskname, instanceId, tag)
+    insert into tb_instance_user (id, username, taskname, instanceId, tag, responseTime)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{taskname, jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER},
-      #{tag,jdbcType=VARCHAR})
+      #{tag,jdbcType=VARCHAR}, #{responseTime, jdbcType=REAL})
     ON DUPLICATE KEY UPDATE
     instanceId = #{instanceId,jdbcType=BIGINT},
     username = #{username,jdbcType=VARCHAR},
     taskname = #{taskname,jdbcType=VARCHAR},
     tag = #{tag,jdbcType=VARCHAR}
+    responseTime = #{responseTime, jdbcType=REAL}
   </insert>
 </mapper>

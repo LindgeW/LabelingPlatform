@@ -44,8 +44,10 @@
         //防止右键菜单弹出
         document.oncontextmenu = function(){return false};
 
+        var t1 = null;
         $(function () {
             randSelect();
+            t1 = new Date();
         });
 
         function goldSelect(goldTag) {
@@ -63,13 +65,17 @@
             tag_radios[randNum].checked = true;
         }
 
+
         function save() {
+            var t2 = new Date();
+
             var username = $("#username").text();
             var taskName = $("#taskName").text();
             var role = $('#role').val();
             var instId = $("#instanceId").val();
             var tagNum = parseInt($("#tagNum").text());
             var tag = $("input:radio:checked").val();
+            var respTime = (t2 - t1) / 1000;  // 标注的响应时间(单位：秒)
 
             var sendData = {
                 "username": username,
@@ -77,7 +83,8 @@
                 "instanceId": instId,
                 "taskName": taskName,
                 "tag": tag,
-                "tagNum": tagNum
+                "tagNum": tagNum,
+                "responseTime": respTime
             };
 
             $.ajax({
@@ -110,6 +117,8 @@
                     alert("error: " + msg);
                 }
             });
+
+            t1 = new Date();
         }
 
     </script>

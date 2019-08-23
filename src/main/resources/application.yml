@@ -1,17 +1,18 @@
 server:
   port: 8888
 
+
 spring:
   thymeleaf:
     cache: false
     encoding: UTF-8
 #  resources:
 #    static-locations: classpath:/static/
-  data:
-    mongodb:
-      host: 172.23.43.28
-      port: 27017
-      database: label_db
+#  data:
+#    mongodb:
+#      host: 172.23.43.28
+#      port: 27017
+#      database: label_db
   datasource:
     url: jdbc:mysql://172.23.43.28:3306/db_label_platform?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
@@ -23,3 +24,7 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   #扫描pojo类的位置,在此处指明扫描实体类的包
   type-aliases-package: com.labeling.demo.entity
+
+logging:
+  level:
+    com.labeling.demo.repository: debug

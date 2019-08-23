@@ -56,4 +56,9 @@ public class UserServiceImpl implements UserService {
         return isOk;
     }
 
+    @Override
+    public List<User> findUserWithoutTeam() {
+        return userMapper.findUserWithoutTeam();
+    }
+
 }

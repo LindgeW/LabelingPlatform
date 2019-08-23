@@ -219,16 +219,13 @@
 
     <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
         <h5>
-            <p>
-                <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline"></span>
-            </p>
-            <p>
-                <strong>小组：</strong><span th:text="${team.teamName}" style="text-decoration: underline"></span>
-            </p>
+            <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>
+            &nbsp;&nbsp;&nbsp;
+            <strong>小组：</strong><span th:text="${team.teamName}" style="text-decoration: underline">无</span>
         </h5>
         <div id="dataTable" class="table-responsive">
-            <!--<table class="table" data-mobile-responsive="true">-->
-            <!--</table>-->
+            <table class="table" data-mobile-responsive="true">
+            </table>
         </div>
     </div>
 </body>
