@@ -66,10 +66,16 @@
 
         function validate() {
             var teamName = $.trim($("#teamName").val());
+            var taskName = $("#tasks").val();
             var members = $.trim($("#member_box").val());
 
             if (teamName === ""){
                 alert("小组名称不能为空！");
+                return false;
+            }
+
+            if (taskName == null){
+                alert("请先发布任务！");
                 return false;
             }
 
@@ -139,7 +145,7 @@
                     </select>
 
                     <button type="button" onclick="addMember()" class="btn btn-primary"> 添加 </button>
-                    &nbsp;&nbsp;
+                    &nbsp;
                     <button type="button" onclick="deleteMember()" class="btn btn-primary"> 撤回 </button>
 
                     <input type="hidden" name="members" id="members">

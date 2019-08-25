@@ -8,6 +8,7 @@ import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
 import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -36,16 +37,22 @@ public class AnnotateController {
         this.instanceUserService = instanceUserService;
     }
 
-    private Integer randGenerator(Integer bound){
-        Random random = new Random();
-        return random.nextInt(bound);
-    }
+    //产生指定范围内的随机数
+//    private Integer randGenerator(Integer bound){
+//        Random random = new Random();
+//        return random.nextInt(bound);
+//    }
 
     //生产随机标签
     private String randTag(Instance instance){
         List<String> tagLst = new ArrayList<>();
+        String tagDefault = instance.getTagDefault();
         String tagExpert = instance.getTagExpert();
         String tagModels = instance.getTagModel();
+
+        if (StringUtils.isNotBlank(tagDefault)){
+            tagLst.add(tagDefault);
+        }
 
         if (StringUtils.isNotBlank(tagExpert)) {
             tagLst.add(tagExpert);
@@ -62,16 +69,12 @@ public class AnnotateController {
         }
 
         System.out.println("gold标签：" + tagLst);
-        return tagLst.get(randGenerator(tagLst.size()));
+        return tagLst.get(RandomUtils.nextInt(0, tagLst.size()));
     }
 
     @GetMapping("/annotate")
     public String toAnnotate(Model model){
         Subject curSubj = SecurityUtils.getSubject();
-
-//        if (curSubj.hasRole("admin")){
-//            return "redirect:/bg";
-//        }
 
         User curUser = (User) curSubj.getPrincipal();
         String username = curUser.getUsername();
@@ -80,7 +83,7 @@ public class AnnotateController {
 
         //判断当前用户是否加入小组（没有，则返回空页面）
         if (StringUtils.isBlank(teamName)){
-            model.addAttribute("userVo", new UserVO(username, role));
+            model.addAttribute("userVo", new UserVO(username, role, 0));
             return "no_task";
         }
 
@@ -100,9 +103,6 @@ public class AnnotateController {
         UserVO userVO = new UserVO(username, role, tagNum);
         //当前页 pageNum, 每页大小 pageSize
         List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), PageRequest.of(tagNum, 1));
-//            System.out.println(pageData.isLast());
-//            System.out.println(pageData.hasContent());
-//            System.out.println(pageData.hasNext());
         // 判断当前用户是否已经完成小组任务
         if (pageData.isEmpty()){
             model.addAttribute("userVo", userVO);
@@ -134,9 +134,12 @@ public class AnnotateController {
         Instance instance = instanceService.findById(instanceId);
         //如果当前数据未标满，则tagnum+1
         instance.setTagNum(instance.getTagNum()+1);
+
         Session session = SecurityUtils.getSubject().getSession();
         Team team = (Team) session.getAttribute("team");
-        if (instance.getTagNum() == StringUtils.split(team.getMembers()).length) {
+        String[] members = StringUtils.split(team.getMembers(), ";");
+        //判断该数据是否完成标注，完成置成1
+        if (instance.getTagNum() == members.length) {
 //        ArrayList<String> taglist = new ArrayList<String>();
 //            List<InstanceUser> instTaglist =  instanceUserService.findInstanceUserById(instanceVO.getInstanceId());
 //            //为数据打上最终标签且改变状态
@@ -178,32 +181,31 @@ public class AnnotateController {
 
         if (pageData.isEmpty()){
             TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
-
             List<Instance>instanceList = instanceService.findByTaskName(taskName);
             boolean flag = true;
-            for(Instance item: instanceList){
+            for(Instance item: instanceList){  //所有的数据状态都为1，才算完成任务
                 if (item.getStatus() == 0){
                     flag = false;
                     break;
                 }
             }
             if (flag){
-                //任务完成将队伍和任务的状态都改变
+                //任务完成将队伍和任务的状态都改变，变成1
                 team.setStatus(true);
                 taskVO.setStatus(true);
-                teamService.updateByTeamName(team);
-                taskService.updateByName(taskVO);
+                teamService.updateTeam(team);
+                taskService.updateTask(taskVO);
             }
 
             return new RespEntity<>(RespStatus.Over, curUser);
         }
 
         Instance nextInstance = pageData.get(0);
-        InstanceVO nextInst = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getTaskName(), nextInstance.getItem(), randTag(nextInstance));
+        InstanceVO nextInstVo = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getTaskName(), nextInstance.getItem(), randTag(nextInstance));
 
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("curUser", curUser);
-        respMap.put("nextInst", nextInst);
+        respMap.put("nextInst", nextInstVo);
         return new RespEntity<>(RespStatus.SUCCESS, respMap);
     }
 }

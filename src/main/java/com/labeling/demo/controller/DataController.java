@@ -8,6 +8,8 @@ import com.labeling.demo.entity.vo.ExportVO;
 import com.labeling.demo.service.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -25,10 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -93,20 +92,18 @@ public class DataController {
             if (!records.isEmpty()){
                 for (InstanceUser record : records) {
                     String role = userService.findUser(record.getUsername()).getRole();
-                    ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagExpert(), record.getUsername(), record.getTag(), role, record.getTagTime(), record.getResponseTime());
+                    ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), record.getUsername(), record.getTag(), role, record.getTagTime(), record.getResponseTime());
                     exportVOs.add(exportVO);
                 }
             } else{ //没有标注记录直接导出
-                ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagExpert(), "", "", "", null, 0f);
+                ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), "", "", "", null, 0f);
                 exportVOs.add(exportVO);
             }
         }
 
-        if (!exportVOs.isEmpty()){
-            bufOs.write(JSONArray.toJSONBytes(exportVOs));
-            bufOs.flush();
-            bufOs.close();
-        }
+        bufOs.write(JSONArray.toJSONBytes(exportVOs));
+        bufOs.flush();
+        bufOs.close();
     }
 
 
@@ -126,6 +123,7 @@ public class DataController {
         System.out.println(multiFile.getContentType());
         System.out.println(multiFile.getSize());
         System.out.println(tags);
+        String[] tagArr = StringUtils.split(tags, ";");
 
         /*
             插入：
@@ -157,6 +155,10 @@ public class DataController {
                 for (int i = 0, len=jsonArray.size(); i < len; i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Long instanceId = jsonObject.getLong("instanceId");
+//                    String tagDefault = jsonObject.getString("defaultTag");
+//                    if(StringUtils.isBlank(tagDefault)){
+//                        tagDefault = "";
+//                    }
                     String tagExpert = jsonObject.getString("expertTag");
                     if(StringUtils.isBlank(tagExpert)){
                         tagExpert = "";
@@ -168,6 +170,7 @@ public class DataController {
                     }
                     Instance instance = new Instance();
                     instance.setInstanceId(instanceId);
+//                    instance.setTagDefault(tagDefault);
                     instance.setTagExpert(tagExpert);
                     instance.setTagModel(tagModel);
                     instSet.add(instance);
@@ -219,7 +222,8 @@ public class DataController {
                         line = StringUtils.trimToEmpty(line);  //过滤两端空格
                         if (!StringUtils.isAllBlank(line)){
 //                            instSet.add(line);
-                            instSet.add(new Instance(taskName, "", "", 0, 0, line));
+                            String defaultTag = tagArr[RandomUtils.nextInt(0, tagArr.length)];
+                            instSet.add(new Instance(taskName, defaultTag, "", "", 0, 0, line));
                         }
                     }
                 }
@@ -233,7 +237,8 @@ public class DataController {
                 line = StringUtils.trimToEmpty(line);
                 if (!StringUtils.isAllBlank(line)){
 //                    instSet.add(line);
-                    instSet.add(new Instance(taskName, "", "", 0, 0, line));
+                    String defaultTag = tagArr[RandomUtils.nextInt(0, tagArr.length)];
+                    instSet.add(new Instance(taskName, defaultTag, "", "", 0, 0, line));
                 }
             }
 

@@ -39,9 +39,20 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                     <ul class="navbar-nav">
-                        <li class="navbar-text">
-                            <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}"></span>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                                <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
                         </li>
+
+                        <!--<li class="navbar-text">-->
+                            <!--<i class="fa fa-user-circle"></i> <span th:text="${userVo.username}"></span>-->
+                        <!--</li>-->
                         <!--<li class="nav-item">-->
                             <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
                                 <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
@@ -62,10 +73,7 @@
                                 设置
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
                                 <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
                             </div>
                         </li>
                     </ul>

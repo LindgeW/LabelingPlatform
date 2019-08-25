@@ -9,8 +9,14 @@ public class User {
 
     private String teamName;
 
-    public User(String username, String teamName) {
+    public User(String username, String role) {
         this.username = username;
+        this.role = role;
+    }
+
+    public User(String username, String role, String teamName) {
+        this.username = username;
+        this.role = role;
         this.teamName = teamName;
     }
 

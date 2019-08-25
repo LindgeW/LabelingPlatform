@@ -1,15 +1,19 @@
 package com.labeling.demo.entity.vo;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class ExportVO implements Serializable {
     private Long instanceId;  //数据编号
     private String raw;       //原始数据
+    private String defaultTag; //默认标签（随机）
     private String expertTag; //专家标签
-    private String userName;    //标注者
+    private String userName;  //标注者
     private String userTag;  //用户标签
-    private String userType;     //用户类型：专家或普通用户
+    private String userType;  //用户类型：专家或普通用户
     private Date tagTime;   //标注时间
     private Float responseTime;  //标注响应时间
 
@@ -17,9 +21,10 @@ public class ExportVO implements Serializable {
         super();
     }
 
-    public ExportVO(Long instanceId, String raw, String expertTag, String userName, String userTag, String userType, Date tagTime, Float responseTime) {
+    public ExportVO(Long instanceId, String raw, String defaultTag, String expertTag, String userName, String userTag, String userType, Date tagTime, Float responseTime) {
         this.instanceId = instanceId;
         this.raw = raw;
+        this.defaultTag = defaultTag;
         this.expertTag = expertTag;
         this.userName = userName;
         this.userTag = userTag;
@@ -42,6 +47,14 @@ public class ExportVO implements Serializable {
 
     public void setRaw(String raw) {
         this.raw = raw;
+    }
+
+    public String getDefaultTag() {
+        return defaultTag;
+    }
+
+    public void setDefaultTag(String defaultTag) {
+        this.defaultTag = defaultTag;
     }
 
     public String getExpertTag() {
@@ -95,30 +108,34 @@ public class ExportVO implements Serializable {
     @Override
     public String toString() {
         return "ExportVO{" +
-                "raw='" + raw + '\'' +
+                "instanceId=" + instanceId +
+                ", raw='" + raw + '\'' +
+                ", defaultTag='" + defaultTag + '\'' +
                 ", expertTag='" + expertTag + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userTag='" + userTag + '\'' +
+                ", userType='" + userType + '\'' +
                 ", tagTime=" + tagTime +
+                ", responseTime=" + responseTime +
                 '}';
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExportVO exportVO = (ExportVO) o;
+        return Objects.equals(instanceId, exportVO.instanceId) &&
+                Objects.equals(raw, exportVO.raw) &&
+                Objects.equals(defaultTag, exportVO.defaultTag) &&
+                Objects.equals(expertTag, exportVO.expertTag) &&
+                Objects.equals(userName, exportVO.userName) &&
+                Objects.equals(userTag, exportVO.userTag) &&
+                Objects.equals(userType, exportVO.userType);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null){
-            return false;
-        } else if(this == obj) {  //先比较hashCode，不同时再分别比较属性
-            return true;
-        } else if(obj instanceof ExportVO){
-            ExportVO objOther = (ExportVO) obj;
-            return (raw.equals(objOther.getRaw()) && userName.equals(objOther.getUserName()) && expertTag.equals(objOther.getExpertTag()) && userTag.equals(objOther.getUserTag()));
-        }
-
-        return false;
+    public int hashCode() {
+        return Objects.hash(instanceId, raw, defaultTag, expertTag, userName, userTag, userType);
     }
 }

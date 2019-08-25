@@ -61,7 +61,8 @@ public class TeamController {
     @RequiresRoles("admin")
     public String buildTeam(@RequestParam("task") String taskName,
                             @RequestParam("teamName") String teamName,
-                            @RequestParam("members") String members, Model model){
+                            @RequestParam("members") String members,
+                            Model model){
         /*
             同一个人不能进多个团队，一个团队不能标注多个任务！
 
@@ -86,7 +87,10 @@ public class TeamController {
             if(isOk){
                 // 修改用户状态
                 for (String memberName: memberLst) {
-                    userService.updateUser(new User(memberName, teamName));
+                    User user = new User();
+                    user.setUsername(memberName);
+                    user.setTeamName(teamName);
+                    userService.updateUser(user);
                 }
             }
         } else if (!userName.equals(team.getExpertname())){
@@ -100,9 +104,13 @@ public class TeamController {
             boolean isNew = false;
             for(String memberName: memberLst){
                 if (!memberSet.contains(memberName)){
+                    User user = new User();
+                    user.setUsername(memberName);
+                    user.setTeamName(teamName);
+                    userService.updateUser(user);
+
                     isNew = true;
                     memberSet.add(memberName);
-                    userService.updateUser(new User(memberName, teamName));
                 }
             }
             if (isNew) {  //有新成员加入

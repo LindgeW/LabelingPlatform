@@ -86,6 +86,12 @@
                         className: 'rubberBand animated',
                         message: data.response.message
                     });
+                } else{
+                    bootbox.alert({
+                        title: 'Successful',
+                        className: 'rubberBand animated',
+                        message: '任务创建成功！'
+                    });
                 }
             }).on("filebatchselected", function(event, files) {
                 // 上传json格式化文件，则不需要输入标签集

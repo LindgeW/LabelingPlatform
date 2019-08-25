@@ -37,7 +37,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateByTeamName(Team team) {
+    public boolean updateTeam(Team team) {
         return teamMapper.updateByPrimaryKeySelective(team) >= 1;
     }
 
@@ -50,12 +50,5 @@ public class TeamServiceImpl implements TeamService {
     public List<String> findByExpertName(String username) {
         return teamMapper.findByExpertName(username);
     }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateTeam(Team team) {
-        teamMapper.updateByPrimaryKeySelective(team);
-    }
-
 
 }

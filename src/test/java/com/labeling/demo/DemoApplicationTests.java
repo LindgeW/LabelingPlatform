@@ -7,6 +7,8 @@ import com.labeling.demo.entity.Instance;
 import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.service.InstanceService;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -227,43 +229,58 @@ public class DemoApplicationTests {
     @Test
     public void testObj(){
         Student stu1 = new Student(312, "aaa");
-        Student stu2 = new Student(312, "aaa");
+        Student stu2 = new Student(121, "aaa");
         System.out.println(stu1.hashCode());
         System.out.println(stu2.hashCode());
+        System.out.println(ObjectUtils.notEqual(stu1, stu2));
         Set<Student> ss = new HashSet<>();
         ss.add(stu1);
         ss.add(stu2);
         System.out.println(ss);
     }
 
-    @Autowired
-    InstanceMapper instanceMapper;
-
-    @Test
-    public void testTask(){
-        //instanceId, taskName, item, tagExpert, tagModel, status, tagNum
-        Instance inst1 = new Instance();
-        inst1.setInstanceId(2L);
-        inst1.setTagNum(1);
-        inst1.setTagExpert("gen");
-        inst1.setTagModel("gen");
-
-        Instance inst2 = new Instance();
-        inst2.setInstanceId(3L);
-        inst2.setTagNum(1);
-        inst2.setTagExpert("gen");
-        inst2.setTagModel("pos");
-
-        List<Instance> instLst = new ArrayList<>();
-        instLst.add(inst1);
-        instLst.add(inst2);
-        instanceMapper.saveAll(instLst);
-//        System.out.println(instanceMapper.findPageDataByTaskNameRand("电商评论", PageRequest.of(1, 3)));
-    }
+//    @Autowired
+//    InstanceMapper instanceMapper;
+//
+//    @Test
+//    public void testTask(){
+//        //instanceId, taskName, item, tagExpert, tagModel, status, tagNum
+//        Instance inst1 = new Instance();
+//        inst1.setInstanceId(2L);
+//        inst1.setTagNum(1);
+//        inst1.setTagExpert("gen");
+//        inst1.setTagModel("gen");
+//
+//        Instance inst2 = new Instance();
+//        inst2.setInstanceId(3L);
+//        inst2.setTagNum(1);
+//        inst2.setTagExpert("gen");
+//        inst2.setTagModel("pos");
+//
+//        List<Instance> instLst = new ArrayList<>();
+//        instLst.add(inst1);
+//        instLst.add(inst2);
+//        instanceMapper.saveAll(instLst);
+////        System.out.println(instanceMapper.findPageDataByTaskNameRand("电商评论", PageRequest.of(1, 3)));
+//    }
 
     @Test
     public void testUnicode(){
         String us = "1\u3001\u5bf9\u6807\u6ce8\u5458\u51fa\u73b0\u5206\u6b67\u7684\u6807\u6ce8\u7ed3\u679c\u505a\u51b3\u65ad\uff08\u4e13\u5bb6\u4e0d\u80fd\u8bc4\u5b9a\u81ea\u5df1\u6807\u7684\u6570\u636e\uff09";
         System.out.println(us);
+    }
+
+    private Integer randGenerator(Integer bound){
+        Random random = new Random();
+        return random.nextInt(bound);
+    }
+
+    @Test
+    public void testRand(){
+        System.out.println(RandomUtils.nextInt());
+        for(int i=0; i<10; i++) {
+            System.out.println(RandomUtils.nextInt(0, 3));
+//            System.out.println(randGenerator(3));
+        }
     }
 }

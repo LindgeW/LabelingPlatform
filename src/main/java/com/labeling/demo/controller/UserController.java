@@ -93,7 +93,7 @@ public class UserController {
     @GetMapping("/account")
     public String account(Model model) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole()));
+        model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole(), user.getTeamName(), 0));
         return "account";
     }
 

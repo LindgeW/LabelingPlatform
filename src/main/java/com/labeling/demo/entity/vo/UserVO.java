@@ -1,39 +1,21 @@
 package com.labeling.demo.entity.vo;
 
-public class UserVO {
-    private String username;
-    private String role = "user";
+import com.labeling.demo.entity.User;
+
+public class UserVO extends User {
     private Integer tagNum = 0;  //当前用户已经标了多少数据
 
     public UserVO() {
     }
 
-    public UserVO(String username, String role) {
-        this.username = username;
-        this.role = role;
-        this.tagNum = 0;
-    }
-
     public UserVO(String username, String role, Integer tagNum) {
-        this.username = username;
-        this.role = role;
+        super(username, role);
         this.tagNum = tagNum;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public UserVO(String username, String role, String teamName, Integer tagNum) {
+        super(username, role, teamName);
+        this.tagNum = tagNum;
     }
 
     public Integer getTagNum() {
@@ -42,13 +24,5 @@ public class UserVO {
 
     public void setTagNum(Integer tagNum) {
         this.tagNum = tagNum;
-    }
-
-    @Override
-    public String toString() {
-        return "UserVO{" +
-                "username='" + username + '\'' +
-                ", tagNum=" + tagNum +
-                '}';
     }
 }

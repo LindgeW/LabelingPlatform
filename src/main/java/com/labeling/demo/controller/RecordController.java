@@ -38,12 +38,10 @@ public class RecordController {
     public String history(Model model){
         Subject subject = SecurityUtils.getSubject();
         User user = (User)subject.getPrincipal();
-        UserVO userVo = new UserVO(user.getUsername(), user.getRole());
 
         //获取当前用户的任务信息
         Session session = subject.getSession();
         TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
-        Team team = (Team) session.getAttribute("team");
 
         //计算用户正确率
 //        String username = user.getUsername();
@@ -63,9 +61,8 @@ public class RecordController {
 //        String correctRate = dataTransfer.dataTrans(correcNum,totalNum);
 //        model.addAttribute("correctRate",correctRate);
 
-        model.addAttribute("team", team);
         model.addAttribute("taskVo", taskVO);
-        model.addAttribute("userVo", userVo);
+        model.addAttribute("userVo", user);
         return "history";
     }
 

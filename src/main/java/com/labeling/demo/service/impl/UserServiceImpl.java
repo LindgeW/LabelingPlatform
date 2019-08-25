@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addUser(User user) {
-        if(null == userMapper.selectByPrimaryKey(user.getUsername())){
+        if(null == findUser(user.getUsername())){
             return this.userMapper.insertSelective(user) >= 1;
         }
 
