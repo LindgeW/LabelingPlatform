@@ -12,7 +12,7 @@ public class TaskVO extends Task {
 
     public TaskVO(Task task) {
         super(task.getTaskname(), task.getDatatype(), task.getCorpussize(), task.getTags(), task.getStatus(), task.getExpertname());
-        this.dataType = DataType.getTypeByID(task.getDatatype());
+        this.dataType = DataType.getTypeByID(task.getDatatype()).getName();
         this.tagSet = StringUtils.split(task.getTags(), ";");
     }
 

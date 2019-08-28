@@ -25,4 +25,11 @@ public class UserVO extends User {
     public void setTagNum(Integer tagNum) {
         this.tagNum = tagNum;
     }
+
+    @Override
+    public String toString() {
+        return "UserVO{" +
+                "tagNum=" + tagNum +
+                '}';
+    }
 }

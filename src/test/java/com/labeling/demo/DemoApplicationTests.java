@@ -283,4 +283,17 @@ public class DemoApplicationTests {
 //            System.out.println(randGenerator(3));
         }
     }
+
+    @Test
+    public void testTag(){
+        String[] s = new String[3];
+        for (int i=0; i<3 ; i++){
+            s[i] = "O";
+        }
+
+        s[1] = "S";
+        for (int i=0; i<3 ; i++){
+            System.out.println(s[i]);
+        }
+    }
 }

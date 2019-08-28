@@ -50,11 +50,6 @@ public class LoginController {
         return "login";
     }
 
-//    @RequestMapping("/ner_annotate")
-//    public String toNerAnn(){
-//        return "ner_annotate";
-//    }
-
     @PostMapping("/login")
     @ResponseBody
     public RespEntity login(User user, @RequestParam("remember") String rememberme, HttpServletResponse httpServletResponse){

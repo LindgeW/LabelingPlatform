@@ -1,9 +1,9 @@
 package com.labeling.demo.entity.vo;
 
-public class InstanceVO {
+public class InstanceVO<T> {
     private Long instanceId;    // 数据编号
     private String taskName;  //任务名
-    private String item;     //数据项
+    private T item;     //数据项
     private String tag;      //用户标签
     private Float responseTime;  //用户标签选择响应时间
 
@@ -11,7 +11,7 @@ public class InstanceVO {
         super();
     }
 
-    public InstanceVO(Long instanceId, String taskName, String item, String tag) {
+    public InstanceVO(Long instanceId, String taskName, T item, String tag) {
         this.instanceId = instanceId;
         this.taskName = taskName;
         this.item = item;
@@ -34,11 +34,11 @@ public class InstanceVO {
         this.taskName = taskName;
     }
 
-    public String getItem() {
+    public T getItem() {
         return item;
     }
 
-    public void setItem(String item) {
+    public void setItem(T item) {
         this.item = item;
     }
 

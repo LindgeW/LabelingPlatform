@@ -15,10 +15,7 @@
     <script src="/js/bootstrap.min.js"></script>
 
     <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!--&lt;!&ndash;Scripts js&ndash;&gt;-->
     <script src="/js/scripts.js"></script>
-
-    <!--<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" crossorigin="anonymous">-->
     <script src="/js/jquery.validate.min.js"></script>
     <script src="/js/messages_zh.min.js"></script>
     <script src="/js/bootbox.min.js"></script>
@@ -191,13 +188,14 @@
         总任务量为<span th:text="${taskVo.corpussize}" style="text-decoration: underline;color: #1677b3"></span>条，
         您已标注<span id="tagNum" th:text="${userVo.tagNum}" style="text-decoration: underline;color: #1677b3">0</span>条
     </h5>
+    <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
+    <input type="hidden" id="role" th:value="${userVo.role}"/>
 </div>
+
 <div>
     <div class="row">
         <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
             <div id="lbl_obj" th:text="${instanceVo.item}" class="container"></div>
-            <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
-            <input type="hidden" id="role" th:value="${userVo.role}"/>
         </div>
     </div>
     <div class="row">

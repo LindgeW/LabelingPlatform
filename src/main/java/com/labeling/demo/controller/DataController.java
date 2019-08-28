@@ -89,16 +89,19 @@ public class DataController {
         for (Instance instance: taskInsts){ //导出相关任务的所有数据
             //根据数据找到标注者的标注记录
             List<InstanceUser> records = instanceUserService.findInstanceUserById(instance.getInstanceId());
-            if (!records.isEmpty()){
-                for (InstanceUser record : records) {
-                    String role = userService.findUser(record.getUsername()).getRole();
-                    ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), record.getUsername(), record.getTag(), role, record.getTagTime(), record.getResponseTime());
-                    exportVOs.add(exportVO);
-                }
-            } else{ //没有标注记录直接导出
-                ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), "", "", "", null, 0f);
-                exportVOs.add(exportVO);
-            }
+            ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), records);
+            exportVOs.add(exportVO);
+
+//            if (!records.isEmpty()){
+//                for (InstanceUser record : records) {
+//                    String role = userService.findUser(record.getUsername()).getRole();
+//                    ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), record.getUsername(), record.getTag(), role, record.getTagTime(), record.getResponseTime());
+//                    exportVOs.add(exportVO);
+//                }
+//            } else{ //没有标注记录直接导出
+//                ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), "", "", "", null, 0f);
+//                exportVOs.add(exportVO);
+//            }
         }
 
         bufOs.write(JSONArray.toJSONBytes(exportVOs));

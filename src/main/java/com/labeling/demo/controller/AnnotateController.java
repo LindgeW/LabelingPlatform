@@ -23,7 +23,6 @@ import java.util.*;
 
 @Controller
 public class AnnotateController {
-//    private List<InstanceUser> instUserList = null;
     private InstanceService instanceService;
     private TaskService taskService;
     private TeamService teamService;
@@ -36,12 +35,6 @@ public class AnnotateController {
         this.teamService = teamService;
         this.instanceUserService = instanceUserService;
     }
-
-    //产生指定范围内的随机数
-//    private Integer randGenerator(Integer bound){
-//        Random random = new Random();
-//        return random.nextInt(bound);
-//    }
 
     //生产随机标签
     private String randTag(Instance instance){
@@ -70,6 +63,17 @@ public class AnnotateController {
 
         System.out.println("gold标签：" + tagLst);
         return tagLst.get(RandomUtils.nextInt(0, tagLst.size()));
+    }
+
+    private InstanceVO fitTask(Instance instance, Task task) {
+        InstanceVO<Object> instanceVO = null;
+        if (DataType.CLASSIFY.getId().equals(task.getDatatype())) {
+            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), instance.getItem(), randTag(instance));
+        } else if(DataType.NER.getId().equals(task.getDatatype())) {
+            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), StringUtils.split(instance.getItem(), " "), randTag(instance));
+        }
+
+        return instanceVO;
     }
 
     @GetMapping("/annotate")
@@ -110,16 +114,17 @@ public class AnnotateController {
         }
 
         Instance firstInstance = pageData.get(0);
-        InstanceVO instanceVO = new InstanceVO(firstInstance.getInstanceId(), task.getTaskname(), firstInstance.getItem(), randTag(firstInstance));
+        InstanceVO instanceVO = fitTask(firstInstance, task);
+
         model.addAttribute("userVo", userVO);
         model.addAttribute("taskVo", taskVo);
         model.addAttribute("instanceVo", instanceVO);
-        return "annotate";
+        return DataType.getTypeByID(task.getDatatype()).getUrl();
     }
 
     @PostMapping("/annotate")
     @ResponseBody
-    public RespEntity annotate(UserVO userVO, InstanceVO instanceVO){
+    public RespEntity annotate(UserVO userVO, InstanceVO<Object> instanceVO){
         System.out.println(userVO);
         System.out.println(instanceVO);
 
@@ -137,6 +142,7 @@ public class AnnotateController {
 
         Session session = SecurityUtils.getSubject().getSession();
         Team team = (Team) session.getAttribute("team");
+        TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
         String[] members = StringUtils.split(team.getMembers(), ";");
         //判断该数据是否完成标注，完成置成1
         if (instance.getTagNum() == members.length) {
@@ -172,7 +178,6 @@ public class AnnotateController {
         instanceUser.setTag(tag);
         instanceUserService.addInstanceUser(instanceUser);
 
-
         // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
         UserVO curUser = new UserVO(username, role, tagNum);
@@ -180,7 +185,6 @@ public class AnnotateController {
 //        Instance nextInstance = instanceService.findPageDataByTaskNameRand(username ,taskName, PageRequest.of(tagNum, 1));
 
         if (pageData.isEmpty()){
-            TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
             List<Instance>instanceList = instanceService.findByTaskName(taskName);
             boolean flag = true;
             for(Instance item: instanceList){  //所有的数据状态都为1，才算完成任务
@@ -201,7 +205,7 @@ public class AnnotateController {
         }
 
         Instance nextInstance = pageData.get(0);
-        InstanceVO nextInstVo = new InstanceVO(nextInstance.getInstanceId(), nextInstance.getTaskName(), nextInstance.getItem(), randTag(nextInstance));
+        InstanceVO nextInstVo = fitTask(nextInstance, taskVO);
 
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("curUser", curUser);
