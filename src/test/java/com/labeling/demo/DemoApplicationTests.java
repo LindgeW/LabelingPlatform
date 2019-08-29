@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.labeling.demo.entity.Instance;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.repository.InstanceMapper;
+import com.labeling.demo.repository.InstanceUserMapper;
 import com.labeling.demo.service.InstanceService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -294,6 +296,22 @@ public class DemoApplicationTests {
         s[1] = "S";
         for (int i=0; i<3 ; i++){
             System.out.println(s[i]);
+        }
+    }
+
+    @Test
+    public void testSplit(){
+        String[] s = StringUtils.split("ads; fd;", ";");
+        System.out.println(Arrays.toString(s));
+    }
+
+    @Autowired
+    InstanceUserMapper instanceUserMapper;
+    @Test
+    public void testVo(){
+        List<InstanceUserVO> fullRecord = instanceUserMapper.findFullRecord(5L);
+        for (InstanceUserVO iuv: fullRecord) {
+            System.out.println(iuv);
         }
     }
 }

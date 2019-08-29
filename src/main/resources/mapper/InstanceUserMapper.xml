@@ -12,6 +12,19 @@
       <arg column="responseTime" javaType="java.lang.Float" jdbcType="REAL" />
     </constructor>
   </resultMap>
+
+  <resultMap id="VoResultMap" type="com.labeling.demo.entity.vo.InstanceUserVO">
+    <id property="id" column="id" />
+    <result property="username" column="username"/>
+    <result property="instanceId" column="instanceId"/>
+    <result property="tag" column="tag" />
+    <result property="taskname" column="taskname" />
+    <result property="tagTime" column="tagTime" />
+    <result property="responseTime" column="responseTime"/>
+    <result property="item" column="item" />
+    <result property="role" column="role" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, username, instanceId, tag, taskname, tagTime, responseTime
   </sql>
@@ -134,4 +147,13 @@
     tag = #{tag,jdbcType=VARCHAR}
     responseTime = #{responseTime, jdbcType=REAL}
   </insert>
+
+  <select id="findFullRecord" parameterType="java.lang.Long" resultMap="VoResultMap">
+    select
+    id, tu.username, ti.instanceId, tag, tiu.taskname, tagTime, responseTime, ti.item, tu.role
+    from tb_instance_user tiu
+    join tb_user tu on tiu.username = tu.username
+    join tb_instance ti on tiu.instanceId = ti.instanceId
+    where ti.instanceId = #{instanceId, jdbcType=BIGINT}
+  </select>
 </mapper>

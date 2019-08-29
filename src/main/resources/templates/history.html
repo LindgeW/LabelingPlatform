@@ -126,6 +126,7 @@
         }
 
         function editOne(row){
+            alert(row);
             if (inputOpts < 1){
                 return;
             }
@@ -176,7 +177,6 @@
                     <img src="/img/logo.png" alt="LOGO" style="width:50px;">
                     <span class="navbar-text">天大数据标注平台</span>
                 </a>
-                <!-- Toggler/collapsibe Button -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -231,9 +231,29 @@
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>
         </h5>
         <div id="dataTable" class="table-responsive">
-            <table class="table" data-mobile-responsive="true">
-            </table>
+            <table class="table" data-mobile-responsive="true"></table>
         </div>
     </div>
+
+<!--    <div class="modal fade" id="myModal">-->
+<!--        <div class="modal-dialog modal-lg">-->
+<!--            <form action="/updateType" method="post" onsubmit="return checkAlterForm();">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title">修改</h5>-->
+<!--                        <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                        -->
+<!--                        -->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>-->
+<!--                        <button type="submit" class="btn btn-info">提交</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
 </body>
 </html>

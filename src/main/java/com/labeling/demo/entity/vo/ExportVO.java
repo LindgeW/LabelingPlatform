@@ -1,9 +1,9 @@
 package com.labeling.demo.entity.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
 import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.InstanceUser;
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -143,19 +143,23 @@ import java.util.Objects;
 //    }
 //}
 
-
+//@JSONType(ignores = {"instanceId", "expertTag"})
 public class ExportVO implements Serializable {
+//    @JSONField(serialize = false)  //不序列化id
     private Long instanceId;  //数据编号
+    @JSONField(name = "item")  //配置序列化名称
     private String raw;       //原始数据
+
     private String defaultTag; //默认标签（随机）
     private String expertTag; //专家标签
-    private List<InstanceUser> records;  //该条数据的用户标注记录
+//    private List<InstanceUser> records;  //该条数据的用户标注记录
+    private List<InstanceUserVO> records;  //该条数据的用户标注记录
 
     public ExportVO() {
         super();
     }
 
-    public ExportVO(Long instanceId, String raw, String defaultTag, String expertTag, List<InstanceUser> records) {
+    public ExportVO(Long instanceId, String raw, String defaultTag, String expertTag, List<InstanceUserVO> records) {
         this.instanceId = instanceId;
         this.raw = raw;
         this.defaultTag = defaultTag;
@@ -195,11 +199,11 @@ public class ExportVO implements Serializable {
         this.expertTag = expertTag;
     }
 
-    public List<InstanceUser> getRecords() {
+    public List<InstanceUserVO> getRecords() {
         return records;
     }
 
-    public void setRecords(List<InstanceUser> records) {
+    public void setRecords(List<InstanceUserVO> records) {
         this.records = records;
     }
 

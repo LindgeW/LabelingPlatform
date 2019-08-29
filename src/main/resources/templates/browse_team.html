@@ -25,7 +25,7 @@
             </thead>
             <tbody>
                 <tr th:each="team, state: ${teams}">
-                    <td th:text="${state.index}"></td>
+                    <td th:text="${state.index} + 1"></td>
                     <td th:text="${team.teamName}"></td>
                     <td th:text="${team.taskName}"></td>
                     <td th:text="${#strings.replace(team.members, ';', ' ')}"></td>

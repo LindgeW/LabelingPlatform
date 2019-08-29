@@ -1,6 +1,7 @@
 package com.labeling.demo.controller;
 
 import com.labeling.demo.entity.*;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.entity.vo.InstanceVO;
 import com.labeling.demo.entity.vo.TaskVO;
 import com.labeling.demo.entity.vo.UserVO;
@@ -65,15 +66,30 @@ public class AnnotateController {
         return tagLst.get(RandomUtils.nextInt(0, tagLst.size()));
     }
 
-    private InstanceVO fitTask(Instance instance, Task task) {
-        InstanceVO<Object> instanceVO = null;
-        if (DataType.CLASSIFY.getId().equals(task.getDatatype())) {
-            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), instance.getItem(), randTag(instance));
-        } else if(DataType.NER.getId().equals(task.getDatatype())) {
-            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), StringUtils.split(instance.getItem(), " "), randTag(instance));
+//    private InstanceVO fitTask(Instance instance, Task task) {
+//        InstanceVO<Object> instanceVO = null;
+//        if (TagType.CLASSIFY.getId().equals(task.getDatatype())) {
+//            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), instance.getItem(), randTag(instance));
+//        } else if(TagType.NER.getId().equals(task.getDatatype())) {
+//            instanceVO = new InstanceVO<>(instance.getInstanceId(), task.getTaskname(), StringUtils.split(instance.getItem(), " "), randTag(instance));
+//        }
+//
+//        return instanceVO;
+//    }
+
+    private InstanceUserVO fitTask(Instance instance, Task task) {
+        InstanceUserVO<Object> instanceUserVO = new InstanceUserVO<>();
+        instanceUserVO.setInstanceId(instance.getInstanceId());
+        instanceUserVO.setTaskname(task.getTaskname());
+        if (TagType.CLASSIFY.getId().equals(task.getDatatype())) {
+            instanceUserVO.setItem(instance.getItem());
+            instanceUserVO.setTag(randTag(instance));
+        } else if(TagType.NER.getId().equals(task.getDatatype())) {
+            instanceUserVO.setItem(StringUtils.split(instance.getItem(), " "));
+//            instanceUserVO.setTag(randTag(instance));
         }
 
-        return instanceVO;
+        return instanceUserVO;
     }
 
     @GetMapping("/annotate")
@@ -114,23 +130,24 @@ public class AnnotateController {
         }
 
         Instance firstInstance = pageData.get(0);
-        InstanceVO instanceVO = fitTask(firstInstance, task);
+//        InstanceVO instanceVO = fitTask(firstInstance, task);
+        InstanceUserVO instanceUserVO = fitTask(firstInstance, task);
 
         model.addAttribute("userVo", userVO);
         model.addAttribute("taskVo", taskVo);
-        model.addAttribute("instanceVo", instanceVO);
-        return DataType.getTypeByID(task.getDatatype()).getUrl();
+        model.addAttribute("instanceVo", instanceUserVO);
+        return TagType.getTypeByID(task.getDatatype()).getUrl();
     }
 
     @PostMapping("/annotate")
     @ResponseBody
-    public RespEntity annotate(UserVO userVO, InstanceVO<Object> instanceVO){
+    public RespEntity annotate(UserVO userVO, InstanceUserVO<Object> instanceVO){
         System.out.println(userVO);
         System.out.println(instanceVO);
 
         //记录用户对此数据标注的标签
         String username = userVO.getUsername();
-        String taskName = instanceVO.getTaskName();
+        String taskName = instanceVO.getTaskname();
         String role = userVO.getRole();
         Long instanceId = instanceVO.getInstanceId();
         String tag = instanceVO.getTag();
@@ -205,7 +222,8 @@ public class AnnotateController {
         }
 
         Instance nextInstance = pageData.get(0);
-        InstanceVO nextInstVo = fitTask(nextInstance, taskVO);
+//        InstanceVO nextInstVo = fitTask(nextInstance, taskVO);
+        InstanceUserVO nextInstVo = fitTask(nextInstance, taskVO);
 
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("curUser", curUser);

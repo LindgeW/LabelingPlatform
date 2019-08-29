@@ -1,6 +1,7 @@
 package com.labeling.demo.service;
 
 import com.labeling.demo.entity.InstanceUser;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface InstanceUserService {
     List<InstanceUser>findInstanceUserById(Long instanceid);
 
     Integer countByTask(String username, String taskname);
+
+    List<InstanceUserVO> findFullRecords(Long instanceId);
 }

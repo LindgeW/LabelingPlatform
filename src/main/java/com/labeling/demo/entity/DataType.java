@@ -1,40 +1,57 @@
 package com.labeling.demo.entity;
 
-public enum DataType {
-    UNKNOWN((short)0, "未知任务", ""),
-    CLASSIFY((short)1, "文本分类", "annotate"),
-    NER((short)2, "实体识别", "ner_annotate")
-    ;
+public class DataType {
+    private Short id;
 
-    private Short id;    //对应的编号
-    private String name;  //名称
-    private String url;  //标注页面url
+    private String typeName;
 
-    DataType(Short id, String name, String url) {
-        this.id = id;
-        this.name = name;
+    private String url;
+
+    public DataType(String typeName, String url) {
+        this.typeName = typeName;
         this.url = url;
     }
 
-    public static DataType getTypeByID(Short id){
-        if (id.equals(DataType.CLASSIFY.id)){
-            return DataType.CLASSIFY;
-        } else if (id.equals(DataType.NER.id)){
-            return DataType.NER;
-        }
-
-        return DataType.UNKNOWN;
+    public DataType(Short id, String typeName, String url) {
+        this.id = id;
+        this.typeName = typeName;
+        this.url = url;
     }
 
-    public String getName() {
-        return name;
+    public DataType() {
+        super();
+    }
+
+    public Short getId() {
+        return id;
+    }
+
+    public void setId(Short id) {
+        this.id = id;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName == null ? null : typeName.trim();
     }
 
     public String getUrl() {
         return url;
     }
 
-    public Short getId() {
-        return id;
+    public void setUrl(String url) {
+        this.url = url == null ? null : url.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "DataType{" +
+                "id=" + id +
+                ", typeName='" + typeName + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

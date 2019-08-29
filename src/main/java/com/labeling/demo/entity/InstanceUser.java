@@ -7,15 +7,15 @@ public class InstanceUser {
 
     private String username;
 
-    private Long instanceId;
+    private transient Long instanceId;  //序列化时不起作用
 
-    private String tag;
+    private String tag;  //用户标签
 
     private String taskname;
 
-    private Date tagTime;
+    private Date tagTime;  //标注时间戳
 
-    private Float responseTime;
+    private Float responseTime;  //标注数据instanceId的响应时间
 
     public InstanceUser(Long id, String username, Long instanceId, String tag, String taskname, Float responseTime) {
         this.id = id;
@@ -94,5 +94,18 @@ public class InstanceUser {
 
     public void setResponseTime(Float responseTime) {
         this.responseTime = responseTime;
+    }
+
+    @Override
+    public String toString() {
+        return "InstanceUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", instanceId=" + instanceId +
+                ", tag='" + tag + '\'' +
+                ", taskname='" + taskname + '\'' +
+                ", tagTime=" + tagTime +
+                ", responseTime=" + responseTime +
+                '}';
     }
 }

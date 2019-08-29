@@ -89,7 +89,7 @@ public class RecordController {
             List<InstanceUser> instanceUsers = instanceUserService.findByPage(username, pageable);
             for (InstanceUser instanceUser: instanceUsers) {
                 String item = instanceService.findById(instanceUser.getInstanceId()).getItem();
-                instanceUserVOs.add(new InstanceUserVO(instanceUser, item));
+                instanceUserVOs.add(new InstanceUserVO<>(instanceUser, item, null));
             }
         } else{  //关键字查询（模糊查询）
             List<InstanceUser> instanceUsers = instanceUserService.findByUserName(username);
@@ -97,7 +97,7 @@ public class RecordController {
             for (InstanceUser instanceUser: instanceUsers) {
                 String item = instanceService.findById(instanceUser.getInstanceId()).getItem();
                 if (StringUtils.contains(item, search) || StringUtils.contains(instanceUser.getTag(), search)){
-                    instanceUserLst.add(new InstanceUserVO(instanceUser, item));
+                    instanceUserLst.add(new InstanceUserVO<>(instanceUser, item, null));
                 }
             }
 

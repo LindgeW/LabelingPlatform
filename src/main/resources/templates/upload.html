@@ -108,9 +108,15 @@
             var taskName = $.trim($("#taskName").val());
             var tags = $.trim($("#tags").val());
             var fileName = $("#uploadFile").val();  //获取上传文件的文件路径
+            var type = $("#dataType").val();
 
             if (taskName === ""){
                 alert('任务名不能为空！');
+                return false;
+            }
+
+            if (type==null || type === ""){
+                alert('请添加标注的数据类型！');
                 return false;
             }
 
@@ -151,8 +157,7 @@
         <div class="form-group">
             <label for="taskName">标注任务：</label>
             <div class="form-inline">
-                <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>
-                &nbsp;&nbsp;
+                <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>&nbsp;&nbsp;
                 <select class="form-control" id="builtTask">
                     <option selected disabled>--已创建的任务--</option>
                     <option th:each="task: ${builtTasks}" th:text="${task}" th:value="${task}">暂无</option>
@@ -162,8 +167,7 @@
         <div class="form-group">
             <label for="dataType">数据类型：</label>
             <select class="form-control" id="dataType">
-                <option value="1" selected>文本分类</option>
-                <option value="2">实体识别</option>
+                <option th:each="type: ${dataTypes}" th:text="${type.typeName}" th:value="${type.id}">暂无</option>
             </select>
         </div>
     </div>

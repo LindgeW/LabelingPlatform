@@ -94,7 +94,16 @@
             <!--<property name="useActualColumnNames" value="true"/>-->
         <!--</table>-->
 
-        <table tableName="tb_instance" domainObjectName="Instance"
+<!--        <table tableName="tb_instance" domainObjectName="Instance"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--        </table>-->
+
+        <table tableName="tb_data_type" domainObjectName="DataType"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

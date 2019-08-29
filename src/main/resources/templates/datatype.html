@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Favicons -->
+    <link href="/img/logo.png" rel="icon">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-fileinput/fileinput.css" rel="stylesheet">
+    <link href="/css/bootstrap-fileinput/themes/explorer-fas/theme.css" rel="stylesheet">
+    <link href="/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+    <style>
+    </style>
+    <title>标注类型设置</title>
+
+    <script>
+        function checkAddForm() {
+            var type = $("#datatype").val();
+            var url = $("#url").val();
+            if (type === '' || url === ''){
+                bootbox.alert({
+                    title: 'Warning',
+                    className: 'rubberBand animated',
+                    message: '请输入完整信息！'
+                });
+                return false;
+            }
+            return true;
+        }
+
+        function checkAlterForm() {
+            $("#msg").hide();
+            var type = $("#datatype2").val();
+            var url = $("#url2").val();
+            if (type === '' || url === ''){
+                $("#msg").text("*请输入完整信息！").css("color", "#ff0000").show();
+                return false;
+            }
+
+            return true;
+        }
+
+        function editOne(id, type, url) {
+            $("#typeId").val(id);
+            $("#datatype2").val(type);
+            $("#url2").val(url);
+            $("#myModal").modal();
+        }
+
+    </script>
+</head>
+<body>
+<div class="container" style="margin-top:100px; min-height: 800px;">
+    <div class="alert alert-danger alert-dismissible fade show" th:unless="${msg} == null">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>添加失败！</strong> <span th:text="${msg}"></span>
+    </div>
+    <form action="/addType" method="post" onsubmit="return checkAddForm();">
+        <div class="form-inline">
+            <label for="datatype">数据类型：</label>
+            <input type="text" id="datatype" name="typeName" placeholder="输入名称" class="form-control" />
+            &nbsp;&nbsp;
+            <label for="url">标注页面URL：</label>
+            <input type="text" id="url" name="url" placeholder="如：annotate.html" class="form-control" />
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">添加</button>
+        </div>
+        <div style="margin-top: 30px;">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>数据类型</th>
+                    <th>页面URL</th>
+                    <th>编辑</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="type, state: ${dataTypes}">
+<!--                        <td th:text="${state.index} + 1"></td>-->
+                        <td th:text="${type.id}"></td>
+                        <td th:text="${type.typeName}"></td>
+                        <td th:text="${type.url}"></td>
+                        <td><a href="#" class="btn btn-xs btn-info tableEditor" th:onclick="editOne([[${type.id}]], [[${type.typeName}]], [[${type.url}]]);"><i class="fa fa-edit"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <form action="/updateType" method="post" onsubmit="return checkAlterForm();">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">修改</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="msg"></p>
+                    <label for="datatype">数据类型：</label>
+                    <input type="text" id="datatype2" name="typeName" class="form-control" />
+                    <label for="url">标注页面URL：</label>
+                    <input type="text" id="url2" name="url" class="form-control" />
+                    <input type="hidden" name="id" id="typeId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-info">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

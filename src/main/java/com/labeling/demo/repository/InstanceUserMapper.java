@@ -1,6 +1,7 @@
 package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.InstanceUser;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -41,4 +42,6 @@ public interface InstanceUserMapper {
     Integer countByTask(String username, String taskname);
 
     boolean save(InstanceUser instanceUser);
+
+    List<InstanceUserVO> findFullRecord(Long instanceId);
 }

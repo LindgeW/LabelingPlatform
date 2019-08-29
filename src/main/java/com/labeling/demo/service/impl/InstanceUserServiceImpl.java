@@ -1,6 +1,7 @@
 package com.labeling.demo.service.impl;
 
 import com.labeling.demo.entity.InstanceUser;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.repository.InstanceUserMapper;
 import com.labeling.demo.service.InstanceUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,10 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     @Override
     public Integer countByTask(String username, String taskname) {
         return instanceuserMapper.countByTask(username, taskname);
+    }
+
+    @Override
+    public List<InstanceUserVO> findFullRecords(Long instanceId) {
+        return instanceuserMapper.findFullRecord(instanceId);
     }
 }

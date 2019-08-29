@@ -3,12 +3,13 @@ package com.labeling.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.ExportVO;
+import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.service.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -34,20 +35,22 @@ import java.util.zip.ZipInputStream;
 
 @Controller
 public class DataController {
-    private static final String tempDir = "src/main/resources/temp";
+//    private static final String tempDir = "src/main/resources/temp";
     private static final int BatchSize = 500;
 
     private UserService userService;
     private InstanceService instanceService;
     private TaskService taskService;
     private InstanceUserService instanceUserService;
+    private DataTypeService dataTypeService;
 
     @Autowired
-    public DataController(UserService userService, InstanceService instanceService, TaskService taskService, InstanceUserService instanceUserService) {
+    public DataController(UserService userService, InstanceService instanceService, TaskService taskService, InstanceUserService instanceUserService, DataTypeService dataTypeService) {
         this.userService = userService;
         this.instanceService = instanceService;
         this.taskService = taskService;
         this.instanceUserService = instanceUserService;
+        this.dataTypeService = dataTypeService;
     }
 
     @GetMapping("/upload")
@@ -56,7 +59,10 @@ public class DataController {
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
         List<String> taskNames = taskService.findByExpertName(curUser.getUsername());
         Set<String> taskSet = new HashSet<>(taskNames);
+        List<DataType> dataTypes = dataTypeService.findAll();
+
         model.addAttribute("builtTasks", taskSet);
+        model.addAttribute("dataTypes", dataTypes);
         return "upload";
     }
 
@@ -88,7 +94,9 @@ public class DataController {
         Set<ExportVO> exportVOs = new HashSet<>();
         for (Instance instance: taskInsts){ //导出相关任务的所有数据
             //根据数据找到标注者的标注记录
-            List<InstanceUser> records = instanceUserService.findInstanceUserById(instance.getInstanceId());
+//            List<InstanceUser> records = instanceUserService.findInstanceUserById(instance.getInstanceId());
+            List<InstanceUserVO> records = instanceUserService.findFullRecords(instance.getInstanceId());
+
             ExportVO exportVO = new ExportVO(instance.getInstanceId(), instance.getItem(), instance.getTagDefault(), instance.getTagExpert(), records);
             exportVOs.add(exportVO);
 
@@ -201,25 +209,27 @@ public class DataController {
         }
 
         if (multiFile.getOriginalFilename().endsWith("zip")) {
-            File tmpDir = new File(tempDir);
-            if (!tmpDir.exists()){
-                boolean isDone = tmpDir.mkdirs();
-                if (!isDone){
-                    return new RespEntity(RespStatus.Error);
-                }
-            }
+//            File tmpDir = new File(tempDir);
+//            if (!tmpDir.exists()){
+//                boolean isDone = tmpDir.mkdirs();
+//                if (!isDone){
+//                    return new RespEntity(RespStatus.Error);
+//                }
+//            }
+//            FileUtils.cleanDirectory(tmpDir);
+//            File tmpFile = new File(tmpDir.getAbsolutePath(), multiFile.getOriginalFilename());
+//            multiFile.transferTo(tmpFile);
+//            // 读取zip文件
+//            ZipFile zf = new ZipFile(tmpFile);
+//            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(tmpFile)));
 
-            FileUtils.cleanDirectory(tmpDir);
-            File tmpFile = new File(tmpDir.getAbsolutePath(), multiFile.getOriginalFilename());
-            multiFile.transferTo(tmpFile);
-
-            // 读取zip文件
-            ZipFile zf = new ZipFile(tmpFile);
-            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(tmpFile)));
+            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(multiFile.getInputStream()));
             ZipEntry ze;
             while ((ze = zis.getNextEntry()) != null) {
                 if (ze.getName().endsWith("txt") || ze.getName().endsWith("csv")) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(zf.getInputStream(ze), Charset.forName("gbk")));
+                    System.out.println(String.format("name:%s size:%d", ze.getName(), ze.getSize()));
+//                    BufferedReader br = new BufferedReader(new InputStreamReader(zf.getInputStream(ze), Charset.forName("gbk")));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(zis, Charset.forName("gbk")));
                     String line;
                     while ((line = br.readLine()) != null) {
                         line = StringUtils.trimToEmpty(line);  //过滤两端空格
@@ -246,27 +256,8 @@ public class DataController {
             }
 
         }
-//        else if(multiFile.getOriginalFilename().endsWith("json")){
-//            String jsonStr = IOUtils.toString(multiFile.getInputStream());
-//            JSONArray jsonArray = JSON.parseArray(jsonStr);
-//
-//            for (int i = 0, len=jsonArray.size(); i < len; i++) {
-//                JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                String item = jsonObject.getString("raw");
-//                String tagExpert = jsonObject.getString("expertTag");
-//                if(StringUtils.isBlank(tagExpert)){
-//                    tagExpert = "";
-//                }
-//                JSONArray tagModelArr = jsonObject.getJSONArray("modelTag");
-//                String tagModel = "";
-//                if (tagModelArr != null){
-//                    tagModel = StringUtils.join(tagModelArr, ";");
-//                }
-//                instSet.add(new Instance(taskName, item, tagExpert, tagModel, 0, 0));
-//            }
-//        }
 
-        // 分批次将数据保存到MongoDB中
+        // 分批次将数据保存到DB中
         if (!instSet.isEmpty()){
             List<Instance> instBuf = new ArrayList<>(BatchSize);
             for(Instance inst: instSet){

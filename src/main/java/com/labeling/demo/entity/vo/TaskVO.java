@@ -1,6 +1,6 @@
 package com.labeling.demo.entity.vo;
 
-import com.labeling.demo.entity.DataType;
+import com.labeling.demo.entity.TagType;
 import com.labeling.demo.entity.Task;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +12,7 @@ public class TaskVO extends Task {
 
     public TaskVO(Task task) {
         super(task.getTaskname(), task.getDatatype(), task.getCorpussize(), task.getTags(), task.getStatus(), task.getExpertname());
-        this.dataType = DataType.getTypeByID(task.getDatatype()).getName();
+        this.dataType = TagType.getTypeByID(task.getDatatype()).getName();
         this.tagSet = StringUtils.split(task.getTags(), ";");
     }
 
