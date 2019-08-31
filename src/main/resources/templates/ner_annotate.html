@@ -79,16 +79,29 @@
 
             $('#token_panel').on('click', '.token', function(){
                 // on()方法添加的事件处理程序适用于当前及未来的元素（比如由JS脚本创建的新元素）
-                if (ls == null){
-                    $(this).css('background','lightgray');
-                    span = {};
-                    ls = $('.token').index($(this));
-                    span['L'] = ls;
-                } else{
-                    rs = $('.token').index($(this));
-                    span['R'] = rs;
-                    drawEntity(span, 'lightgray', '#ffffff');
-                    ls = null;
+                var idx = $('.token').index($(this));
+                // 避免标注过程中重复标注已标注的部分
+                var isValid = true;
+                for (var i=0, len=spans.length; i<len; i++){
+                    var sp = spans[i];
+                    if (idx >= sp['L'] && idx <= sp['R']) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (isValid){
+                    if (ls == null){
+                        $(this).css('background','lightgray');
+                        span = {};
+                        ls = idx;
+                        span['L'] = ls;
+                    } else{
+                        rs = idx;
+                        span['R'] = rs;
+                        drawEntity(span, 'lightgray', '#ffffff');
+                        ls = null;
+                    }
                 }
             });
 
@@ -113,32 +126,6 @@
 
             t1 = new Date();
         });
-
-        // BIOES
-        // function getTags(spans, seqLen) {
-        //     var tagSeq = [];
-        //     for (var i=0; i<seqLen; i++){
-        //         tagSeq[i] = "O";
-        //     }
-
-        //     $.each(spans, function (i, span) {
-        //         var l = span['L'];
-        //         var r = span['R'];
-        //         var tag = span['Tag'];
-        //         if (l === r){
-        //             tagSeq[r] = 'S-' + tag;
-        //         }else{
-        //             tagSeq[l] = 'B-' + tag;
-        //
-        //             for(var j=l+1; j<r; j++){
-        //                 tagSeq[j] = 'I-' + tag;
-        //             }
-        //
-        //             tagSeq[r] = 'E-' + tag;
-        //         }
-        //     });
-        //     return tagSeq.join(" ");
-        // }
 
         // 左边界_右边界_类型 &
         function getTags(spans) {

@@ -248,11 +248,11 @@
     </header>
 
     <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
-        <h5>
+        <h6>
             <strong>角色：</strong><span th:text="${userVo.role} == 'admin' ? '管理员' : '标注员'" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>
-        </h5><hr>
+        </h6><hr>
         <div id="dataTable" class="table-responsive">
             <table class="table" data-mobile-responsive="true"></table>
         </div>

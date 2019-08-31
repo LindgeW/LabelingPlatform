@@ -134,7 +134,12 @@ public class DataController {
         System.out.println(multiFile.getContentType());
         System.out.println(multiFile.getSize());
         System.out.println(tags);
-        String[] tagArr = StringUtils.split(tags, ";");
+//        String[] tagArr = StringUtils.split(tags, ";");
+        String[] tagArr = StringUtils.split(tags, "\n");
+        // 清除每个标签值中的空白字符
+        for (int i = 0; i < tagArr.length; i++) {
+            tagArr[i] = StringUtils.trimToEmpty(tagArr[i]);
+        }
 
         /*
             插入：

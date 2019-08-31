@@ -90,6 +90,10 @@
             this.getOffset = function(){
                 return this.offset;
             };
+
+            this.getTotalRows = function () {
+                return this.totalRows;
+            }
         };
 
         function previous() {
@@ -106,6 +110,21 @@
 
         function last() {
             pager.last();
+        }
+
+        // 任意页面跳转
+        function any() {
+            var anyPage = $("#anyPage").val();
+
+            if (isNaN(anyPage) || anyPage <= 0){
+                anyPage = 1;
+                $("#anyPage").val(anyPage);
+            } else if(anyPage >= pager.getTotalRows()) {
+                anyPage = pager.getTotalRows();
+                $("#anyPage").val(anyPage);
+            }
+
+            pager.any(anyPage - 1);
         }
 
         // 换页
@@ -229,9 +248,27 @@
             return allSpan;
         }
 
+        //根据实体标签改变对应实体的背景色
+        function drawByTag(instTag) {
+            var enTags = parseTag(instTag);
+            spans = enTags;
+
+            $.each(enTags, function (i, tag) {
+                var l = tag['L'];
+                var r = tag['R'];
+                if (l === r){  //单实体
+                    $(".token").eq(r).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
+                } else {
+                    for (var j = l; j <= r; j++) {
+                        $(".token").eq(j).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
+                    }
+                }
+            });
+        }
+
         var ls, lr = null;
         var span = null;
-        var spans = null;
+        var spans = [];
         var pager = null;
         var lblColorMap = {}; //实体标签与颜色映射表
 
@@ -251,16 +288,28 @@
 
             $('#token_panel').on('click', '.token', function(){
                 // on()方法添加的事件处理程序适用于当前及未来的元素（比如由JS脚本创建的新元素）
-                if (ls == null){
-                    $(this).css('background','lightgray');
-                    span = {};
-                    ls = $('.token').index($(this));
-                    span['L'] = ls;
-                } else{
-                    rs = $('.token').index($(this));
-                    span['R'] = rs;
-                    drawEntity(span, 'lightgray', '#ffffff');
-                    ls = null;
+                var idx = $('.token').index($(this));
+                var isValid = true;
+                for (var i=0, len=spans.length; i<len; i++){
+                    var sp = spans[i];
+                    if (idx >= sp['L'] && idx <= sp['R']) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if(isValid) {
+                    if (ls == null){
+                        $(this).css('background','lightgray');
+                        span = {};
+                        ls = idx;
+                        span['L'] = ls;
+                    } else{
+                        rs = idx;
+                        span['R'] = rs;
+                        drawEntity(span, 'lightgray', '#ffffff');
+                        ls = null;
+                    }
                 }
             });
 
@@ -269,22 +318,6 @@
             var tag = $("#tag").val();  //当前数据的格式化实体标签
             drawByTag(tag);
         });
-
-        //根据实体标签改变对应实体的背景色
-        function drawByTag(instTag) {
-            var enTags = parseTag(instTag);
-            $.each(enTags, function (i, tag) {
-                var l = tag['L'];
-                var r = tag['R'];
-                if (l === r){  //单实体
-                    $(".token").eq(r).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
-                } else {
-                    for (var j = l; j <= r; j++) {
-                        $(".token").eq(j).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
-                    }
-                }
-            });
-        }
     </script>
 
     <style>
@@ -407,7 +440,7 @@
     </header>
 
     <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
-        <h5>
+        <h6>
             <strong>角色：</strong><span th:text="${userVo.role} == 'admin' ? '管理员' : '标注员'" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
@@ -417,7 +450,7 @@
 <!--                <input type="text" class="form-control" id="keyWord" placeholder="输入关键字">-->
 <!--                <button type="button" class="btn btn-light">搜索</button>-->
 <!--            </span>-->
-        </h5><hr>
+        </h6><hr>
 
         <div class="card">
             <div class="card-header">
@@ -444,11 +477,13 @@
             </div>
         </div>
         <div id="pagerBtn">
-            <button type="button" class="btn btn-info" onclick="previous()">前一页</button>
-            <button type="button" class="btn btn-info" onclick="next()">下一页</button>
-            <button type="button" class="btn btn-info" onclick="first()">首  页</button>
-            <button type="button" class="btn btn-info" onclick="last()">尾  页</button>
-
+            <div class="form-inline">
+                <button type="button" class="btn btn-info btn-sm" onclick="previous()">上一页</button>
+                <button type="button" class="btn btn-info btn-sm" onclick="next()">下一页</button>
+                <button type="button" class="btn btn-info btn-sm" onclick="first()">首  页</button>
+                <button type="button" class="btn btn-info btn-sm" onclick="last()">尾  页</button>
+                <label for="anyPage">转至 <input type="text" id="anyPage" class="form-control" onchange="any()" onblur="any()" size="6" maxlength="6"> 页</label>
+            </div>
             第<span th:text="${pager.offset + 1}" id="offset"></span> / <span th:text="${pager.totalRows}" id="totalRows"></span>页
         </div>
     </div>

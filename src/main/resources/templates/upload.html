@@ -46,7 +46,7 @@
                 uploadExtraData: function () {   //以函数形式传，不要直接写JSON格式
                     var taskName = $.trim($("#taskName").val());
                     var dataType = $("#dataType").val();
-                    var tags = $("#tags").val();
+                    var tags = $.trim($("#tags").val());
                     return {'taskName': taskName, 'dataType': dataType, 'tags': tags};
                 },
                 showUpload: false,
@@ -131,14 +131,14 @@
                 return false;
             }
 
-            var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
-            var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
-            if (eng_reg.test(tags) || ch_reg.test(tags)){
-                return true
-            }else {
-                alert('标签值格式有误！');
-                return false;
-            }
+            // var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
+            // var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
+            // if (eng_reg.test(tags) || ch_reg.test(tags)){
+            //     return true
+            // }else {
+            //     alert('标签值格式有误！');
+            //     return false;
+            // }
 
             return true;
         }
@@ -191,7 +191,8 @@
         <div class="card-footer">
             <div class="form-group">
                 <label for="tags">标签设置：</label>
-                <textarea class="form-control" rows="5" id="tags" placeholder="标签值用英文;隔开，如：正面;中立;负面"></textarea>
+<!--                <textarea class="form-control" rows="5" id="tags" placeholder="标签值用英文;隔开，如：正面;中立;负面"></textarea>-->
+                <textarea class="form-control" rows="5" id="tags" placeholder="注意: 每行一个标签"></textarea>
             </div>
         </div>
     </div>
