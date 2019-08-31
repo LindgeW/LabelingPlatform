@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Favicons -->
+    <link href="/img/logo.png" rel="icon">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bg/icons.css">
+    <link href="/css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <link href="/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+
+    <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/bootstrap-table/bootstrap-table.js"></script>
+    <script src="/js/export/bootstrap-table-export.js"></script>
+    <script src="/js/export/tableExport.js"></script>
+    <script src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+
+    <title>评论汇总</title>
+    <script>
+        function colorFactory(i) {
+            var rgbSet = [
+                'rgb(255, 23, 34)',
+                'rgb(25, 123, 30)',
+                'rgb(2, 23, 134)',
+                'rgb(0, 0, 20)',
+                'rgb(255, 120, 3)',
+                'rgb(100, 50, 200)',
+                'rgb(20, 100, 200)'
+            ];
+            // var r, g, b = null;
+            // do{
+            //     r = Math.floor(Math.random() * 255);
+            //     g = Math.floor(Math.random() * 255);
+            //     b = Math.floor(Math.random() * 255);
+            //     // rgb模式转YUV模式，Y是明亮度
+            //     var yuv = 0.299 * r + 0.587 * g + 0.114 * b;
+            // } while (yuv >= 192); //浅色
+            // return "rgb(" + r + "," + g + "," + b + ")";
+
+            return rgbSet[i];
+        }
+
+        // js 面向对象
+        var Pager = function(offset, totalRows){
+            this.offset = offset;
+            this.totalRows = totalRows;
+
+            this.previous = function(){
+                this.offset -- ;
+                if (this.offset < 0){
+                    this.offset = 0;
+                    alert('已经是第一页！');
+                } else{
+                    changePage('/new_page', this.getOffset());
+                }
+            };
+
+            this.next = function(){
+                this.offset ++ ;
+                if (this.offset > this.totalRows - 1){
+                    this.offset = this.totalRows - 1;
+                    alert('已经是最后一页！');
+                } else{
+                    changePage('/new_page', this.getOffset());
+                }
+            };
+
+            this.first = function(){
+                this.offset = 0 ;
+                changePage('/new_page', this.getOffset());
+            };
+
+            this.last = function(){
+                this.offset = this.totalRows - 1 ;
+                changePage('/new_page', this.getOffset());
+            };
+
+            this.any = function (pageNum) {
+                this.offset = pageNum;
+                changePage('/new_page', this.getOffset());
+            };
+
+            this.getOffset = function(){
+                return this.offset;
+            };
+        };
+
+        function previous() {
+            pager.previous();
+        }
+
+        function next() {
+            pager.next();
+        }
+
+        function first() {
+            pager.first();
+        }
+
+        function last() {
+            pager.last();
+        }
+
+        // 换页
+        function changePage(url, pageNum) {
+            $("#offset").text(pageNum+1);
+
+            var username = $("#username").text();
+
+            var sendData = {
+                "username": username,
+                "offset": pageNum
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: sendData,
+                dataType: "json",
+                cache: "false",
+                success: function (respData) {
+                    $("#recordId").text(respData.id);
+
+                    var nextItem = respData.item;  //token序列
+                    $("#token_panel").empty();
+                    $.each(nextItem, function (i, val) {
+                        var nextInst = "<span class='token'>" + val +"</span>";
+                        $("#token_panel").append(nextInst);
+                    });
+
+                    drawByTag(respData.tag);
+                },
+                error: function (msg) {
+                    alert("error: " + msg);
+                }
+            });
+        }
+
+        //保存修改
+        function sendData(url, tags) {
+            var id = $("#recordId").text();
+            var username = $("#username").text();
+
+            var sendData = {
+                "id": id,
+                "username": username,
+                "tag": tags
+            };
+
+            $.post(url, sendData, function (respData, status) {
+                if (status === 'success'){
+                    bootbox.alert({
+                        title: '提示',
+                        className: 'rubberBand animated',
+                        message: "保存成功！"
+                    });
+                }
+            });
+        }
+
+        function drawEntity(span, bgcolor, ftcolor){
+            if (span['L'] > span['R']){
+                var tmp = span['L'];
+                span['L'] = span['R'];
+                span['R'] = tmp;
+            }
+
+            $.each($('.token').slice(span['L'], span['R']+1), function(){
+                $(this).css('color', ftcolor);
+                $(this).css('background', bgcolor);
+            });
+        }
+
+        // 左边界_右边界_类型 &
+        function getTags(spans) {
+            var tagSeq = [];
+            $.each(spans, function (i, span) {
+                var l = span['L'];
+                var r = span['R'];
+                var tag = span['Tag'];
+                tagSeq.push(l+'_'+r+'_'+tag);
+            });
+            return tagSeq.join("&");
+        }
+
+        function save(){
+            if (spans==null || spans.length === 0){
+                alert("请选定实体！");
+                return;
+            }
+
+            // alert(JSON.stringify(spans)); //数组转成json字符串
+            sendData("/update", getTags(spans));
+            spans = []
+        }
+
+        function noEntity() {
+            sendData("/update", getTags(spans));
+            spans = []
+        }
+
+        function clean(){
+            $.each($('.token'), function(){
+                $(this).css('color', '#000000').css('background', '#ffffff');
+            });
+            spans = []
+        }
+
+        // 解析用户标签
+        function parseTag(tag) {
+            var enTags = tag.split('&');
+            var allSpan = [];
+            $.each(enTags, function (i, val) {
+                var tagSpan = {};
+                var elems = val.split('_');
+                tagSpan['L'] = elems[0];
+                tagSpan['R'] = elems[1];
+                tagSpan['Tag'] = elems[2];
+                allSpan.push(tagSpan);
+            });
+
+            return allSpan;
+        }
+
+        var ls, lr = null;
+        var span = null;
+        var spans = null;
+        var pager = null;
+        var lblColorMap = {}; //实体标签与颜色映射表
+
+        $(function() {
+            var $en_lbls = $('.en_lbl');
+            $.each($en_lbls, function(i, val){
+                var lblColor = colorFactory(i);
+                $(this).css('background', lblColor);
+                lblColorMap[$(this).text()] = lblColor;
+            });
+
+            $en_lbls.click(function () {
+                drawEntity(span, $(this).css('background-color'));
+                span['Tag'] = $(this).text();
+                spans.push(span);
+            });
+
+            $('#token_panel').on('click', '.token', function(){
+                // on()方法添加的事件处理程序适用于当前及未来的元素（比如由JS脚本创建的新元素）
+                if (ls == null){
+                    $(this).css('background','lightgray');
+                    span = {};
+                    ls = $('.token').index($(this));
+                    span['L'] = ls;
+                } else{
+                    rs = $('.token').index($(this));
+                    span['R'] = rs;
+                    drawEntity(span, 'lightgray', '#ffffff');
+                    ls = null;
+                }
+            });
+
+            pager = new Pager(0, parseInt($("#totalRows").text()));
+
+            var tag = $("#tag").val();  //当前数据的格式化实体标签
+            drawByTag(tag);
+        });
+
+        //根据实体标签改变对应实体的背景色
+        function drawByTag(instTag) {
+            var enTags = parseTag(instTag);
+            $.each(enTags, function (i, tag) {
+                var l = tag['L'];
+                var r = tag['R'];
+                if (l === r){  //单实体
+                    $(".token").eq(r).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
+                } else {
+                    for (var j = l; j <= r; j++) {
+                        $(".token").eq(j).css('color', '#ffffff').css('background', lblColorMap[tag['Tag']]);
+                    }
+                }
+            });
+        }
+    </script>
+
+    <style>
+        a {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .en_lbl{
+            align-items: center;
+            border-radius: 4px;
+            display: inline-flex;
+            font: bold 1rem '微软雅黑';
+            height: 2em;
+            justify-content: center;
+            line-height: 1.5;
+            padding-left: 0.75em;
+            padding-right: 0.75em;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            white-space: nowrap;
+        }
+
+        a.en_lbl:link{
+            color: #ffffff;
+        }
+
+        a.en_lbl:hover{
+            text-decoration: underline;
+        }
+
+        .token {
+            /*上 右 下 左*/
+            padding: 5px 10px 5px;
+        }
+
+        #lbl_panel{
+            padding: 1em;
+            text-align: center;
+        }
+
+        #token_panel{
+            margin: 10px;
+            text-align: left;
+            font-size: 20px;
+            line-height: 250%;
+        }
+
+        #btn_panel{
+            text-align: center;
+        }
+
+        #btn_panel button{
+            margin: 10px;
+        }
+
+        #pagerBtn{
+            margin: 1em;
+        }
+
+        #pagerBtn button{
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body style="background: #ededed">
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                                <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                        <!--<li class="navbar-text">-->
+                            <!--<i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                        <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                        <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                        <!--<span id="fullscreen-button">全屏</span>-->
+                        <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item" th:if="${userVo.role} == admin">
+                            <a class="nav-link" href="/bg">后台管理</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
+        <h5>
+            <strong>角色：</strong><span th:text="${userVo.role} == 'admin' ? '管理员' : '标注员'" style="text-decoration: underline">无</span>&nbsp;&nbsp;
+            <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
+            <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
+            <strong>当前数据ID：</strong><span th:text="${instanceVo.id}" id="recordId"></span>
+
+<!--            <span class="form-inline">-->
+<!--                <input type="text" class="form-control" id="keyWord" placeholder="输入关键字">-->
+<!--                <button type="button" class="btn btn-light">搜索</button>-->
+<!--            </span>-->
+        </h5><hr>
+
+        <div class="card">
+            <div class="card-header">
+                <!--<div id="lbl_panel">-->
+                <!--<a class="en_lbl" th:each="lbl, state : ${ner_lbls}" th:text="${state.current.key}" th:style="'color:#ffffff;background:' + ${state.current.value}"></a>-->
+                <!--</div>-->
+                <div id="lbl_panel">
+                    <a class="en_lbl" th:each="tag: ${taskVo.tagSet}" th:text="${tag}" style="color:#ffffff;"></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id='token_panel'>
+                    <span class="token" th:each="token : ${instanceVo.item}" th:text="${token}"></span>
+                </div>
+<!--                <input type="hidden" th:value="${instanceVo.id}" id="recordId">-->
+                <input type="hidden" th:value="${instanceVo.tag}" id="tag">
+            </div>
+            <div class="card-footer">
+                <div id="btn_panel">
+                    <button type="button" id="resetBtn" class="btn btn-secondary" onclick="clean()">重置</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" onclick="save()">保存</button>
+                    <button type="button" id="noEntityBtn" class="btn btn-success" onclick="noEntity()">没有实体</button>
+                </div>
+            </div>
+        </div>
+        <div id="pagerBtn">
+            <button type="button" class="btn btn-info" onclick="previous()">前一页</button>
+            <button type="button" class="btn btn-info" onclick="next()">下一页</button>
+            <button type="button" class="btn btn-info" onclick="first()">首  页</button>
+            <button type="button" class="btn btn-info" onclick="last()">尾  页</button>
+
+            第<span th:text="${pager.offset + 1}" id="offset"></span> / <span th:text="${pager.totalRows}" id="totalRows"></span>页
+        </div>
+    </div>
+</body>
+</html>

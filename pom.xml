@@ -48,12 +48,6 @@
             <version>1.3.2</version>
         </dependency>
 
-        <!--MongoDB-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-
         <!--thymeleaf模板-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -131,5 +125,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

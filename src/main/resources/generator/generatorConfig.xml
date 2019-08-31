@@ -103,7 +103,16 @@
 <!--            <property name="useActualColumnNames" value="true"/>-->
 <!--        </table>-->
 
-        <table tableName="tb_data_type" domainObjectName="DataType"
+<!--        <table tableName="tb_data_type" domainObjectName="DataType"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--        </table>-->
+
+        <table tableName="tb_status" domainObjectName="Status"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

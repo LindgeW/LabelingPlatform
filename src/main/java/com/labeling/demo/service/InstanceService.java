@@ -1,10 +1,9 @@
 package com.labeling.demo.service;
 
 import com.labeling.demo.entity.Instance;
+import com.labeling.demo.entity.Pager;
 import com.labeling.demo.entity.vo.InstanceUserVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,9 +17,9 @@ public interface InstanceService {
     List<Instance> findAll();
 
 //    List<Instance> findPageData(Pageable instPage);
-    List<Instance> findPageDataByTaskName(String taskName, Pageable pageable);
+    List<Instance> findPageDataByTaskName(String taskName, Pager pageable);
 
-    Instance findPageDataByTaskNameRand(String userName, String taskName, Pageable pageable);
+    Instance findPageDataByTaskNameRand(String userName, String taskName, Pager pageable);
 
 //    Instance findInstById(Long id);
 

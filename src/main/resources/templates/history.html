@@ -24,8 +24,7 @@
 
     <title>评论汇总</title>
     <script>
-        var inputOpts = [];
-        $(function() {
+    $(function() {
             initTable("/list");
         });
 
@@ -108,10 +107,16 @@
                     $.post("/fetchTags", function (respData, status) {
                         if (status === 'success') {
                             var tags = respData.data.tagSet;
-                            inputOpts = [];
+                            // inputOpts = [];
+                            // $.each(tags, function (i, val) {
+                            //     inputOpts.push({text: val, value: val})
+                            // });
+
+                            $("#lbl_panel").empty();
                             $.each(tags, function (i, val) {
-                                inputOpts.push({text: val, value: val})
-                            });
+                                var radio = "<label class='radio-inline' style='padding: 10px;'><input type='radio' name='tag' class='radio_tag' value='"+ val +"'/>"+ val +"</label>";
+                                $("#lbl_panel").append(radio);
+                            })
                         }
                     });
                 },
@@ -125,26 +130,43 @@
             });
         }
 
+        // var inputOpts = [];
         function editOne(row){
-            alert(row);
-            if (inputOpts < 1){
-                return;
-            }
+            // if (inputOpts < 1){
+            //     return;
+            // }
+            // bootbox.prompt({
+            //     title: "编辑标签",
+            //     size: 'large',
+            //     message: '<p>请重新选择标签:</p>',
+            //     inputType: 'radio',
+            //     inputOptions: inputOpts,
+            //     callback: function (result) {
+            //         if(result == null){
+            //             return;
+            //         }
+            //         row.tag = result;
+            //         editSave(row, "/update");
+            //     }
+            // });
 
-            bootbox.prompt({
-                title: "编辑标签",
-                size: 'large',
-                message: '<p>请重新选择标签:</p>',
-                inputType: 'radio',
-                inputOptions: inputOpts,
-                callback: function (result) {
-                    if(result == null){
-                        return;
-                    }
-                    row.tag = result;
-                    editSave(row, "/update");
+            $("#recordId").val(row.id);
+            $(".radio_tag").each(function (i, tr) {
+                if (row.tag === tr.value) {
+                    tr.checked = true;
                 }
             });
+
+            $("#myModal").modal();
+        }
+
+        function submitAlter() {
+            var sendData = {
+                "id": $("#recordId").val(),
+                "tag": $("input:radio:checked").val()
+            };
+
+            editSave(sendData, "/update");
         }
 
         function editSave(row, url){
@@ -152,13 +174,14 @@
             $.ajax({
                 url: url,
                 type: "POST",
-                data: JSON.stringify(row),
+                data: row,
                 dataType: "json",
-                contentType: "application/json;charset=utf-8",
+                cache: "false",
+                // contentType: "application/json;charset=utf-8",
                 success: function(data, status) {
                     if (status === 'success') {
-                        // refresh();
                         $("#dataTable").bootstrapTable('refresh');
+                        $("#myModal").modal('hide')
                     }
                 },
                 error: function(){
@@ -226,34 +249,34 @@
 
     <div class="container-fluid" style="margin-top: 20px; min-height:800px;">
         <h5>
-            <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>
-            &nbsp;&nbsp;&nbsp;
+            <strong>角色：</strong><span th:text="${userVo.role} == 'admin' ? '管理员' : '标注员'" style="text-decoration: underline">无</span>&nbsp;&nbsp;
+            <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>
-        </h5>
+        </h5><hr>
         <div id="dataTable" class="table-responsive">
             <table class="table" data-mobile-responsive="true"></table>
         </div>
     </div>
 
-<!--    <div class="modal fade" id="myModal">-->
-<!--        <div class="modal-dialog modal-lg">-->
-<!--            <form action="/updateType" method="post" onsubmit="return checkAlterForm();">-->
-<!--                <div class="modal-content">-->
-<!--                    <div class="modal-header">-->
-<!--                        <h5 class="modal-title">修改</h5>-->
-<!--                        <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                    </div>-->
-<!--                    <div class="modal-body">-->
-<!--                        -->
-<!--                        -->
-<!--                    </div>-->
-<!--                    <div class="modal-footer">-->
-<!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>-->
-<!--                        <button type="submit" class="btn btn-info">提交</button>-->
-<!--                    </div>-->
-<!--                </div>-->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+<!--            <form action="/update" method="post">-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">修改</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="lbl_panel"></div>
+                        <input type="hidden" name="id" id="recordId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" onclick="submitAlter()" class="btn btn-info">提交</button>
+                    </div>
+                </div>
 <!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
+        </div>
+    </div>
 </body>
 </html>

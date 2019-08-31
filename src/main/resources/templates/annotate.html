@@ -58,14 +58,13 @@
 
         function randSelect() {
             var tag_radios = $(".radio_tag");
-            var randNum = parseInt(Math.random() * tag_radios.length);
+            var randNum = Math.floor(Math.random() * tag_radios.length);
             tag_radios[randNum].checked = true;
         }
 
 
         function save() {
             var t2 = new Date();
-
             var username = $("#username").text();
             var taskName = $("#taskName").text();
             var role = $('#role').val();
@@ -129,7 +128,6 @@
                     <img src="/img/logo.png" alt="LOGO" style="width:50px;">
                     <span class="navbar-text">天大数据标注平台</span>
                 </a>
-                <!-- Toggler/collapsibe Button -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
                     <span class="navbar-toggler-icon"></span>
                 </button>

@@ -1,10 +1,10 @@
 package com.labeling.demo.repository;
 
 import com.labeling.demo.entity.Instance;
+import com.labeling.demo.entity.Pager;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -27,11 +27,11 @@ public interface InstanceMapper {
     @Select("select * from tb_instance")
     List<Instance> findAll();
 
-    List<Instance> findPageData(Pageable instPage);
+    List<Instance> findPageData(Pager instPage);
 
-    List<Instance> findPageDataByTaskName(String taskName, @Param("pager") Pageable pageable);
+    List<Instance> findPageDataByTaskName(String taskName, @Param("pager") Pager pageable);
 
-    List<Instance> findPageDataByTaskNameRand(String taskName, @Param("pager") Pageable pageable);
+    List<Instance> findPageDataByTaskNameRand(String taskName, @Param("pager") Pager pageable);
 
     @Select("select * from tb_instance where taskName = #{taskName}")
     List<Instance> findByTaskName(String taskName);

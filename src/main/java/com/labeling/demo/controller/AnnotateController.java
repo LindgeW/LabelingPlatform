@@ -2,7 +2,6 @@ package com.labeling.demo.controller;
 
 import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.InstanceUserVO;
-import com.labeling.demo.entity.vo.InstanceVO;
 import com.labeling.demo.entity.vo.TaskVO;
 import com.labeling.demo.entity.vo.UserVO;
 import com.labeling.demo.service.InstanceService;
@@ -15,7 +14,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -81,10 +79,11 @@ public class AnnotateController {
         InstanceUserVO<Object> instanceUserVO = new InstanceUserVO<>();
         instanceUserVO.setInstanceId(instance.getInstanceId());
         instanceUserVO.setTaskname(task.getTaskname());
-        if (TagType.CLASSIFY.getId().equals(task.getDatatype())) {
+        TagType tagType = TagType.getTypeByID(task.getDatatype());
+        if(tagType == TagType.CLASSIFY){
             instanceUserVO.setItem(instance.getItem());
             instanceUserVO.setTag(randTag(instance));
-        } else if(TagType.NER.getId().equals(task.getDatatype())) {
+        } else if (tagType == TagType.NER){
             instanceUserVO.setItem(StringUtils.split(instance.getItem(), " "));
 //            instanceUserVO.setTag(randTag(instance));
         }
@@ -122,7 +121,7 @@ public class AnnotateController {
 
         UserVO userVO = new UserVO(username, role, tagNum);
         //当前页 pageNum, 每页大小 pageSize
-        List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), PageRequest.of(tagNum, 1));
+        List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), Pager.of(tagNum, 1));
         // 判断当前用户是否已经完成小组任务
         if (pageData.isEmpty()){
             model.addAttribute("userVo", userVO);
@@ -181,7 +180,7 @@ public class AnnotateController {
             instance.setStatus(1);
         }
 
-        if ("admin".equalsIgnoreCase(role)){
+        if (Role.ADMIN == Role.valueOf(role.toUpperCase())){
             instance.setTagExpert(tag);
         }
         instanceService.save(instance);
@@ -198,7 +197,7 @@ public class AnnotateController {
         // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
         UserVO curUser = new UserVO(username, role, tagNum);
-        List<Instance> pageData = instanceService.findPageDataByTaskName(taskName, PageRequest.of(tagNum, 1));
+        List<Instance> pageData = instanceService.findPageDataByTaskName(taskName, Pager.of(tagNum, 1));
 //        Instance nextInstance = instanceService.findPageDataByTaskNameRand(username ,taskName, PageRequest.of(tagNum, 1));
 
         if (pageData.isEmpty()){

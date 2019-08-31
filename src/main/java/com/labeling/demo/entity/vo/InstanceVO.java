@@ -1,5 +1,6 @@
 package com.labeling.demo.entity.vo;
 
+// deprecated
 public class InstanceVO<T> {
     private Long instanceId;    // 数据编号
     private String taskName;  //任务名

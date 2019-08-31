@@ -3,11 +3,11 @@ package com.labeling.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.labeling.demo.entity.Instance;
+import com.labeling.demo.entity.Pager;
+import com.labeling.demo.entity.Role;
+import com.labeling.demo.entity.TagType;
 import com.labeling.demo.entity.vo.InstanceUserVO;
-import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.repository.InstanceUserMapper;
-import com.labeling.demo.service.InstanceService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -16,8 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
@@ -313,5 +311,59 @@ public class DemoApplicationTests {
         for (InstanceUserVO iuv: fullRecord) {
             System.out.println(iuv);
         }
+    }
+
+    enum Stating{
+        Create("已创建"),
+        Paying("支付中"),
+        Failed("失败")
+        ;
+        private String value;
+
+        Stating(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    @Test
+    public void testEnum(){
+//        System.out.println(Status.values());
+        System.out.println(Stating.valueOf("Paying"));
+        System.out.println(Role.valueOf("admin".toUpperCase()));
+//        System.out.println(Stating.Create.getValue());
+//        System.out.println(Stating.Create);
+
+//        TagType typeByID = TagType.getTypeByID((short) 1);
+//        System.out.println(typeByID == TagType.NER);
+    }
+
+    /*
+    rgb(202, 53, 228)
+    rgb(237, 93, 78)
+    rgb(145, 110, 46)
+    rgb(105, 204, 22)
+     */
+
+    @Test
+    public void testColor(){
+        Random random = new Random(23);
+        for(int i=0; i<4; i++) {
+//            random.setSeed(23);
+            int r = random.nextInt(255);
+            int g = random.nextInt(255);
+            int b = random.nextInt(255);
+            System.out.println(String.format("rgb(%d, %d, %d)", r, g, b));
+        }
+    }
+
+    @Test
+    public void TestPager(){
+        Pager p1 = Pager.of(1, 2);
+        Pager p2 = Pager.of(1, 2);
+        System.out.println(p1 == p2);
     }
 }

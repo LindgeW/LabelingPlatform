@@ -1,8 +1,8 @@
 package com.labeling.demo.service;
 
 import com.labeling.demo.entity.InstanceUser;
+import com.labeling.demo.entity.Pager;
 import com.labeling.demo.entity.vo.InstanceUserVO;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface InstanceUserService {
 
     List<InstanceUser> findAll();
 
-    List<InstanceUser> findByPage(String username, Pageable pageable);
+    List<InstanceUser> findByPage(String username, Pager pageable);
 
     List<InstanceUser> findByUserName(String username);
 

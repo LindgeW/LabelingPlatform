@@ -2,12 +2,11 @@ package com.labeling.demo.service.impl;
 
 import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.InstanceUser;
+import com.labeling.demo.entity.Pager;
 import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,12 +51,12 @@ public class InstanceServiceImpl implements InstanceService {
 //    }
 
     @Override
-    public List<Instance> findPageDataByTaskName(String taskName, Pageable pageable) {
+    public List<Instance> findPageDataByTaskName(String taskName, Pager pageable) {
         return instanceMapper.findPageDataByTaskName(taskName, pageable);
     }
 
     @Override
-    public Instance findPageDataByTaskNameRand(String userName, String taskName, Pageable pageable) {
+    public Instance findPageDataByTaskNameRand(String userName, String taskName, Pager pageable) {
         boolean isTagged = false;
         Instance instance = null;
         do {

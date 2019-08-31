@@ -37,10 +37,27 @@
             });
         }
 
-        function drawEntities(spans, color){
-            $.each(spans, function(i, span){
-                drawEntity(span, color)
-            });
+        function colorFactory(i) {
+            var rgbSet = [
+                'rgb(255, 23, 34)',
+                'rgb(25, 123, 30)',
+                'rgb(2, 23, 134)',
+                'rgb(0, 0, 20)',
+                'rgb(255, 120, 3)',
+                'rgb(100, 50, 200)',
+                'rgb(20, 100, 200)'
+            ];
+            // var r, g, b = null;
+            // do{
+            //     r = Math.floor(Math.random() * 255);
+            //     g = Math.floor(Math.random() * 255);
+            //     b = Math.floor(Math.random() * 255);
+            //     // rgb模式转YUV模式，Y是明亮度
+            //     var yuv = 0.299 * r + 0.587 * g + 0.114 * b;
+            // } while (yuv >= 192); //浅色
+            // return "rgb(" + r + "," + g + "," + b + ")";
+
+            return rgbSet[i];
         }
 
         var t1 = null;
@@ -50,12 +67,8 @@
 
         $(function(){
             var $en_lbls = $('.en_lbl');
-            $.each($en_lbls, function(){
-                var r = parseInt(Math.random() * 255);
-                var g = parseInt(Math.random() * 255);
-                var b = parseInt(Math.random() * 255);
-                var rgb = "rgb(" + r + "," + g + "," + b + ")";
-                $(this).css('background', rgb);
+            $.each($en_lbls, function(i, val){
+                $(this).css('background', colorFactory(i));
             });
 
             $en_lbls.click(function () {
@@ -92,7 +105,6 @@
             //             drawEntity(span, 'lightgray', '#ffffff');
             //             ls = null;
             //         }
-            //
             //     }
             //     // else if (e.which === 3){
             //     //     drawEntity(span, $("body").css('background'));
@@ -102,37 +114,48 @@
             t1 = new Date();
         });
 
-        function getTags(spans, seqLen) {
-            var tagSeq = [];
-            for (var i=0; i<seqLen; i++){
-                tagSeq[i] = "O";
-            }
+        // BIOES
+        // function getTags(spans, seqLen) {
+        //     var tagSeq = [];
+        //     for (var i=0; i<seqLen; i++){
+        //         tagSeq[i] = "O";
+        //     }
 
+        //     $.each(spans, function (i, span) {
+        //         var l = span['L'];
+        //         var r = span['R'];
+        //         var tag = span['Tag'];
+        //         if (l === r){
+        //             tagSeq[r] = 'S-' + tag;
+        //         }else{
+        //             tagSeq[l] = 'B-' + tag;
+        //
+        //             for(var j=l+1; j<r; j++){
+        //                 tagSeq[j] = 'I-' + tag;
+        //             }
+        //
+        //             tagSeq[r] = 'E-' + tag;
+        //         }
+        //     });
+        //     return tagSeq.join(" ");
+        // }
+
+        // 左边界_右边界_类型 &
+        function getTags(spans) {
+            var tagSeq = [];
             $.each(spans, function (i, span) {
                 var l = span['L'];
                 var r = span['R'];
                 var tag = span['Tag'];
-                if (l === r){
-                    tagSeq[r] = 'S-' + tag;
-                }else{
-                    tagSeq[l] = 'B-' + tag;
-
-                    for(var j=l+1; j<r; j++){
-                        tagSeq[j] = 'I-' + tag;
-                    }
-
-                    tagSeq[r] = 'E-' + tag;
-                }
+                tagSeq.push(l+'_'+r+'_'+tag);
             });
-
-            return tagSeq.join(" ");
+            return tagSeq.join("&");
         }
 
         function sendData(url, tags) {
             var t2 = new Date();
 
             $("#tag_seq").text(tags);
-
             var username = $("#username").text();
             var taskName = $("#taskName").text();
             var role = $('#role').val();
@@ -145,7 +168,7 @@
                 "username": username,
                 "role": role,
                 "instanceId": instId,
-                "taskName": taskName,
+                "taskname": taskName,
                 "tag": tags,
                 "tagNum": tagNum,
                 "responseTime": respTime
@@ -162,7 +185,7 @@
                         $("#tagNum").text(resp.data.curUser.tagNum);
                         $("#instanceId").val(resp.data.nextInst.instanceId);
                         var nextItem = resp.data.nextInst.item;
-                        $("#token_panel").text('');
+                        $("#token_panel").empty();
                         $.each(nextItem, function (i, val) {
                             var nextInst = "<span class='token'>" + val +"</span>";
                             $("#token_panel").append(nextInst);
@@ -173,6 +196,7 @@
                         $("#token_panel").html("<div style='font-weight: bold;color: #ff0000; text-align: center;'>" + resp.message + "</div>");
                         $("#saveBtn").attr('disabled', true);
                         $("#noEntityBtn").attr('disabled', true);
+                        $("#resetBtn").attr('disabled', true);
                         // $("#saveBtn").hide();
                     }
                 },
@@ -191,12 +215,14 @@
             }
 
             // alert(JSON.stringify(spans)); //数组转成json字符串
-            sendData("/annotate", getTags(spans, $(".token").length));
+            // sendData("/annotate", getTags(spans, $(".token").length));
+            sendData("/annotate", getTags(spans));
             spans = []
         }
 
         function noEntity() {
-            sendData("/annotate", getTags(spans, $(".token").length));
+            // sendData("/annotate", getTags(spans, $(".token").length));
+            sendData("/annotate", getTags(spans));
             spans = []
         }
 
@@ -243,14 +269,14 @@
         }
 
         #lbl_panel{
-            padding: 1em;
+            padding: 1rem;
             text-align: center;
         }
 
         #token_panel{
-            margin: 10px;
+            margin: 1rem;
             text-align: left;
-            font-size: 20px;
+            font-size: 1.5em;
             line-height: 250%;
         }
 
@@ -259,7 +285,7 @@
         }
 
         #btn_panel button{
-            margin: 10px;
+            margin: 0.75rem;
         }
     </style>
 </head>
@@ -271,7 +297,6 @@
                 <img src="/img/logo.png" alt="LOGO" style="width:50px;">
                 <span class="navbar-text">天大数据标注平台</span>
             </a>
-            <!-- Toggler/collapsibe Button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -340,7 +365,6 @@
             <!--<div id="lbl_panel">-->
                 <!--<a class="en_lbl" th:each="lbl, state : ${ner_lbls}" th:text="${state.current.key}" th:style="'color:#ffffff;background:' + ${state.current.value}"></a>-->
             <!--</div>-->
-
             <div id="lbl_panel">
                 <a class="en_lbl" th:each="tag: ${taskVo.tagSet}" th:text="${tag}" style="color:#ffffff;"></a>
             </div>
@@ -352,7 +376,7 @@
         </div>
         <div class="card-footer">
             <div id="btn_panel">
-                <button type="button" class="btn btn-secondary" onclick="clean()">重置</button>
+                <button type="button" id="resetBtn" class="btn btn-secondary" onclick="clean()">重置</button>
                 <button type="button" id="saveBtn" class="btn btn-primary" onclick="save()">保存</button>
                 <button type="button" id="noEntityBtn" class="btn btn-success" onclick="noEntity()">没有实体</button>
             </div>
