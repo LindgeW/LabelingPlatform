@@ -1,6 +1,6 @@
 # LabelingPlatform 数据标注平台
 
-## 业务流程
+## 业务流
 ![](imgs/process.png)
 
 ## 数据流
