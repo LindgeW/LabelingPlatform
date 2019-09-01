@@ -1,10 +1,11 @@
-# LabelingPlatform 
+# LabelingPlatform 数据标注平台
 
 ## 业务流程
 ![](imgs/process.png)
 
 ## 数据流
 ![](imgs/dataflow.png)
+** 创建任务的专家可以随时导出数据，训练模型，更新数据标签
 
 ## ER图（略去属性）
 ![](imgs/er.png)
