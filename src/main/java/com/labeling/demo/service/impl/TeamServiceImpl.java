@@ -42,12 +42,22 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Team findById(Integer teamId) {
+        return teamMapper.selectByPrimaryKey(teamId);
+    }
+
+    @Override
+    public void deleteTeamById(int teamId) {
+        teamMapper.deleteByPrimaryKey(teamId);
+    }
+
+    @Override
     public List<Team> findByTaskName(String taskName) {
         return teamMapper.findByTaskName(taskName);
     }
 
     @Override
-    public List<String> findByExpertName(String username) {
+    public List<Team> findByExpertName(String username) {
         return teamMapper.findByExpertName(username);
     }
 

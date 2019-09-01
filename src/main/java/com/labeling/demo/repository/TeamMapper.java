@@ -29,6 +29,6 @@ public interface TeamMapper {
     @Select("select * from tb_team where teamName = #{teamName}")
     Team findByName(String teamName);
 
-    @Select("select teamName from tb_team where expertname = #{expertname} and status = 0")
-    List<String> findByExpertName(String username);
+    @Select("select * from tb_team where expertname = #{expertname}")
+    List<Team> findByExpertName(String username);
 }

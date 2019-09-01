@@ -23,6 +23,6 @@ public interface TaskMapper {
     @Select("select * from tb_task")
     List<Task> findAll();
 
-    @Select("select taskName from tb_task where expertname = #{expertname} and status = 0")
-    List<String> findByExpert(String expertName);
+    @Select("select * from tb_task where expertname = #{expertname}")
+    List<Task> findByExpert(String expertName);
 }

@@ -56,11 +56,10 @@ public class DataController {
     @RequiresRoles("admin")
     public String toUpload(Model model){
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
-        List<String> taskNames = taskService.findByExpertName(curUser.getUsername());
-        Set<String> taskSet = new HashSet<>(taskNames);
+        List<Task> tasks = taskService.findByExpertName(curUser.getUsername());
         List<DataType> dataTypes = dataTypeService.findAll();
 
-        model.addAttribute("builtTasks", taskSet);
+        model.addAttribute("builtTasks", tasks);
         model.addAttribute("dataTypes", dataTypes);
         return root+"upload";
     }

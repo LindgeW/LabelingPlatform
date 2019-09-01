@@ -81,4 +81,16 @@ public class Team {
     public void setExpertname(String expertname) {
         this.expertname = expertname == null ? null : expertname.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "teamId=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", members='" + members + '\'' +
+                ", status=" + status +
+                ", expertname='" + expertname + '\'' +
+                '}';
+    }
 }

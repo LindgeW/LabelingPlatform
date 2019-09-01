@@ -13,7 +13,11 @@ public interface TeamService {
 
     List<Team> findByTaskName(String taskName);
 
-    List<String> findByExpertName(String username);
+    List<Team> findByExpertName(String username);
 
     boolean updateTeam(Team team);
+
+    Team findById(Integer teamId);
+
+    void deleteTeamById(int teamId);
 }

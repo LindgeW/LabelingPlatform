@@ -1,8 +1,6 @@
 package com.labeling.demo.controller;
 
-import com.labeling.demo.entity.Task;
-import com.labeling.demo.entity.Team;
-import com.labeling.demo.entity.User;
+import com.labeling.demo.entity.*;
 import com.labeling.demo.service.TaskService;
 import com.labeling.demo.service.TeamService;
 import com.labeling.demo.service.UserService;
@@ -15,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
@@ -39,11 +38,11 @@ public class TeamController {
         List<User> users = userService.findUserWithoutTeam();
 
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
-        List<String> teamNames = teamService.findByExpertName(curUser.getUsername());
+        List<Team> teams = teamService.findByExpertName(curUser.getUsername());
 
         model.addAttribute("tasks", tasks);
         model.addAttribute("users", users);
-        model.addAttribute("builtTeams", teamNames);
+        model.addAttribute("builtTeams", teams);
 
         return root+"build_team";
     }
@@ -51,9 +50,11 @@ public class TeamController {
     @RequestMapping("/browse")
     @RequiresRoles("admin")
     public String browseTeam(Model model){
-        List<Team> teamLst = teamService.findAll();
+//        List<Team> teamLst = teamService.findAll();
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        List<Team> teams = teamService.findByExpertName(curUser.getUsername());
+        model.addAttribute("teams", teams);
 
-        model.addAttribute("teams", teamLst);
         return root+"browse_team";
     }
 
@@ -125,4 +126,27 @@ public class TeamController {
         return "forward:/build";
     }
 
+    @PostMapping("/releaseTeam")
+    @ResponseBody
+    @RequiresRoles("admin")
+    public RespEntity releaseTeam(Integer teamId) {
+        Team team = teamService.findById(teamId);
+        String[] members = StringUtils.split(team.getMembers(), ";");
+        // 将团队所有成员的team字段都置成空
+        for(String username: members){
+            System.out.println(username);
+            User user = new User();
+            user.setUsername(username);
+            user.setTeamName("");
+            userService.updateUser(user);
+        }
+
+        //删除团队或改变团队状态为 -1
+//        team.setStatus(-1);
+//        teamService.updateTeam(team);
+
+        teamService.deleteTeamById(teamId);
+
+        return new RespEntity<>(RespStatus.SUCCESS, "/browse");
+    }
 }

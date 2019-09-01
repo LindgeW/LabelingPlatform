@@ -166,19 +166,6 @@ public class AnnotateController {
         String[] members = StringUtils.split(team.getMembers(), ";");
         //判断该数据是否完成标注，完成置成1
         if (instance.getTagNum() == members.length) {
-//        ArrayList<String> taglist = new ArrayList<String>();
-//            List<InstanceUser> instTaglist =  instanceUserService.findInstanceUserById(instanceVO.getInstanceId());
-//            //为数据打上最终标签且改变状态
-//            for(InstanceUser item :instTaglist){
-//                System.out.println(item.getTag());
-//                taglist.add(item.getTag());
-//            }
-//            FindMostElm findmostElm = new FindMostElm();
-//            //找到最终的标签
-//            String finaltag = findmostElm.findfinaltag(taglist);
-//            System.out.println(finaltag);
-//            //为此数据打上最终标签并修改它的状态
-//            instance.setTag(finaltag);
 
             //1为已标状态
             instance.setStatus(1);

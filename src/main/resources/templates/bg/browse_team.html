@@ -7,7 +7,34 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
 
+    <script>
+        // 解散团队：团队不再存在，团队成员回到no task状态
+        function release(teamId) {
+            bootbox.confirm({
+                message: "确定解散吗？",
+                callback: function (result) {
+                    if (result){  // true
+                        $.ajax({
+                            url: "/releaseTeam",
+                            type: "POST",
+                            data: {"teamId": teamId},
+                            async: false, //同步提交
+                            cache: false,
+                            success: function (respData) {
+                                window.location.href = respData.data;
+                            },
+                            error: function (msg) {
+                                alert('error:'+msg);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+    </script>
 </head>
 <body>
     <div class="container" style="margin-top:50px; min-height: 800px;">
@@ -21,6 +48,7 @@
                     <th>团队成员</th>
                     <th>创建者</th>
                     <th>状态</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,12 +56,16 @@
                     <td th:text="${state.index} + 1"></td>
                     <td th:text="${team.teamName}"></td>
                     <td th:text="${team.taskName}"></td>
-                    <td th:text="${#strings.replace(team.members, ';', ' ')}"></td>
+                    <td th:text="${#strings.replace(team.members, ';', '/')}"></td>
                     <td th:text="${team.expertname}"></td>
                     <td>
                         <span th:if="${team.status == false}">进行中...</span>
                         <!--th:unless条件不成立时才显示-->
                         <span th:unless="${team.status == false}" style="color: #ff473a; font-weight: bold;">结束</span>
+                    </td>
+                    <td>
+                        <a th:text="${team.status == true} ? 解散" href="#" th:onclick="release([[${team.teamId}]])"></a>
+                        <a th:text="${team.status == false} ? --"></a>
                     </td>
                 </tr>
             </tbody>

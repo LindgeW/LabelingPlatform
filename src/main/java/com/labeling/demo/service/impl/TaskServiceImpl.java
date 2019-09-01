@@ -41,7 +41,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<String> findByExpertName(String expertName) {
+    public List<Task> findByExpertName(String expertName) {
         return taskMapper.findByExpert(expertName);
     }
 

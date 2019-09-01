@@ -16,6 +16,10 @@
         .adminClass{
             color: #ff473d;
         }
+
+        .finished{
+            color: darkgrey;
+        }
     </style>
     <script>
         var memberLst = new Array(0);
@@ -127,7 +131,7 @@
                         &nbsp;&nbsp;
                         <select class="form-control" id="builtTeam">
                             <option selected disabled>--已创建的小组--</option>
-                            <option th:each="team: ${builtTeams}" th:text="${team}" th:value="${team}">暂无</option>
+                            <option th:each="team: ${builtTeams}" th:text="${team.teamName}" th:value="${team.teamName}">暂无</option>
                         </select>
                     </div>
                 </div>
@@ -135,7 +139,7 @@
                 <div class="form-group">
                     <label for="tasks">选择标注任务：</label>
                     <select class="form-control" id="tasks" name="task">
-                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
+                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}" th:class="${task.status == true} ? finished">无</option>
                     </select>
                 </div>
 
