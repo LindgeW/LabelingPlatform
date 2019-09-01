@@ -4,6 +4,7 @@ import com.labeling.demo.entity.DataType;
 import com.labeling.demo.service.DataTypeService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Controller
 public class DataTypeController {
-    private List<DataType> dataTypes = null;
+    private static final String root = "bg/";
     private DataTypeService dataTypeService;
 
     @Autowired
@@ -24,9 +25,9 @@ public class DataTypeController {
     @RequestMapping("/datatype")
     @RequiresRoles("admin")
     public String toDataTypePage(Model model){
-        dataTypes = dataTypeService.findAll();
+        List<DataType> dataTypes = dataTypeService.findAll();
         model.addAttribute("dataTypes", dataTypes);
-        return "datatype";
+        return root+"datatype";
     }
 
     @PostMapping("/addType")
@@ -40,8 +41,7 @@ public class DataTypeController {
             model.addAttribute("msg", "该数据类型已存在！");
         }
 
-        model.addAttribute("dataTypes", dataTypes);
-        return "datatype";
+        return "forward:/datatype";
     }
 
     @PostMapping("/updateType")
@@ -51,7 +51,6 @@ public class DataTypeController {
 
         dataTypeService.updateDataType(dataType);
 
-        model.addAttribute("dataTypes", dataTypes);
-        return "datatype";
+        return "forward:/datatype";
     }
 }

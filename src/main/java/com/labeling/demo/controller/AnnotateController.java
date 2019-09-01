@@ -26,6 +26,7 @@ public class AnnotateController {
     private TaskService taskService;
     private TeamService teamService;
     private InstanceUserService instanceUserService;
+    private final static String root = "annotate/";
 
     @Autowired
     public AnnotateController(InstanceService instanceService, TaskService taskService, TeamService teamService, InstanceUserService instanceUserService) {
@@ -86,6 +87,9 @@ public class AnnotateController {
         } else if (tagType == TagType.NER){
             instanceUserVO.setItem(StringUtils.split(instance.getItem(), " "));
 //            instanceUserVO.setTag(randTag(instance));
+        } else if (tagType == TagType.SEMANTIC_SIM){
+            instanceUserVO.setItem(StringUtils.split(instance.getItem(), "$$"));
+            instanceUserVO.setTag(randTag(instance));
         }
 
         return instanceUserVO;
@@ -135,7 +139,7 @@ public class AnnotateController {
         model.addAttribute("userVo", userVO);
         model.addAttribute("taskVo", taskVo);
         model.addAttribute("instanceVo", instanceUserVO);
-        return TagType.getTypeByID(task.getDatatype()).getUrl();
+        return root + TagType.getTypeByID(task.getDatatype()).getUrl();
     }
 
     @PostMapping("/annotate")

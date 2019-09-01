@@ -3,12 +3,10 @@ package com.labeling.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.labeling.demo.entity.*;
 import com.labeling.demo.entity.vo.ExportVO;
 import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.service.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +35,7 @@ import java.util.zip.ZipInputStream;
 public class DataController {
 //    private static final String tempDir = "src/main/resources/temp";
     private static final int BatchSize = 500;
+    private static final String root = "bg/";
 
     private UserService userService;
     private InstanceService instanceService;
@@ -63,7 +62,7 @@ public class DataController {
 
         model.addAttribute("builtTasks", taskSet);
         model.addAttribute("dataTypes", dataTypes);
-        return "upload";
+        return root+"upload";
     }
 
     @GetMapping("/export")
@@ -71,7 +70,7 @@ public class DataController {
     public String toExport(Model model){
         List<Task> tasks = taskService.findAll();
         model.addAttribute("tasks", tasks);
-        return "export";
+        return root+"export";
     }
 
     @GetMapping("/exportData")

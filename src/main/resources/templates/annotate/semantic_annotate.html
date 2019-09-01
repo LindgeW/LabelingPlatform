@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>标注平台</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--为页面上的所有链接规定默认地址或默认目标,然后你的css或js或src原来是怎么样还是什么样-->
+    <base th:href="@{/}">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bg/icons.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css">
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/messages_zh.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
+
+    <style>
+        #lbl_obj_left, #lbl_obj_right {
+            margin-top: 10%;
+            min-height: 100px;
+            padding: 20px;
+            display: inline-flex;
+            font-size: 20px;
+            font-family: 微软雅黑, serif;
+            background: #fafafa;
+            /*border: #2b82ac solid 1px;*/
+        }
+
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            display: inline;
+        }
+    </style>
+
+    <script>
+        //防止右键菜单弹出
+        document.oncontextmenu = function(){return false};
+
+        var t1 = null;
+        $(function () {
+            randSelect();
+            t1 = new Date();
+        });
+
+        function goldSelect(goldTag) {
+            var tag_radios = $(".radio_tag");
+            tag_radios.each(function (i, tr) {
+                if (goldTag === tr.value) {
+                    tr.checked = true;
+                }
+            });
+        }
+
+        function randSelect() {
+            var tag_radios = $(".radio_tag");
+            var randNum = Math.floor(Math.random() * tag_radios.length);
+            tag_radios[randNum].checked = true;
+        }
+
+
+        function save() {
+            var t2 = new Date();
+            var username = $("#username").text();
+            var taskName = $("#taskName").text();
+            var role = $('#role').val();
+            var instId = $("#instanceId").val();
+            var tagNum = parseInt($("#tagNum").text());
+            var tag = $("input:radio:checked").val();
+            var respTime = (t2 - t1) / 1000;  // 标注的响应时间(单位：秒)
+
+            var sendData = {
+                "username": username,
+                "role": role,
+                "instanceId": instId,
+                "taskname": taskName,
+                "tag": tag,
+                "tagNum": tagNum,
+                "responseTime": respTime
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/annotate",
+                data: sendData,
+                dataType: "json",
+                cache: "false",
+                success: function (resp) {
+                    if (resp.code === 200) {
+                        $("#tagNum").text(resp.data.curUser.tagNum);
+                        $("#instanceId").val(resp.data.nextInst.instanceId);
+                        $("#lbl_obj_left").text(resp.data.nextInst.item[0]);
+                        $("#lbl_obj_right").text(resp.data.nextInst.item[1]);
+
+                        var goldTag = resp.data.nextInst.tag;
+                        if (goldTag == null || goldTag === '') {
+                            randSelect();
+                        } else {
+                            goldSelect(goldTag);
+                        }
+                    } else if (resp.code === 201) {
+                        $("#tagNum").text(resp.data.tagNum);
+                        $("#lbl_obj_left").html("<div style='font-weight: bold;color: #ff0000; text-align: center;'>" + resp.message + "</div>");
+                        $("#lbl_obj_right").html("<div style='font-weight: bold;color: #ff0000; text-align: center;'>" + resp.message + "</div>");
+                        // $("#saveBtn").hide();
+                        $("#saveBtn").attr("disabled", true);
+                        $("#lblArea").hide();
+                    }
+                },
+                error: function (msg) {
+                    alert("error: " + msg);
+                }
+            });
+
+            t1 = new Date();
+        }
+
+    </script>
+</head>
+
+<body style="background: #ededed">
+    <header class="header">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="img/logo.png" alt="LOGO" style="width:50px;">
+                    <span class="navbar-text">天大数据标注平台</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                                <i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/account"><i class="fa fa-key"> 修改密码</i></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout"><i class="fa fa-arrow-circle-o-right"> 退出</i></a>
+                            </div>
+                        </li>
+                        <!--<li class="navbar-text">-->
+                            <!--<i class="fa fa-user-circle"></i> <span th:text="${userVo.username}" id="username"></span>-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                            <!--<a href="#" class="nav-link nav-link-lg full-screen-link">-->
+                                <!--&lt;!&ndash;<i class="ion-arrow-expand" id="fullscreen-button"></i>&ndash;&gt;-->
+                                <!--<span id="fullscreen-button">全屏</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/annotate">我的任务</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/history">标注统计</a>
+                        </li>
+                        <li class="nav-item" th:if="${userVo.role} == admin">
+                            <a class="nav-link" href="/bg">后台管理</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                设置
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" id="fullscreen-button"><i class="ion-arrow-expand"> 全屏</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+<div class="container" style="padding-top: 20px;">
+    <h5 class="text-center">
+        <embed src="img/annotate_task_logo.svg" type="image/svg+xml" width="25" height="25"/>
+        您现在进行的是<span id="taskName" th:text="${taskVo.taskname}" style="text-decoration: underline;color: #1677b3"></span>任务，
+        标注类型为<span th:text="${taskVo.dataType}" style="text-decoration: underline;color: #1677b3"></span>
+    </h5>
+    <h5 class="text-center">
+        <embed src="img/annotate_task_logo.svg" type="image/svg+xml" width="25" height="25"/>
+        总任务量为<span th:text="${taskVo.corpussize}" style="text-decoration: underline;color: #1677b3"></span>条，
+        您已标注<span id="tagNum" th:text="${userVo.tagNum}" style="text-decoration: underline;color: #1677b3">0</span>条
+    </h5>
+    <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
+    <input type="hidden" id="role" th:value="${userVo.role}"/>
+</div>
+
+<div>
+    <div class="row">
+        <div class="col-sm-3 offset-sm-3 col-md-3 offset-md-3">
+            <div id="lbl_obj_left" th:text="${instanceVo.item[0]}" class="container"></div>
+        </div>
+        <div class="col-sm-3 col-md-3">
+            <div id="lbl_obj_right" th:text="${instanceVo.item[1]}" class="container"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
+            <div align="center">
+                <div id="lblArea">
+                    <label class="radio-inline" th:each="tag : ${taskVo.tagSet}"
+                           style="padding: 10px;">
+                        <input type="radio" name="tag" class="radio_tag" th:value="${tag}" th:text="${tag}"/>
+                    </label>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" style="background-color: #1677b3;" id="saveBtn" onclick="save()">
+                        保 存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ import java.util.*;
 
 @Controller
 public class TeamController {
-
+    private static final String root = "bg/";
     private UserService userService;
     private TaskService taskService;
     private TeamService teamService;
@@ -45,7 +45,7 @@ public class TeamController {
         model.addAttribute("users", users);
         model.addAttribute("builtTeams", teamNames);
 
-        return "build_team";
+        return root+"build_team";
     }
 
     @RequestMapping("/browse")
@@ -54,7 +54,7 @@ public class TeamController {
         List<Team> teamLst = teamService.findAll();
 
         model.addAttribute("teams", teamLst);
-        return "browse_team";
+        return root+"browse_team";
     }
 
     @PostMapping("/build_team")

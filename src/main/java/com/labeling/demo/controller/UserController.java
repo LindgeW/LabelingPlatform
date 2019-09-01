@@ -23,6 +23,7 @@ import java.util.List;
 
 @Controller
 public class UserController {
+    private static final String root = "bg/";
     private UserService userService;
     private TaskService taskService;
     private TeamService teamService;
@@ -34,6 +35,16 @@ public class UserController {
         this.taskService = taskService;
         this.teamService = teamService;
         this.instanceUserService = instanceUserService;
+    }
+
+
+    @GetMapping("/bg")
+    @RequiresRoles("admin")
+//    @RequiresPermissions("login:annotate:bg")
+    public String background(Model model) {
+        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
+        model.addAttribute("username", curUser.getUsername());
+        return root+"bg";
     }
 
     @GetMapping("/bg_index")
@@ -55,7 +66,7 @@ public class UserController {
 //            }
 //        }
 //        model.addAttribute("tempos", tempos);
-        return "bg_index";
+        return root+"bg_index";
     }
 
     @PostMapping("/tempoInfo")
@@ -80,23 +91,12 @@ public class UserController {
         return tempos;
     }
 
-
-    @GetMapping("/bg")
-    @RequiresRoles("admin")
-//    @RequiresPermissions("login:annotate:bg")
-    public String background(Model model) {
-        User curUser = (User) SecurityUtils.getSubject().getPrincipal();
-        model.addAttribute("username", curUser.getUsername());
-        return "bg";
-    }
-
     @GetMapping("/account")
     public String account(Model model) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         model.addAttribute("userVo", new UserVO(user.getUsername(), user.getRole(), user.getTeamName(), 0));
         return "account";
     }
-
 
     @PostMapping("/register")
     @ResponseBody

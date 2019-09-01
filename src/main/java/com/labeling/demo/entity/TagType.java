@@ -1,12 +1,15 @@
 package com.labeling.demo.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public enum TagType {
     UNKNOWN((short)0, "未知任务", ""),
     CLASSIFY((short)1, "文本分类", "annotate"),
-    NER((short)2, "实体识别", "ner_annotate")
+    NER((short)2, "实体识别", "ner_annotate"),
+    SEMANTIC_SIM((short)3, "语义相似度", "semantic_annotate");
     ;
 
     private Short id;    //编号

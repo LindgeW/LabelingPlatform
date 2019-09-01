@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <!-- Favicons -->
-    <link href="/img/logo.png" rel="icon">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-fileinput/fileinput.css" rel="stylesheet">
-    <link href="/css/bootstrap-fileinput/themes/explorer-fas/theme.css" rel="stylesheet">
-    <link href="/css/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="/css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <base th:href="@{/}">
+    <link href="img/logo.png" rel="icon">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="css/bootstrap-fileinput/fileinput.css" rel="stylesheet">
+    <link href="css/bootstrap-fileinput/themes/explorer-fas/theme.css" rel="stylesheet">
+    <link href="css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
 
-    <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-    <script src="/js/bootbox.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
     <style>
     </style>
     <title>标注类型设置</title>
@@ -53,7 +53,8 @@
             $("#typeId").val(id);
             $("#datatype2").val(type);
             $("#url2").val(url);
-            $("#myModal").modal();
+
+            $("#myModal").modal('show');
         }
 
     </script>
@@ -90,7 +91,7 @@
                         <td th:text="${type.id}"></td>
                         <td th:text="${type.typeName}"></td>
                         <td th:text="${type.url}"></td>
-                        <td><a href="#" class="btn btn-xs btn-info tableEditor" th:onclick="editOne([[${type.id}]], [[${type.typeName}]], [[${type.url}]]);"><i class="fa fa-edit"></i></a></td>
+                        <td><a class="btn btn-xs btn-info tableEditor" th:onclick="editOne([[${type.id}]], [[${type.typeName}]], [[${type.url}]]);"><i class="fa fa-edit"></i></a></td>
                     </tr>
                 </tbody>
             </table>

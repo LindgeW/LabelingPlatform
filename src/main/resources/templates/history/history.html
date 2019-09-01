@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!--为页面上的所有链接规定默认地址或默认目标,然后你的css或js或src原来是怎么样还是什么样-->
+    <base th:href="@{/}">
     <!-- Favicons -->
-    <link href="/img/logo.png" rel="icon">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/bg/icons.css">
-    <link href="/css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
-    <link href="/css/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="/css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
-    <script src="/js/jquery-3.4.1.min.js"></script>
+    <link href="img/logo.png" rel="icon">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bg/icons.css">
+    <link href="css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <link href="css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="css/plugins/iconfonts/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js"></script>
 
     <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap-table/bootstrap-table.js"></script>
-    <script src="/js/export/bootstrap-table-export.js"></script>
-    <script src="/js/export/tableExport.js"></script>
-    <script src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-    <script src="/js/bootbox.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap-table/bootstrap-table.js"></script>
+    <script src="js/export/bootstrap-table-export.js"></script>
+    <script src="js/export/tableExport.js"></script>
+    <script src="js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
 
     <title>评论汇总</title>
     <script>
@@ -93,7 +95,7 @@
                     {title: '编辑', formatter: function(value, row, index){
                         //HTML中函数对象传递只能转为JSON来传
                         var jsonObj = JSON.stringify(row).replace(/"/g, '&quot;'); //将所有"替换成&quot;
-                        return '<a href="#" class="btn btn-xs btn-info tableEditor" onclick="editOne(' + jsonObj + ')"><i class="fa fa-edit"></i></a>';
+                        return '<a class="btn btn-xs btn-info tableEditor" onclick="editOne(' + jsonObj + ')"><i class="fa fa-edit"></i></a>';
                     }}
                 ],
                 formatLoadingMessage: function () {
@@ -122,7 +124,7 @@
                 }
             });
 
-            $("#myModal").modal();
+            $("#myModal").modal('show');
         }
 
         function submitAlter() {
@@ -162,7 +164,7 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <img src="img/logo.png" alt="LOGO" style="width:50px;">
                     <span class="navbar-text">天大数据标注平台</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">

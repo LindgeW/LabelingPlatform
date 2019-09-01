@@ -18,7 +18,7 @@ import java.util.*;
 
 @Controller
 public class RecordController {
-
+    private final static String root = "history/";
     private InstanceService instanceService;
     private InstanceUserService instanceUserService;
 
@@ -59,10 +59,10 @@ public class RecordController {
             String[] items = StringUtils.split(instance.getItem(), " ");
             model.addAttribute("instanceVo", new InstanceUserVO<>(record, items, null));
             model.addAttribute("pager", Pager.of(0, 1, totalRows));
-            return "ner_history";
+            return root+"ner_history";
         }
 
-        return "history";
+        return root+"history";
     }
 
     @PostMapping("/list")
@@ -114,7 +114,7 @@ public class RecordController {
     public RespEntity update(InstanceUser instanceUser){
         //修改数据
         System.out.println(instanceUser);
-        instanceUser.setTagTime(new Date());
+        instanceUser.setTagTime(new Date());  //修改标注时间
         instanceUserService.updateInstanceUser(instanceUser);
         return new RespEntity(RespStatus.SUCCESS);
     }

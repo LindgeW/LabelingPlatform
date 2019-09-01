@@ -8,17 +8,19 @@
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bg/icons.css">
-    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css">
-    <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <!--为页面上的所有链接规定默认地址或默认目标,然后你的css或js或src原来是怎么样还是什么样-->
+    <base th:href="@{/}">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bg/icons.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css">
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
-    <script src="/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="/js/scripts.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/messages_zh.min.js"></script>
-    <script src="/js/bootbox.min.js"></script>
+    <script src="js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/messages_zh.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
 
     <style>
         #lbl_obj {
@@ -125,7 +127,7 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="/img/logo.png" alt="LOGO" style="width:50px;">
+                    <img src="img/logo.png" alt="LOGO" style="width:50px;">
                     <span class="navbar-text">天大数据标注平台</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
