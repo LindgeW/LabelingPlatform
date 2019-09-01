@@ -65,14 +65,6 @@ public class RecordController {
         return "history";
     }
 
-    @PostMapping("/fetchTags")
-    @ResponseBody
-    public RespEntity fetchTags(){
-        Session session = SecurityUtils.getSubject().getSession();
-        TaskVO myTask = (TaskVO) session.getAttribute("taskVo");
-        return new RespEntity<>(RespStatus.SUCCESS, myTask);
-    }
-
     @PostMapping("/list")
     @ResponseBody
     public Map<String, Object> personalRecords(@RequestParam("username") String username,

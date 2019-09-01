@@ -277,7 +277,7 @@ public class DataController {
             }
 
             // 保存新任务
-            taskService.save(new Task(taskName, dataType, instSet.size(), tags, false, username));
+            taskService.save(new Task(taskName, dataType, instSet.size(), StringUtils.join(tagArr, ";"), false, username));
         }
 
 //        if (!instSet.isEmpty()){

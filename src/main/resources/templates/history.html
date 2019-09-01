@@ -103,22 +103,6 @@
                     return '无符合条件的记录';
                 },
                 onLoadSuccess: function () {
-                   // alert("数据加载成功！");
-                    $.post("/fetchTags", function (respData, status) {
-                        if (status === 'success') {
-                            var tags = respData.data.tagSet;
-                            // inputOpts = [];
-                            // $.each(tags, function (i, val) {
-                            //     inputOpts.push({text: val, value: val})
-                            // });
-
-                            $("#lbl_panel").empty();
-                            $.each(tags, function (i, val) {
-                                var radio = "<label class='radio-inline' style='padding: 10px;'><input type='radio' name='tag' class='radio_tag' value='"+ val +"'/>"+ val +"</label>";
-                                $("#lbl_panel").append(radio);
-                            })
-                        }
-                    });
                 },
                 onLoadError: function () {
                     bootbox.alert({
@@ -130,26 +114,7 @@
             });
         }
 
-        // var inputOpts = [];
         function editOne(row){
-            // if (inputOpts < 1){
-            //     return;
-            // }
-            // bootbox.prompt({
-            //     title: "编辑标签",
-            //     size: 'large',
-            //     message: '<p>请重新选择标签:</p>',
-            //     inputType: 'radio',
-            //     inputOptions: inputOpts,
-            //     callback: function (result) {
-            //         if(result == null){
-            //             return;
-            //         }
-            //         row.tag = result;
-            //         editSave(row, "/update");
-            //     }
-            // });
-
             $("#recordId").val(row.id);
             $(".radio_tag").each(function (i, tr) {
                 if (row.tag === tr.value) {
@@ -267,7 +232,9 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <div id="lbl_panel"></div>
+                        <div id="lbl_panel">
+                            <label class='radio-inline' style='padding: 10px;' th:each="tag: ${taskVo.tagSet}"><input type='radio' name='tag' class='radio_tag' th:text="${tag}" th:value="${tag}"></label>
+                        </div>
                         <input type="hidden" name="id" id="recordId">
                     </div>
                     <div class="modal-footer">
