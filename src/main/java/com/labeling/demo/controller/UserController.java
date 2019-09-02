@@ -10,6 +10,8 @@ import com.labeling.demo.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,6 +105,13 @@ public class UserController {
     public RespEntity addUser(User user) {
         System.out.println(user);
         //账户信息保存到数据库中
+
+        //将用户名作为盐值
+        ByteSource salt = ByteSource.Util.bytes(user.getUsername());
+        //使用MD5算法对用户密码进行加密1024次
+        String pwd = new SimpleHash("MD5", user.getPassword(), salt, 1024).toHex();
+        user.setPassword(pwd);
+
         boolean isOk = this.userService.addUser(user);
         if (isOk) {
             return new RespEntity(RespStatus.SUCCESS);

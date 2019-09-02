@@ -7,6 +7,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
@@ -44,19 +45,22 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("身份验证。。。。。");
-        String loginUserName = (String)authenticationToken.getPrincipal();
-        String loginPwd = new String((char[]) authenticationToken.getCredentials());
-        System.out.println(loginUserName+" "+loginPwd);
+//        String loginUserName = (String)authenticationToken.getPrincipal();
+//        String loginPwd = new String((char[]) authenticationToken.getCredentials());
+        UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
+        String loginUserName = userToken.getUsername();
         User user = userService.findUser(loginUserName);
 
         if(user == null){
             throw new UnknownAccountException("用户不存在！！！");
         }
-        if(!loginPwd.equals(user.getPassword())){
-            throw new IncorrectCredentialsException("密码错误！！！");
-        }
+//        if(!loginPwd.equals(user.getPassword())){
+//            throw new IncorrectCredentialsException("密码错误！！！");
+//        }
 
-//        return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
-        return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+       // 盐值
+        ByteSource saltBytes = ByteSource.Util.bytes(user.getUsername());
+        return new SimpleAuthenticationInfo(user, user.getPassword(), saltBytes, getName());
+        //return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
     }
 }
