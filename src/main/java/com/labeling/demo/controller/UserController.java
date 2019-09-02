@@ -76,7 +76,6 @@ public class UserController {
     @RequiresRoles("admin")
     public List<TempoVO> usersInfo() {
         List<User> allUsers = userService.findAll();
-
         List<TempoVO> tempos = new ArrayList<>();  //保存当前正在进行的用户进度信息
         for (User user : allUsers) {
             String username = user.getUsername();
@@ -104,8 +103,6 @@ public class UserController {
     @ResponseBody
     public RespEntity addUser(User user) {
         System.out.println(user);
-        //账户信息保存到数据库中
-
         //将用户名作为盐值
         ByteSource salt = ByteSource.Util.bytes(user.getUsername());
         //使用MD5算法对用户密码进行加密1024次
@@ -122,18 +119,20 @@ public class UserController {
 
     @PostMapping("/alter_pwd")
     @ResponseBody
-    public RespEntity alterPwd(@RequestParam("oldPwd") String oldPwd,
+    public RespEntity alterPwd(@RequestParam("oldPwd") String pwd,
                                @RequestParam("newPwd") String newPwd) {
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
         String username = curUser.getUsername();
         String password = curUser.getPassword();
         System.out.println(curUser);
+        ByteSource salt = ByteSource.Util.bytes(username);
+        String oldPwd = new SimpleHash("MD5", pwd, salt, 1024).toHex();
         if (!oldPwd.equals(password)) {
             return new RespEntity(RespStatus.UNAUTHEN);
-        } else if (!oldPwd.equals(newPwd)) {
+        } else if (!pwd.equals(newPwd)) {
             User user = new User();
             user.setUsername(username);
-            user.setPassword(newPwd);
+            user.setPassword(new SimpleHash("MD5", newPwd, salt, 1024).toHex());
             userService.updateUser(user);
         }
 

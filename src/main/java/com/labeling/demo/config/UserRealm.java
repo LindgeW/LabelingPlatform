@@ -58,7 +58,7 @@ public class UserRealm extends AuthorizingRealm {
 //            throw new IncorrectCredentialsException("密码错误！！！");
 //        }
 
-       // 盐值
+       // 盐值：加密过程中生成的随机字符串
         ByteSource saltBytes = ByteSource.Util.bytes(user.getUsername());
         return new SimpleAuthenticationInfo(user, user.getPassword(), saltBytes, getName());
         //return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());

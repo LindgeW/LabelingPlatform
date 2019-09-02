@@ -91,6 +91,7 @@ public class ShiroConfig {
     public UserRealm myShiroRealm(){
         UserRealm userRealm = new UserRealm();
         userRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        userRealm.setAuthorizationCachingEnabled(false);
         return userRealm;
     }
 
