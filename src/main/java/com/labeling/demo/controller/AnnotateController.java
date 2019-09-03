@@ -81,14 +81,16 @@ public class AnnotateController {
         instanceUserVO.setInstanceId(instance.getInstanceId());
         instanceUserVO.setTaskname(task.getTaskname());
         TagType tagType = TagType.getTypeByID(task.getDatatype());
+        String itemSeparator = task.getItemSeparator();
+
         if(tagType == TagType.CLASSIFY){
             instanceUserVO.setItem(instance.getItem());
             instanceUserVO.setTag(randTag(instance));
         } else if (tagType == TagType.NER){
-            instanceUserVO.setItem(StringUtils.split(instance.getItem(), " "));
+            instanceUserVO.setItem(StringUtils.split(instance.getItem(), itemSeparator));
 //            instanceUserVO.setTag(randTag(instance));
         } else if (tagType == TagType.SEMANTIC_SIM){
-            instanceUserVO.setItem(StringUtils.split(instance.getItem(), "$$"));
+            instanceUserVO.setItem(StringUtils.split(instance.getItem(), itemSeparator));
             instanceUserVO.setTag(randTag(instance));
         }
 

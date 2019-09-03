@@ -31,7 +31,6 @@
         .over{
             color: darkgrey;
         }
-
     </style>
 
     <script>
@@ -55,7 +54,13 @@
                     var taskName = $.trim($("#taskName").val());
                     var dataType = $("#dataType").val();
                     var tags = $.trim($("#tags").val());
-                    return {'taskName': taskName, 'dataType': dataType, 'tags': tags};
+                    var sep = $("#sep").val();
+
+                    return {'taskName': taskName,
+                        'dataType': dataType,
+                        'tags': tags,
+                        'separator': sep
+                    };
                 },
                 showUpload: false,
                 showCaption: true,          // 显示文件文本框
@@ -139,6 +144,13 @@
                 return false;
             }
 
+            bootbox.confirm({
+                message: "确定数据项不需要分隔吗？",
+                callback: function (result) {
+                    return result;
+                }
+            });
+
             // var eng_reg = /^[\w;]+\w+$/gm;   //匹配英文
             // var ch_reg = /^[\u4E00-\u9FFF;]+[\u4E00-\u9FFF]+$/gm;  //匹配中文
             // if (eng_reg.test(tags) || ch_reg.test(tags)){
@@ -165,7 +177,7 @@
         <div class="form-group">
             <label for="taskName">标注任务：</label>
             <div class="form-inline">
-                <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="20"/>&nbsp;&nbsp;
+                <input type="text" class="form-control" placeholder="请命名待标注的任务" id="taskName" maxlength="50" size="50"/>&nbsp;&nbsp;
                 <select class="form-control" id="builtTask">
                     <option selected disabled>--已创建的任务--</option>
                     <option th:each="task: ${builtTasks}" th:text="${task.taskname}" th:value="${task.taskname}" th:class="${task.status == true} ? over">暂无</option>
@@ -177,6 +189,10 @@
             <select class="form-control" id="dataType">
                 <option th:each="type: ${dataTypes}" th:text="${type.typeName}" th:value="${type.id}">暂无</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label for="sep">数据项分隔符：</label>
+            <input type="text" class="form-control" id="sep" placeholder="输入数据项的分隔符，如$$；没有则不填写">
         </div>
     </div>
     <div class="card">
@@ -200,7 +216,7 @@
             <div class="form-group">
                 <label for="tags">标签设置：</label>
 <!--                <textarea class="form-control" rows="5" id="tags" placeholder="标签值用英文;隔开，如：正面;中立;负面"></textarea>-->
-                <textarea class="form-control" rows="5" id="tags" placeholder="注意: 每行一个标签"></textarea>
+                <textarea class="form-control" rows="5" id="tags" placeholder="注: 每行一个标签"></textarea>
             </div>
         </div>
     </div>

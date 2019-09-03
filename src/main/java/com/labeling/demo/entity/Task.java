@@ -9,17 +9,20 @@ public class Task {
 
     private String tags;
 
-    private Boolean status = false;
+    private String itemSeparator;
 
     private String expertname;
 
-    public Task(String taskname, Short datatype, Integer corpussize, String tags, Boolean status, String expertname) {
+    private Boolean status;
+
+    public Task(String taskname, Short datatype, Integer corpussize, String tags, String itemSeparator, String expertname, Boolean status) {
         this.taskname = taskname;
         this.datatype = datatype;
         this.corpussize = corpussize;
         this.tags = tags;
-        this.status = status;
+        this.itemSeparator = itemSeparator;
         this.expertname = expertname;
+        this.status = status;
     }
 
     public Task() {
@@ -58,12 +61,12 @@ public class Task {
         this.tags = tags == null ? null : tags.trim();
     }
 
-    public Boolean getStatus() {
-        return status;
+    public String getItemSeparator() {
+        return itemSeparator;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setItemSeparator(String itemSeparator) {
+        this.itemSeparator = itemSeparator == null ? null : itemSeparator.trim();
     }
 
     public String getExpertname() {
@@ -72,5 +75,13 @@ public class Task {
 
     public void setExpertname(String expertname) {
         this.expertname = expertname == null ? null : expertname.trim();
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

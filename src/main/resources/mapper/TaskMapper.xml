@@ -7,12 +7,13 @@
       <arg column="datatype" javaType="java.lang.Short" jdbcType="SMALLINT" />
       <arg column="corpussize" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tags" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="itemSeparator" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="expertname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    taskname, datatype, corpussize, tags, status, expertname
+    taskname, datatype, corpussize, tags, itemSeparator, expertname, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -26,11 +27,11 @@
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task (taskname, datatype, corpussize, 
-      tags, status, expertname
-      )
+      tags, itemSeparator, expertname, 
+      status)
     values (#{taskname,jdbcType=VARCHAR}, #{datatype,jdbcType=SMALLINT}, #{corpussize,jdbcType=INTEGER}, 
-      #{tags,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{expertname,jdbcType=VARCHAR}
-      )
+      #{tags,jdbcType=VARCHAR}, #{itemSeparator,jdbcType=VARCHAR}, #{expertname,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task
@@ -47,11 +48,14 @@
       <if test="tags != null">
         tags,
       </if>
-      <if test="status != null">
-        status,
+      <if test="itemSeparator != null">
+        itemSeparator,
       </if>
       <if test="expertname != null">
         expertname,
+      </if>
+      <if test="status != null">
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -67,11 +71,14 @@
       <if test="tags != null">
         #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=BIT},
+      <if test="itemSeparator != null">
+        #{itemSeparator,jdbcType=VARCHAR},
       </if>
       <if test="expertname != null">
         #{expertname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -87,11 +94,14 @@
       <if test="tags != null">
         tags = #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=BIT},
+      <if test="itemSeparator != null">
+        itemSeparator = #{itemSeparator,jdbcType=VARCHAR},
       </if>
       <if test="expertname != null">
         expertname = #{expertname,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
       </if>
     </set>
     where taskname = #{taskname,jdbcType=VARCHAR}
@@ -101,8 +111,9 @@
     set datatype = #{datatype,jdbcType=SMALLINT},
       corpussize = #{corpussize,jdbcType=INTEGER},
       tags = #{tags,jdbcType=VARCHAR},
-      status = #{status,jdbcType=BIT},
-      expertname = #{expertname,jdbcType=VARCHAR}
+      itemSeparator = #{itemSeparator,jdbcType=VARCHAR},
+      expertname = #{expertname,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT}
     where taskname = #{taskname,jdbcType=VARCHAR}
   </update>
 </mapper>

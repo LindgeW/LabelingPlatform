@@ -122,7 +122,8 @@ public class DataController {
     public RespEntity upload(@RequestParam("file") MultipartFile multiFile,
                              @RequestParam("taskName") String taskName,
                              @RequestParam("dataType") Short dataType,
-                             @RequestParam("tags") String tags) throws IOException {
+                             @RequestParam("tags") String tags,
+                             @RequestParam("separator") String separator) throws IOException {
         if(multiFile==null || multiFile.isEmpty()){
             return new RespEntity(RespStatus.Error);
         }
@@ -132,6 +133,8 @@ public class DataController {
         System.out.println(multiFile.getContentType());
         System.out.println(multiFile.getSize());
         System.out.println(tags);
+        System.out.println(separator);
+
 //        String[] tagArr = StringUtils.split(tags, ";");
         String[] tagArr = StringUtils.split(tags, "\n");
         // 清除每个标签值中的空白字符
@@ -275,7 +278,7 @@ public class DataController {
             }
 
             // 保存新任务
-            taskService.save(new Task(taskName, dataType, instSet.size(), StringUtils.join(tagArr, ";"), false, username));
+            taskService.save(new Task(taskName, dataType, instSet.size(), StringUtils.join(tagArr, ";"), separator, username, false));
         }
 
 //        if (!instSet.isEmpty()){
