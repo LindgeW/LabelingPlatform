@@ -1,46 +1,21 @@
 package com.labeling.demo.entity.vo;
 
-// deprecated
-public class InstanceVO<T> {
-    private Long instanceId;    // 数据编号
-    private String taskName;  //任务名
-    private T item;     //数据项
-    private String tag;      //用户标签
-    private Float responseTime;  //用户标签选择响应时间
+import com.labeling.demo.entity.Instance;
+
+public class InstanceVO<T> extends Instance {
+    private T taskItem;     // 与具体任务相关的泛型数据项
+    private String tag;     // 最终展示给用户的标签(由随机标签、专家标签和模型标签决策生成)
 
     public InstanceVO() {
         super();
     }
 
-    public InstanceVO(Long instanceId, String taskName, T item, String tag) {
-        this.instanceId = instanceId;
-        this.taskName = taskName;
-        this.item = item;
-        this.tag = tag;
+    public T getTaskItem() {
+        return taskItem;
     }
 
-    public Long getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(Long instanceId) {
-        this.instanceId = instanceId;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public T getItem() {
-        return item;
-    }
-
-    public void setItem(T item) {
-        this.item = item;
+    public void setTaskItem(T taskItem) {
+        this.taskItem = taskItem;
     }
 
     public String getTag() {
@@ -51,22 +26,11 @@ public class InstanceVO<T> {
         this.tag = tag;
     }
 
-    public Float getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(Float responseTime) {
-        this.responseTime = responseTime;
-    }
-
     @Override
     public String toString() {
         return "InstanceVO{" +
-                "instanceId=" + instanceId +
-                ", taskName='" + taskName + '\'' +
-                ", item='" + item + '\'' +
+                "taskItem=" + taskItem +
                 ", tag='" + tag + '\'' +
-                ", responseTime=" + responseTime +
                 '}';
     }
 }

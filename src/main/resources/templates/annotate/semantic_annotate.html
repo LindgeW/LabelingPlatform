@@ -96,8 +96,8 @@
                     if (resp.code === 200) {
                         $("#tagNum").text(resp.data.curUser.tagNum);
                         $("#instanceId").val(resp.data.nextInst.instanceId);
-                        $("#lbl_obj_left").text(resp.data.nextInst.item[0]);
-                        $("#lbl_obj_right").text(resp.data.nextInst.item[1]);
+                        $("#lbl_obj_left").text(resp.data.nextInst.taskItem[0]);
+                        $("#lbl_obj_right").text(resp.data.nextInst.taskItem[1]);
 
                         var goldTag = resp.data.nextInst.tag;
                         if (goldTag == null || goldTag === '') {
@@ -198,10 +198,10 @@
 <div>
     <div class="row">
         <div class="col-sm-3 offset-sm-3 col-md-3 offset-md-3">
-            <div id="lbl_obj_left" th:text="${instanceVo.item[0]}" class="container"></div>
+            <div id="lbl_obj_left" th:text="${instanceVo.taskItem[0]}" class="container"></div>
         </div>
         <div class="col-sm-3 col-md-3">
-            <div id="lbl_obj_right" th:text="${instanceVo.item[1]}" class="container"></div>
+            <div id="lbl_obj_right" th:text="${instanceVo.taskItem[1]}" class="container"></div>
         </div>
     </div>
     <div class="row">

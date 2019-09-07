@@ -95,7 +95,7 @@
                     if (resp.code === 200) {
                         $("#tagNum").text(resp.data.curUser.tagNum);
                         $("#instanceId").val(resp.data.nextInst.instanceId);
-                        $("#lbl_obj").text(resp.data.nextInst.item);
+                        $("#lbl_obj").text(resp.data.nextInst.taskItem);
 
                         var goldTag = resp.data.nextInst.tag;
                         if (goldTag == null || goldTag === '') {
@@ -195,7 +195,7 @@
 <div>
     <div class="row">
         <div class="col-sm-4 offset-sm-4 col-md-4 offset-md-4">
-            <div id="lbl_obj" th:text="${instanceVo.item}" class="container"></div>
+            <div id="lbl_obj" th:text="${instanceVo.taskItem}" class="container"></div>
         </div>
     </div>
     <div class="row">

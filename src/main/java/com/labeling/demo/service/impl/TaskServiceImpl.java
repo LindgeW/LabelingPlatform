@@ -1,5 +1,6 @@
 package com.labeling.demo.service.impl;
 
+import com.labeling.demo.entity.TagType;
 import com.labeling.demo.entity.Task;
 import com.labeling.demo.repository.TaskMapper;
 import com.labeling.demo.service.TaskService;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+    private final static String root = "annotate/";
     private TaskMapper taskMapper;
 
     @Autowired
@@ -43,6 +45,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findByExpertName(String expertName) {
         return taskMapper.findByExpert(expertName);
+    }
+
+    @Override
+    public String pageScheduler(Task task) {
+        return root + TagType.getTypeByID(task.getDatatype()).getUrl();
     }
 
 }

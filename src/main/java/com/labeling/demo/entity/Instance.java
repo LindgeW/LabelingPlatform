@@ -17,7 +17,7 @@ public class Instance {
 
     private Integer tagNum;
 
-    private String item;
+    private String item;  //保存到数据库中的数据项
 
     public Instance(Long instanceId, String taskName, String tagDefault, String tagExpert, String tagModel, Integer status, Integer tagNum) {
         this.instanceId = instanceId;

@@ -172,7 +172,7 @@
                     if (resp.code === 200) {
                         $("#tagNum").text(resp.data.curUser.tagNum);
                         $("#instanceId").val(resp.data.nextInst.instanceId);
-                        var nextItem = resp.data.nextInst.item;
+                        var nextItem = resp.data.nextInst.taskItem;
                         $("#token_panel").empty();
                         $.each(nextItem, function (i, val) {
                             var nextInst = "<span class='token'>" + val +"</span>";
@@ -359,7 +359,7 @@
         </div>
         <div class="card-body">
             <div id='token_panel'>
-                <span class="token" th:each="token : ${instanceVo.item}" th:text="${token}"></span>
+                <span class="token" th:each="token : ${instanceVo.taskItem}" th:text="${token}"></span>
             </div>
         </div>
         <div class="card-footer">

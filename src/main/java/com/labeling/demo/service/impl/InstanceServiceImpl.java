@@ -1,15 +1,18 @@
 package com.labeling.demo.service.impl;
 
-import com.labeling.demo.entity.Instance;
-import com.labeling.demo.entity.InstanceUser;
-import com.labeling.demo.entity.Pager;
+import com.labeling.demo.entity.*;
+import com.labeling.demo.entity.vo.InstanceVO;
 import com.labeling.demo.repository.InstanceMapper;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -102,5 +105,55 @@ public class InstanceServiceImpl implements InstanceService {
     @Override
     public Instance findById(Long instanceId) {
         return instanceMapper.findById(instanceId);
+    }
+
+    //生产随机标签
+    private String randTag(Instance instance){
+        List<String> tagLst = new ArrayList<>();
+        String tagDefault = instance.getTagDefault();
+        String tagExpert = instance.getTagExpert();
+        String tagModels = instance.getTagModel();
+
+        if (StringUtils.isNotBlank(tagDefault)){
+            tagLst.add(tagDefault);
+        }
+
+        if (StringUtils.isNotBlank(tagExpert)) {
+            tagLst.add(tagExpert);
+        }
+
+        if (StringUtils.isNotBlank(tagModels)){
+            // 模型预测的k-best结果
+            String[] tagModel = StringUtils.split(tagModels, ";");
+            Collections.addAll(tagLst, tagModel);
+        }
+
+        if (tagLst.isEmpty()) {
+            return "";
+        }
+
+        System.out.println("gold标签：" + tagLst);
+        return tagLst.get(RandomUtils.nextInt(0, tagLst.size()));
+    }
+
+    @Override
+    public InstanceVO fitTask(Instance instance, Task task) {
+        InstanceVO<Object> instanceVO = new InstanceVO<>();
+        instanceVO.setInstanceId(instance.getInstanceId());
+        instanceVO.setTaskName(task.getTaskname());
+        TagType tagType = TagType.getTypeByID(task.getDatatype());
+        String itemSeparator = task.getItemSeparator();
+
+        if(tagType == TagType.CLASSIFY){
+            instanceVO.setTaskItem(instance.getItem());
+            instanceVO.setTag(randTag(instance));
+        } else if (tagType == TagType.NER){
+            instanceVO.setTaskItem(StringUtils.split(instance.getItem(), itemSeparator));
+        } else if (tagType == TagType.SEMANTIC_SIM){
+            instanceVO.setTaskItem(StringUtils.split(instance.getItem(), itemSeparator));
+            instanceVO.setTag(randTag(instance));
+        }
+
+        return instanceVO;
     }
 }
