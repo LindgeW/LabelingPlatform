@@ -71,7 +71,7 @@
 
         function validate() {
             var teamName = $.trim($("#teamName").val());
-            var taskName = $("#tasks").val();
+            var taskId = $("#tasks").val();
             var members = $.trim($("#member_box").val());
 
             if (teamName === ""){
@@ -79,7 +79,7 @@
                 return false;
             }
 
-            if (taskName == null){
+            if (taskId == null){
                 alert("请先发布任务！");
                 return false;
             }
@@ -138,8 +138,8 @@
 
                 <div class="form-group">
                     <label for="tasks">选择标注任务：</label>
-                    <select class="form-control" id="tasks" name="task">
-                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}" th:class="${task.status == true} ? finished">无</option>
+                    <select class="form-control" id="tasks" name="taskId">
+                        <option th:each="task: ${tasks}" th:value="${task.taskId}" th:text="${task.taskname}" th:class="${task.status == true} ? finished">无</option>
                     </select>
                 </div>
 

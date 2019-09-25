@@ -27,10 +27,7 @@ public interface InstanceUserMapper {
     @Select("select * from tb_instance_user")
     List<InstanceUser> findAll();
 
-    @Select("select count(username) from tb_instance_user where username = #{username}")
-    Integer countByUserName(String username);
-
-    List<InstanceUser> findByPage(String username, @Param("pager") Pager pageable);
+    List<InstanceUser> findByPage(String username, Integer taskId, @Param("pager") Pager pageable);
 
     @Select("select * from tb_instance_user where instanceId = #{instanceId}")
     List<InstanceUser> findInstanceUserById(Long instanceid);
@@ -38,8 +35,8 @@ public interface InstanceUserMapper {
     @Select("select * from tb_instance_user where username = #{username}")
     List<InstanceUser> findByUserName(String username);
 
-    @Select("select count(0) from tb_instance_user where username=#{username} and taskname=#{taskname}")
-    Integer countByTask(String username, String taskname);
+    @Select("select count(0) from tb_instance_user where username=#{username} and taskId=#{taskId}")
+    Integer countByTask(String username, Integer taskId);
 
     boolean save(InstanceUser instanceUser);
 

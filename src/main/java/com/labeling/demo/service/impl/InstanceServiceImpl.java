@@ -48,14 +48,9 @@ public class InstanceServiceImpl implements InstanceService {
         return instanceMapper.findAll();
     }
 
-//    @Override
-//    public Page<Instance> findPageData(Pageable instPage) {
-//        return instanceMapper.findPageData(instPage);
-//    }
-
     @Override
-    public List<Instance> findPageDataByTaskName(String taskName, Pager pageable) {
-        return instanceMapper.findPageDataByTaskName(taskName, pageable);
+    public List<Instance> findPageDataByTaskId(Integer taskId, Pager pageable) {
+        return instanceMapper.findPageDataByTaskId(taskId, pageable);
     }
 
     @Override
@@ -87,14 +82,9 @@ public class InstanceServiceImpl implements InstanceService {
         return instance;
     }
 
-//    @Override
-//    public Instance findInstById(Long id) {
-//        return instanceMapper.findById(id);
-//    }
-
     @Override
-    public List<Instance> findByTaskName(String taskName) {
-        return instanceMapper.findByTaskName(taskName);
+    public List<Instance> findByTaskId(Integer taskId) {
+        return instanceMapper.findByTaskId(taskId);
     }
 
     @Override
@@ -110,9 +100,9 @@ public class InstanceServiceImpl implements InstanceService {
     //生产随机标签
     private String randTag(Instance instance){
         List<String> tagLst = new ArrayList<>();
-        String tagDefault = instance.getTagDefault();
-        String tagExpert = instance.getTagExpert();
-        String tagModels = instance.getTagModel();
+        String tagDefault = instance.getDefaultTag();
+        String tagExpert = instance.getExpertTag();
+        String tagModels = instance.getModelTag();
 
         if (StringUtils.isNotBlank(tagDefault)){
             tagLst.add(tagDefault);
@@ -140,7 +130,7 @@ public class InstanceServiceImpl implements InstanceService {
     public InstanceVO fitTask(Instance instance, Task task) {
         InstanceVO<Object> instanceVO = new InstanceVO<>();
         instanceVO.setInstanceId(instance.getInstanceId());
-        instanceVO.setTaskName(task.getTaskname());
+        instanceVO.setTaskId(task.getTaskId());
         TagType tagType = TagType.getTypeByID(task.getDatatype());
         String itemSeparator = task.getItemSeparator();
 

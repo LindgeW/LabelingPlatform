@@ -29,7 +29,7 @@
 
     <style>
         .over{
-            color: darkgrey;
+            color: #ff473d;
         }
     </style>
 
@@ -74,8 +74,8 @@
                 // textEncoding: 'GBK',
                 maxFileCount: 1,
                 minFileCount: 1,
-                maxFileSize: 20000,  //单位KB，20M
-//                minFileSize: 1,
+                maxFileSize: 500*1024,  //单位KB，1000M
+                minFileSize: 1,
                 fileActionSettings: {                                // 在预览窗口中为新选择的文件缩略图设置文件操作的对象配置
                     showRemove: false,                                 // 显示删除按钮
                     showUpload: false,                                // 显示上传按钮
@@ -93,35 +93,34 @@
                     message: "文件上传失败！\n\n"+msg
                 });
             }).on("fileuploaded", function(event, data, previewId, index) {
-                // 创建的任务已存在或同名任务上传的格式不对
-                if (data.response.code === 203 || data.response.code === 204) {
-                    bootbox.alert({
-                        title: 'Error',
-                        className: 'rubberBand animated',
-                        message: data.response.message
-                    });
-                } else{
+                if (data.response.code === 200) {
                     bootbox.alert({
                         title: 'Successful',
                         className: 'rubberBand animated',
                         message: '任务创建成功！'
                     });
+                } else{  // 创建的任务已存在或同名任务上传的格式不对
+                    bootbox.alert({
+                        title: 'Error',
+                        className: 'rubberBand animated',
+                        message: data.response.message
+                    });
                 }
             }).on("filebatchselected", function(event, files) {
                 // 上传json格式化文件，则不需要输入标签集
-                var fileName = files[0].name;
-                if(getFileType(fileName) === 'json'){
-                    $("#tags").attr("disabled", true);
-                } else{
-                    $("#tags").attr("disabled", false);
-                }
+                // var fileName = files[0].name;
+                // if(getFileType(fileName) === 'json'){
+                //     $("#tags").attr("disabled", true);
+                // } else{
+                //     $("#tags").attr("disabled", false);
+                // }
             });
         }
 
         function validate() {
             var taskName = $.trim($("#taskName").val());
             var tags = $.trim($("#tags").val());
-            var fileName = $("#uploadFile").val();  //获取上传文件的文件路径
+            // var fileName = $("#uploadFile").val();  //获取上传文件的文件路径
             var type = $("#dataType").val();
 
             if (taskName === ""){
@@ -134,16 +133,21 @@
                 return false;
             }
 
-            // 如果是json格式的文件则不用校验标签格式
-            if (getFileType(fileName) === 'json'){
-                return true;
-            }
-
             // 标签校验
             if (tags === ""){
                 alert('标签值不能为空！');
                 return false;
+            } else {
+                var tag_reg = /^.+\n+.+$/gm;
+                if (!tag_reg.test(tags)) {
+                    alert("标签输入格式有误！");
+                    return false;
+                }
             }
+
+            // if (getFileType(fileName) === 'json'){
+            //     return true;
+            // }
 
             // bootbox.confirm({
             //     message: "确定数据项不需要分隔吗？",
@@ -170,6 +174,10 @@
             }
         }
 
+        function selectSep(val) {
+            $("#sep").val(val);
+            $("#sep").select();
+        }
     </script>
 </head>
 <body>
@@ -191,9 +199,24 @@
                 <option th:each="type: ${dataTypes}" th:text="${type.typeName}" th:value="${type.id}">暂无</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="sep">数据项分隔符：</label>
-            <input type="text" class="form-control" id="sep" placeholder="输入数据项的分隔符，如$$；没有则不填写">
+<!--        <div class="form-group">-->
+<!--            <label for="sep">数据项分隔符：</label>-->
+<!--            <input type="text" class="form-control" id="sep" placeholder="输入数据项的分隔符，如$$；没有则不填写">-->
+<!--        </div>-->
+
+        <div class="form-group" style="position: relative; margin-bottom: 50px;">
+            <label for="sep_opts">数据项分隔符：</label>
+            <select class="form-control" id='sep_opts' style="position: absolute" onchange="selectSep(this.value)">
+                <option value='' selected>无</option>
+                <option value=' '>空格</option>
+                <option value="	">Tab</option>
+                <option value='$$'>$$</option>
+                <option value='##'>##</option>
+                <option value='\\'>\\</option>
+                <option value='//'>//</option>
+                <option value='|||'>|||</option>
+            </select>
+            <input class="form-control" id='sep' type='text' style='width:97%; position:absolute; left: 0;'>
         </div>
     </div>
     <div class="card">

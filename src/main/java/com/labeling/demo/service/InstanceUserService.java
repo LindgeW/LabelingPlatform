@@ -11,7 +11,7 @@ public interface InstanceUserService {
 
     List<InstanceUser> findAll();
 
-    List<InstanceUser> findByPage(String username, Pager pageable);
+    List<InstanceUser> findByPage(String username, Integer taskId, Pager pageable);
 
     List<InstanceUser> findByUserName(String username);
 
@@ -21,14 +21,12 @@ public interface InstanceUserService {
 
     boolean save(InstanceUser instanceUser);
 
-    Integer countByUsername(String username);
-
 //    boolean saveBtach (List<InstanceUser>list);
 
     //查找一条数据被所有用户的标注情况
     List<InstanceUser>findInstanceUserById(Long instanceid);
 
-    Integer countByTask(String username, String taskname);
+    Integer countByTask(String username, Integer taskId);
 
     List<InstanceUserVO> findFullRecords(Long instanceId);
 }

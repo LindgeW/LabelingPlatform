@@ -82,11 +82,11 @@ public class UserController {
             String teamName = user.getTeamName();
             if (StringUtils.isNotBlank(teamName)) {
                 Team team = teamService.findByName(teamName);
-                String taskName = team.getTaskName();
-                Task task = taskService.findByName(taskName);
-                Integer tagNum = instanceUserService.countByUsername(username);
+                Integer taskId = team.getTaskId();
+                Task task = taskService.findById(taskId);
+                Integer tagNum = instanceUserService.countByTask(username, taskId);
                 Integer corpusSize = task.getCorpussize();
-                tempos.add(new TempoVO(username, teamName, taskName, tagNum, corpusSize));
+                tempos.add(new TempoVO(username, teamName, task.getTaskname(), tagNum, corpusSize));
             }
         }
         return tempos;

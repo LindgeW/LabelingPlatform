@@ -134,9 +134,11 @@
             $("#offset").text(pageNum+1);
 
             var username = $("#username").text();
+            var taskId = $("#taskId").val();
 
             var sendData = {
                 "username": username,
+                "taskId": taskId,
                 "offset": pageNum
             };
 
@@ -223,7 +225,7 @@
         }
 
         function noEntity() {
-            sendData("/update", getTags(spans));
+            sendData("/update", "0_0_XX");
             spans = []
         }
 
@@ -339,7 +341,7 @@
             padding-left: 0.75em;
             padding-right: 0.75em;
             margin-right: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             white-space: nowrap;
         }
 
@@ -357,7 +359,7 @@
         }
 
         #lbl_panel{
-            padding: 1em;
+            padding: 0.75em 0.75em 0 0.75em;
             text-align: center;
         }
 
@@ -447,6 +449,7 @@
             <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>当前数据ID：</strong><span th:text="${instanceVo.id}" id="recordId"></span>
+            <input type="hidden" th:value="${taskVo.taskId}" id="taskId">
 
 <!--            <span class="form-inline">-->
 <!--                <input type="text" class="form-control" id="keyWord" placeholder="输入关键字">-->

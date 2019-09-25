@@ -7,6 +7,12 @@ public class RespEntity<T> implements Serializable {
     private Integer code;
     private T data;
 
+    public RespEntity(String message, Integer code, T data) {
+        this.message = message;
+        this.code = code;
+        this.data = data;
+    }
+
     public RespEntity(RespStatus status, T data) {
         this.code = status.getStatusCode();
         this.message = status.getStatusValue();

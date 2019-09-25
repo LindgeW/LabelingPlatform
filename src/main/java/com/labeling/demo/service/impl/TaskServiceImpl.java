@@ -31,9 +31,13 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.findAll();
     }
 
+//    public Task findByName(String taskName) {
+//        return taskMapper.selectByPrimaryKey(taskName);
+//    }
+
     @Override
-    public Task findByName(String taskName) {
-        return taskMapper.selectByPrimaryKey(taskName);
+    public Task findById(Integer taskId) {
+        return taskMapper.selectByPrimaryKey(taskId);
     }
 
     @Override
@@ -50,6 +54,16 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public String pageScheduler(Task task) {
         return root + TagType.getTypeByID(task.getDatatype()).getUrl();
+    }
+
+    @Override
+    public Task findByName(String taskName) {
+        return taskMapper.findByName(taskName);
+    }
+
+    @Override
+    public Integer taskCount() {
+        return taskMapper.count();
     }
 
 }

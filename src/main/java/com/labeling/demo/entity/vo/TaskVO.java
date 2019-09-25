@@ -11,7 +11,7 @@ public class TaskVO extends Task {
     private String[] tagSet;    //标签集
 
     public TaskVO(Task task) {
-        super(task.getTaskname(), task.getDatatype(), task.getCorpussize(), task.getTags(), task.getItemSeparator(), task.getExpertname(), task.getStatus());
+        super(task.getTaskId(), task.getTaskname(), task.getDatatype(), task.getCorpussize(), task.getTags(), task.getItemSeparator(), task.getExpertname(), task.getStatus());
         this.dataType = TagType.getTypeByID(task.getDatatype()).getName();
         this.tagSet = StringUtils.split(task.getTags(), ";");
     }

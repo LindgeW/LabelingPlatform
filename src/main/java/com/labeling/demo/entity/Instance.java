@@ -5,46 +5,46 @@ import java.util.Objects;
 public class Instance {
     private Long instanceId;
 
-    private String taskName;
+    private Integer taskId;
 
-    private String tagDefault;
+    private String defaultTag;
 
-    private String tagExpert;
+    private String expertTag;
 
-    private String tagModel;
+    private String modelTag;
 
-    private Integer status;
+    private Integer status = 0;
 
-    private Integer tagNum;
+    private Integer tagNum = 0;
 
     private String item;  //保存到数据库中的数据项
 
-    public Instance(Long instanceId, String taskName, String tagDefault, String tagExpert, String tagModel, Integer status, Integer tagNum) {
+    public Instance(Long instanceId, Integer taskId, String defaultTag, String expertTag, String modelTag, Integer status, Integer tagNum) {
         this.instanceId = instanceId;
-        this.taskName = taskName;
-        this.tagDefault = tagDefault;
-        this.tagExpert = tagExpert;
-        this.tagModel = tagModel;
+        this.taskId = taskId;
+        this.defaultTag = defaultTag;
+        this.expertTag = expertTag;
+        this.modelTag = modelTag;
         this.status = status;
         this.tagNum = tagNum;
     }
 
-    public Instance(String taskName, String tagDefault, String tagExpert, String tagModel, Integer status, Integer tagNum, String item) {
-        this.taskName = taskName;
-        this.tagDefault = tagDefault;
-        this.tagExpert = tagExpert;
-        this.tagModel = tagModel;
+    public Instance(Integer taskId, String defaultTag, String expertTag, String modelTag, Integer status, Integer tagNum, String item) {
+        this.taskId = taskId;
+        this.defaultTag = defaultTag;
+        this.expertTag = expertTag;
+        this.modelTag = modelTag;
         this.status = status;
         this.tagNum = tagNum;
         this.item = item;
     }
 
-    public Instance(Long instanceId, String taskName, String tagDefault, String tagExpert, String tagModel, Integer status, Integer tagNum, String item) {
+    public Instance(Long instanceId, Integer taskId, String defaultTag, String expertTag, String modelTag, Integer status, Integer tagNum, String item) {
         this.instanceId = instanceId;
-        this.taskName = taskName;
-        this.tagDefault = tagDefault;
-        this.tagExpert = tagExpert;
-        this.tagModel = tagModel;
+        this.taskId = taskId;
+        this.defaultTag = defaultTag;
+        this.expertTag = expertTag;
+        this.modelTag = modelTag;
         this.status = status;
         this.tagNum = tagNum;
         this.item = item;
@@ -62,36 +62,36 @@ public class Instance {
         this.instanceId = instanceId;
     }
 
-    public String getTaskName() {
-        return taskName;
+    public Integer getTaskId() {
+        return taskId;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName == null ? null : taskName.trim();
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
-    public String getTagDefault() {
-        return tagDefault;
+    public String getDefaultTag() {
+        return defaultTag;
     }
 
-    public void setTagDefault(String tagDefault) {
-        this.tagDefault = tagDefault == null ? null : tagDefault.trim();
+    public void setDefaultTag(String defaultTag) {
+        this.defaultTag = defaultTag;
     }
 
-    public String getTagExpert() {
-        return tagExpert;
+    public String getExpertTag() {
+        return expertTag;
     }
 
-    public void setTagExpert(String tagExpert) {
-        this.tagExpert = tagExpert == null ? null : tagExpert.trim();
+    public void setExpertTag(String expertTag) {
+        this.expertTag = expertTag;
     }
 
-    public String getTagModel() {
-        return tagModel;
+    public String getModelTag() {
+        return modelTag;
     }
 
-    public void setTagModel(String tagModel) {
-        this.tagModel = tagModel == null ? null : tagModel.trim();
+    public void setModelTag(String modelTag) {
+        this.modelTag = modelTag;
     }
 
     public Integer getStatus() {
@@ -122,10 +122,10 @@ public class Instance {
     public String toString() {
         return "Instance{" +
                 "instanceId=" + instanceId +
-                ", taskName='" + taskName + '\'' +
-                ", tagDefault='" + tagDefault + '\'' +
-                ", tagExpert='" + tagExpert + '\'' +
-                ", tagModel='" + tagModel + '\'' +
+                ", taskId=" + taskId +
+                ", defaultTag='" + defaultTag + '\'' +
+                ", expertTag='" + expertTag + '\'' +
+                ", modelTag='" + modelTag + '\'' +
                 ", status=" + status +
                 ", tagNum=" + tagNum +
                 ", item='" + item + '\'' +
@@ -138,16 +138,17 @@ public class Instance {
         if (o == null || getClass() != o.getClass()) return false;
         Instance instance = (Instance) o;
         return Objects.equals(instanceId, instance.instanceId) &&
-                Objects.equals(taskName, instance.taskName) &&
-                Objects.equals(tagDefault, instance.tagDefault) &&
-                Objects.equals(tagExpert, instance.tagExpert) &&
-                Objects.equals(tagModel, instance.tagModel) &&
+                Objects.equals(taskId, instance.taskId) &&
+                Objects.equals(defaultTag, instance.defaultTag) &&
+                Objects.equals(expertTag, instance.expertTag) &&
+                Objects.equals(modelTag, instance.modelTag) &&
+                Objects.equals(status, instance.status) &&
                 Objects.equals(tagNum, instance.tagNum) &&
                 Objects.equals(item, instance.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instanceId, taskName, tagDefault, tagExpert, tagModel, tagNum, item);
+        return Objects.hash(instanceId, taskId, defaultTag, expertTag, modelTag, status, tagNum, item);
     }
 }

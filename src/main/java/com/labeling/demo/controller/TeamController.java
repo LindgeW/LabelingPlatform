@@ -50,7 +50,6 @@ public class TeamController {
     @RequestMapping("/browse")
     @RequiresRoles("admin")
     public String browseTeam(Model model){
-//        List<Team> teamLst = teamService.findAll();
         User curUser = (User) SecurityUtils.getSubject().getPrincipal();
         List<Team> teams = teamService.findByExpertName(curUser.getUsername());
         model.addAttribute("teams", teams);
@@ -60,7 +59,7 @@ public class TeamController {
 
     @PostMapping("/build_team")
     @RequiresRoles("admin")
-    public String buildTeam(@RequestParam("task") String taskName,
+    public String buildTeam(@RequestParam("taskId") Integer taskId,
                             @RequestParam("teamName") String teamName,
                             @RequestParam("members") String members,
                             Model model){
@@ -84,7 +83,8 @@ public class TeamController {
         Team team = teamService.findByName(teamName);
         boolean isBuilt = true;
         if (team == null) {
-            boolean isOk = teamService.save(new Team(teamName, taskName, members, userName, false));
+            // 注：自增字段，插入数据返回自增数值
+            boolean isOk = teamService.save(new Team(teamName, taskId, members, userName, false));
             if(isOk){
                 // 修改用户状态
                 for (String memberName: memberLst) {
@@ -96,7 +96,7 @@ public class TeamController {
             }
         } else if (!userName.equals(team.getExpertname())){
             isBuilt = false;
-        } else if(!taskName.equals(team.getTaskName())){
+        } else if(!taskId.equals(team.getTaskId())){
             isBuilt = false;
         } else{
             // 添加成员

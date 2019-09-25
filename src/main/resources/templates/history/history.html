@@ -68,6 +68,7 @@
                         // offset: params.offset,  //偏移量
                         limit: params.limit,   //页面大小
                         pageNum: params.offset / params.limit,  //当前页
+                        taskId: $("#taskId").val(),
                         username: $("#username").text(),
                         search: params.search   //搜索框查询关键字
                         // sortName: this.sortName,
@@ -219,6 +220,7 @@
             <strong>角色：</strong><span th:text="${userVo.role} == 'admin' ? '管理员' : '标注员'" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>任务：</strong><span th:text="${taskVo.taskname}" style="text-decoration: underline">无</span>&nbsp;&nbsp;
             <strong>小组：</strong><span th:text="${userVo.teamName}" style="text-decoration: underline">无</span>
+            <input type="hidden" th:value="${taskVo.taskId}" id="taskId">
         </h6><hr>
         <div id="dataTable" class="table-responsive">
             <table class="table" data-mobile-responsive="true"></table>

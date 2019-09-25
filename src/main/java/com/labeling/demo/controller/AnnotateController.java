@@ -54,10 +54,11 @@ public class AnnotateController {
         //找到该小组分配的任务
         Team team = teamService.findByName(teamName);
         //获取该任务对应的标注数据
-        Task task = taskService.findByName(team.getTaskName());
+        Integer taskId = team.getTaskId();
+        Task task = taskService.findById(taskId);
         TaskVO taskVo = new TaskVO(task);
 
-        Integer tagNum = instanceUserService.countByTask(username, task.getTaskname());  //统计当前用户对当前任务已标注的数量
+        Integer tagNum = instanceUserService.countByTask(username, taskId);  //统计当前用户对当前任务已标注的数量
 
         //将小组信息存入session
         Session sess = curSubj.getSession();
@@ -66,7 +67,7 @@ public class AnnotateController {
 
         UserVO userVO = new UserVO(username, role, tagNum);
         //当前页 pageNum, 每页大小 pageSize
-        List<Instance> pageData = instanceService.findPageDataByTaskName(task.getTaskname(), Pager.of(tagNum, 1));
+        List<Instance> pageData = instanceService.findPageDataByTaskId(taskId, Pager.of(tagNum, 1));
         // 判断当前用户是否已经完成小组任务
         if (pageData.isEmpty()){
             model.addAttribute("userVo", userVO);
@@ -74,7 +75,6 @@ public class AnnotateController {
         }
 
         InstanceVO firstInstance = instanceService.fitTask(pageData.get(0), task);
-
         model.addAttribute("userVo", userVO);
         model.addAttribute("taskVo", taskVo);
         model.addAttribute("instanceVo", firstInstance);
@@ -84,12 +84,9 @@ public class AnnotateController {
     @PostMapping("/annotate")
     @ResponseBody
     public RespEntity annotate(UserVO userVO, InstanceUserVO<Object> instanceVO){
-        System.out.println(userVO);
-        System.out.println(instanceVO);
-
         //记录用户对此数据标注的标签
         String username = userVO.getUsername();
-        String taskName = instanceVO.getTaskname();
+        Integer taskId = instanceVO.getTaskId();
         String role = userVO.getRole();
         Long instanceId = instanceVO.getInstanceId();
         String tag = instanceVO.getTag();
@@ -111,7 +108,7 @@ public class AnnotateController {
         }
 
         if (Role.ADMIN == Role.valueOf(role.toUpperCase())){
-            instance.setTagExpert(tag);
+            instance.setExpertTag(tag);
         }
         instanceService.save(instance);
 
@@ -119,7 +116,7 @@ public class AnnotateController {
         InstanceUser instanceUser = new InstanceUser();
         instanceUser.setInstanceId(instanceId);
         instanceUser.setUsername(username);
-        instanceUser.setTaskname(taskName);
+        instanceUser.setTaskId(taskId);
         instanceUser.setResponseTime(respTime);
         instanceUser.setTag(tag);
         instanceUserService.addInstanceUser(instanceUser);
@@ -127,11 +124,10 @@ public class AnnotateController {
         // 取下一个数据
         int tagNum = userVO.getTagNum() + 1;
         UserVO curUser = new UserVO(username, role, tagNum);
-        List<Instance> pageData = instanceService.findPageDataByTaskName(taskName, Pager.of(tagNum, 1));
-//        Instance nextInstance = instanceService.findPageDataByTaskNameRand(username ,taskName, PageRequest.of(tagNum, 1));
+        List<Instance> pageData = instanceService.findPageDataByTaskId(taskId, Pager.of(tagNum, 1));
 
         if (pageData.isEmpty()){
-            List<Instance>instanceList = instanceService.findByTaskName(taskName);
+            List<Instance>instanceList = instanceService.findByTaskId(taskId);
             boolean flag = true;
             for(Instance item: instanceList){  //所有的数据状态都为1，才算完成任务
                 if (item.getStatus() == 0){

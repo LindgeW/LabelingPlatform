@@ -4,10 +4,10 @@
   <resultMap id="BaseResultMap" type="com.labeling.demo.entity.Instance">
     <constructor>
       <idArg column="instanceId" javaType="java.lang.Long" jdbcType="BIGINT" />
-      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagDefault" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagExpert" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="taskId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="defaultTag" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expertTag" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modelTag" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tagNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
@@ -15,17 +15,17 @@
   <resultMap id="ResultMapWithBLOBs" type="com.labeling.demo.entity.Instance">
     <constructor>
       <idArg column="instanceId" javaType="java.lang.Long" jdbcType="BIGINT" />
-      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagDefault" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagExpert" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="tagModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="taskId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="defaultTag" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expertTag" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modelTag" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tagNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="item" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    instanceId, taskName, tagDefault, tagExpert, tagModel, status, tagNum
+    instanceId, taskId, defaultTag, expertTag, modelTag, status, tagNum
   </sql>
   <sql id="Blob_Column_List">
     item
@@ -43,11 +43,11 @@
     where instanceId = #{instanceId,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.Instance">
-    insert into tb_instance (instanceId, taskName, tagDefault, 
-      tagExpert, tagModel, status, 
+    insert into tb_instance (instanceId, taskId, defaultTag, 
+      expertTag, modelTag, status, 
       tagNum, item)
-    values (#{instanceId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{tagDefault,jdbcType=VARCHAR}, 
-      #{tagExpert,jdbcType=VARCHAR}, #{tagModel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+    values (#{instanceId,jdbcType=BIGINT}, #{taskId,jdbcType=INTEGER}, #{defaultTag,jdbcType=VARCHAR}, 
+      #{expertTag,jdbcType=VARCHAR}, #{modelTag,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{tagNum,jdbcType=INTEGER}, #{item,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.Instance">
@@ -56,17 +56,17 @@
       <if test="instanceId != null">
         instanceId,
       </if>
-      <if test="taskName != null">
-        taskName,
+      <if test="taskId != null">
+        taskId,
       </if>
-      <if test="tagDefault != null">
-        tagDefault,
+      <if test="defaultTag != null">
+        defaultTag,
       </if>
-      <if test="tagExpert != null">
-        tagExpert,
+      <if test="expertTag != null">
+        expertTag,
       </if>
-      <if test="tagModel != null">
-        tagModel,
+      <if test="modelTag != null">
+        modelTag,
       </if>
       <if test="status != null">
         status,
@@ -82,17 +82,17 @@
       <if test="instanceId != null">
         #{instanceId,jdbcType=BIGINT},
       </if>
-      <if test="taskName != null">
-        #{taskName,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
       </if>
-      <if test="tagDefault != null">
-        #{tagDefault,jdbcType=VARCHAR},
+      <if test="defaultTag != null">
+        #{defaultTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagExpert != null">
-        #{tagExpert,jdbcType=VARCHAR},
+      <if test="expertTag != null">
+        #{expertTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagModel != null">
-        #{tagModel,jdbcType=VARCHAR},
+      <if test="modelTag != null">
+        #{modelTag,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -108,17 +108,17 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.labeling.demo.entity.Instance">
     update tb_instance
     <set>
-      <if test="taskName != null">
-        taskName = #{taskName,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        taskId = #{taskId,jdbcType=INTEGER},
       </if>
-      <if test="tagDefault != null">
-        tagDefault = #{tagDefault,jdbcType=VARCHAR},
+      <if test="defaultTag != null">
+        defaultTag = #{defaultTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagExpert != null">
-        tagExpert = #{tagExpert,jdbcType=VARCHAR},
+      <if test="expertTag != null">
+        expertTag = #{expertTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagModel != null">
-        tagModel = #{tagModel,jdbcType=VARCHAR},
+      <if test="modelTag != null">
+        modelTag = #{modelTag,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -134,10 +134,10 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.labeling.demo.entity.Instance">
     update tb_instance
-    set taskName = #{taskName,jdbcType=VARCHAR},
-      tagDefault = #{tagDefault,jdbcType=VARCHAR},
-      tagExpert = #{tagExpert,jdbcType=VARCHAR},
-      tagModel = #{tagModel,jdbcType=VARCHAR},
+    set taskId = #{taskId,jdbcType=INTEGER},
+      defaultTag = #{defaultTag,jdbcType=VARCHAR},
+      expertTag = #{expertTag,jdbcType=VARCHAR},
+      modelTag = #{modelTag,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       tagNum = #{tagNum,jdbcType=INTEGER},
       item = #{item,jdbcType=LONGVARCHAR}
@@ -145,10 +145,10 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.Instance">
     update tb_instance
-    set taskName = #{taskName,jdbcType=VARCHAR},
-      tagDefault = #{tagDefault,jdbcType=VARCHAR},
-      tagExpert = #{tagExpert,jdbcType=VARCHAR},
-      tagModel = #{tagModel,jdbcType=VARCHAR},
+    set taskId = #{taskId,jdbcType=INTEGER},
+      defaultTag = #{defaultTag,jdbcType=VARCHAR},
+      expertTag = #{expertTag,jdbcType=VARCHAR},
+      modelTag = #{modelTag,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       tagNum = #{tagNum,jdbcType=INTEGER}
     where instanceId = #{instanceId,jdbcType=BIGINT}
@@ -163,36 +163,36 @@
     limit #{pager.offset}, #{pager.pageSize}
   </select>
 
-  <select id="findPageDataByTaskName" resultMap="ResultMapWithBLOBs">
+  <select id="findPageDataByTaskId" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from tb_instance WHERE taskName=#{taskName}
+    from tb_instance WHERE taskId=#{taskId}
     limit #{pager.offset}, #{pager.pageSize}
   </select>
 
-  <select id="findPageDataByTaskNameRand" resultMap="ResultMapWithBLOBs">
+  <select id="findPageDataByTaskIdRand" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from tb_instance as t1 join (select round(rand() * ((select max(instanceId) from tb_instance) - (select min(instanceId) from tb_instance)) + (select min(instanceId) from tb_instance)) as id) as t2
-    WHERE taskName=#{taskName} and t1.instanceId >= t2.id order by t1.instanceId
+    WHERE taskId=#{taskId} and t1.instanceId >= t2.id order by t1.instanceId
     limit #{pager.offset}, #{pager.pageSize}
   </select>
 
   <!--<insert id="save" parameterType="com.labeling.demo.entity.Instance">-->
-  <!--insert into tb_instance (instanceId, taskName, tagExpert,-->
-  <!--tagModel, status, tagNum,-->
+  <!--insert into tb_instance (instanceId, taskId, expertTag,-->
+  <!--modelTag, status, tagNum,-->
   <!--item)-->
-  <!--values (#{instanceId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{tagExpert,jdbcType=VARCHAR},-->
-  <!--#{tagModel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tagNum,jdbcType=INTEGER},-->
+  <!--values (#{instanceId,jdbcType=BIGINT}, #{taskId,jdbcType=INTEGER}, #{expertTag,jdbcType=VARCHAR},-->
+  <!--#{modelTag,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{tagNum,jdbcType=INTEGER},-->
   <!--#{item,jdbcType=LONGVARCHAR})-->
   <!--ON DUPLICATE KEY UPDATE-->
-  <!--taskName = #{taskName,jdbcType=VARCHAR},-->
-  <!--tagExpert = #{tagExpert,jdbcType=VARCHAR},-->
-  <!--tagModel = #{tagModel,jdbcType=VARCHAR},-->
+  <!--taskId = #{taskId,jdbcType=INTEGER},-->
+  <!--expertTag = #{expertTag,jdbcType=VARCHAR},-->
+  <!--modelTag = #{modelTag,jdbcType=VARCHAR},-->
   <!--tagNum = #{tagNum,jdbcType=INTEGER},-->
   <!--item = #{item,jdbcType=LONGVARCHAR},-->
   <!--status = #{status,jdbcType=INTEGER}-->
@@ -204,17 +204,17 @@
       <if test="instanceId != null">
         instanceId,
       </if>
-      <if test="taskName != null">
-        taskName,
+      <if test="taskId != null">
+        taskId,
       </if>
-      <if test="tagDefault != null">
-        tagDefault,
+      <if test="defaultTag != null">
+        defaultTag,
       </if>
-      <if test="tagExpert != null">
-        tagExpert,
+      <if test="expertTag != null">
+        expertTag,
       </if>
-      <if test="tagModel != null">
-        tagModel,
+      <if test="modelTag != null">
+        modelTag,
       </if>
       <if test="status != null">
         status,
@@ -230,17 +230,17 @@
       <if test="instanceId != null">
         #{instanceId,jdbcType=BIGINT},
       </if>
-      <if test="taskName != null">
-        #{taskName,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
       </if>
-      <if test="tagDefault != null">
-        #{tagDefault,jdbcType=VARCHAR},
+      <if test="defaultTag != null">
+        #{defaultTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagExpert != null">
-        #{tagExpert,jdbcType=VARCHAR},
+      <if test="expertTag != null">
+        #{expertTag,jdbcType=VARCHAR},
       </if>
-      <if test="tagModel != null">
-        #{tagModel,jdbcType=VARCHAR},
+      <if test="modelTag != null">
+        #{modelTag,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -256,17 +256,17 @@
     <if test="instanceId != null">
       instanceId = #{instanceId,jdbcType=BIGINT}
     </if>
-    <if test="taskName != null">
-      ,taskName = #{taskName,jdbcType=VARCHAR}
+    <if test="taskId != null">
+      ,taskId = #{taskId,jdbcType=INTEGER}
     </if>
-    <if test="tagDefault != null">
-      ,tagDefault = #{tagDefault,jdbcType=VARCHAR}
+    <if test="defaultTag != null">
+      ,defaultTag = #{defaultTag,jdbcType=VARCHAR}
     </if>
-    <if test="tagExpert != null">
-      ,tagExpert = #{tagExpert,jdbcType=VARCHAR}
+    <if test="expertTag != null">
+      ,expertTag = #{expertTag,jdbcType=VARCHAR}
     </if>
-    <if test="tagModel != null">
-      ,tagModel = #{tagModel,jdbcType=VARCHAR}
+    <if test="modelTag != null">
+      ,modelTag = #{modelTag,jdbcType=VARCHAR}
     </if>
     <if test="status != null">
       ,status = #{status,jdbcType=INTEGER}
@@ -280,55 +280,55 @@
   </insert>
 
   <!--<insert id="saveAll" parameterType="java.util.List">-->
-  <!--insert into tb_instance(instanceId, taskName, item, tagExpert, tagModel, status, tagNum)-->
+  <!--insert into tb_instance(instanceId, taskId, item, expertTag, modelTag, status, tagNum)-->
   <!--values-->
   <!--<foreach collection="list" item="inst" index="index" separator=",">-->
   <!--(-->
   <!--#{inst.instanceId,jdbcType=BIGINT},-->
-  <!--#{inst.taskName,jdbcType=VARCHAR},-->
+  <!--#{inst.taskId,jdbcType=VARCHAR},-->
   <!--#{inst.item,jdbcType=LONGVARCHAR},-->
-  <!--#{inst.tagExpert,jdbcType=VARCHAR},-->
-  <!--#{inst.tagModel,jdbcType=VARCHAR},-->
+  <!--#{inst.expertTag,jdbcType=VARCHAR},-->
+  <!--#{inst.modelTag,jdbcType=VARCHAR},-->
   <!--#{inst.status,jdbcType=INTEGER},-->
   <!--#{inst.tagNum,jdbcType=INTEGER}-->
   <!--)-->
   <!--</foreach>-->
   <!--ON DUPLICATE KEY UPDATE-->
   <!--instanceId = values(instanceId),-->
-  <!--taskName = values(taskName),-->
+  <!--taskId = values(taskId),-->
   <!--item = values(item),-->
-  <!--tagExpert = values(tagExpert),-->
-  <!--tagModel = values(tagModel),-->
+  <!--expertTag = values(expertTag),-->
+  <!--modelTag = values(modelTag),-->
   <!--status = values(status),-->
   <!--tagNum = values(tagNum)-->
   <!--</insert>-->
 
   <insert id="updateAll" parameterType="java.util.List">
-    insert into tb_instance(instanceId, tagExpert, tagModel)
+    insert into tb_instance(instanceId, expertTag, modelTag)
     values
     <foreach collection="list" item="inst" index="index" separator=",">
       (
       #{inst.instanceId,jdbcType=BIGINT},
-      #{inst.tagExpert,jdbcType=VARCHAR},
-      #{inst.tagModel,jdbcType=VARCHAR}
+      #{inst.expertTag,jdbcType=VARCHAR},
+      #{inst.modelTag,jdbcType=VARCHAR}
       )
     </foreach>
     ON DUPLICATE KEY UPDATE
     instanceId = values(instanceId),
-    tagExpert = values(tagExpert),
-    tagModel = values(tagModel)
+    expertTag = values(expertTag),
+    modelTag = values(modelTag)
   </insert>
 
   <insert id="saveAll" parameterType="java.util.List">
-    insert into tb_instance (taskName, item, tagDefault, tagExpert, tagModel, status, tagNum)
+    insert into tb_instance (taskId, item, defaultTag, expertTag, modelTag, status, tagNum)
     values
     <foreach collection="list" item="inst" index="index" separator=",">
       (
-      #{inst.taskName,jdbcType=VARCHAR},
+      #{inst.taskId,jdbcType=INTEGER},
       #{inst.item,jdbcType=LONGVARCHAR},
-      #{inst.tagDefault,jdbcType=VARCHAR},
-      #{inst.tagExpert,jdbcType=VARCHAR},
-      #{inst.tagModel,jdbcType=VARCHAR},
+      #{inst.defaultTag,jdbcType=VARCHAR},
+      #{inst.expertTag,jdbcType=VARCHAR},
+      #{inst.modelTag,jdbcType=VARCHAR},
       #{inst.status,jdbcType=INTEGER},
       #{inst.tagNum,jdbcType=INTEGER}
       )
@@ -336,19 +336,19 @@
   </insert>
 
   <!--<insert id="saveAll" parameterType="java.util.List">-->
-  <!--insert into tb_instance(instanceId, taskName, item, tagExpert, tagModel, status, tagNum)-->
+  <!--insert into tb_instance(instanceId, taskId, item, expertTag, modelTag, status, tagNum)-->
   <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
   <!--<if test="instanceId != null">-->
   <!--instanceId-->
   <!--</if>-->
-  <!--<if test="taskName != null">-->
-  <!--taskName,-->
+  <!--<if test="taskId != null">-->
+  <!--taskId,-->
   <!--</if>-->
-  <!--<if test="tagExpert != null">-->
-  <!--tagExpert,-->
+  <!--<if test="expertTag != null">-->
+  <!--expertTag,-->
   <!--</if>-->
-  <!--<if test="tagModel != null">-->
-  <!--tagModel,-->
+  <!--<if test="modelTag != null">-->
+  <!--modelTag,-->
   <!--</if>-->
   <!--<if test="status != null">-->
   <!--status,-->
@@ -365,14 +365,14 @@
   <!--<if test="inst.instanceId != null">-->
   <!--#{inst.instanceId,jdbcType=BIGINT},-->
   <!--</if>-->
-  <!--<if test="inst.taskName != null">-->
-  <!--#{inst.taskName,jdbcType=VARCHAR},-->
+  <!--<if test="inst.taskId != null">-->
+  <!--#{inst.taskId,jdbcType=VARCHAR},-->
   <!--</if>-->
-  <!--<if test="inst.tagExpert != null">-->
-  <!--#{inst.tagExpert,jdbcType=VARCHAR},-->
+  <!--<if test="inst.expertTag != null">-->
+  <!--#{inst.expertTag,jdbcType=VARCHAR},-->
   <!--</if>-->
-  <!--<if test="inst.tagModel != null">-->
-  <!--#{inst.tagModel,jdbcType=VARCHAR},-->
+  <!--<if test="inst.modelTag != null">-->
+  <!--#{inst.modelTag,jdbcType=VARCHAR},-->
   <!--</if>-->
   <!--<if test="inst.status != null">-->
   <!--#{inst.status,jdbcType=INTEGER},-->
@@ -390,14 +390,14 @@
   <!--<if test="instanceId != null">-->
   <!--instanceId = values(instanceId),-->
   <!--</if>-->
-  <!--<if test="taskName != null">-->
-  <!--taskName = values(taskName),-->
+  <!--<if test="taskId != null">-->
+  <!--taskId = values(taskId),-->
   <!--</if>-->
-  <!--<if test="tagExpert != null">-->
-  <!--tagExpert = values(tagExpert),-->
+  <!--<if test="expertTag != null">-->
+  <!--expertTag = values(expertTag),-->
   <!--</if>-->
-  <!--<if test="tagModel != null">-->
-  <!--tagModel = values(tagModel),-->
+  <!--<if test="modelTag != null">-->
+  <!--modelTag = values(modelTag),-->
   <!--</if>-->
   <!--<if test="status != null">-->
   <!--status = values(status),-->

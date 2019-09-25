@@ -9,11 +9,15 @@ public interface TaskService {
 
     List<Task> findAll();
 
-    Task findByName(String taskName);
+    Task findById(Integer taskId);
 
     int updateTask(Task task);
 
     List<Task> findByExpertName(String expertName);
 
     String pageScheduler(Task task);
+
+    Task findByName(String taskName);
+
+    Integer taskCount();
 }

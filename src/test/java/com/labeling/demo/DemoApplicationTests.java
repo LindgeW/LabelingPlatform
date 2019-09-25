@@ -3,28 +3,37 @@ package com.labeling.demo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONReader;
+import com.labeling.demo.entity.Instance;
 import com.labeling.demo.entity.Pager;
 import com.labeling.demo.entity.Role;
-import com.labeling.demo.entity.TagType;
+import com.labeling.demo.entity.Team;
 import com.labeling.demo.entity.vo.InstanceUserVO;
 import com.labeling.demo.repository.InstanceUserMapper;
+import com.labeling.demo.repository.TeamMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Mapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 class Student {
     private Integer id;
     private String name;
+
+    public Student() {
+    }
 
     public Student(Integer id, String name) {
         this.id = id;
@@ -227,6 +236,39 @@ public class DemoApplicationTests {
     }
 
     @Test
+    public void testJosn() throws IOException {
+//        String s = IOUtils.toString(new BufferedInputStream(new FileInputStream("C:\\Users\\ASUS\\Desktop\\test.json")), "utf-8");
+
+        JSONReader jsonReader = new JSONReader(new BufferedReader(new InputStreamReader(new FileInputStream("C:\\Users\\ASUS\\Desktop\\test.json"), Charset.forName("gbk"))));
+        jsonReader.startArray();
+        int i = 1;
+        while (jsonReader.hasNext()){
+//            String s = jsonReader.readString();
+            Instance instance = jsonReader.readObject(Instance.class);
+            System.out.println(i+" "+instance);
+            i++;
+        }
+
+        jsonReader.endArray();
+    }
+
+    @Test
+    public void testJson(){
+//        try {
+//            String jsonStr = FileUtils.readFileToString(new File("F:\\github_proj\\LabelingPlatform\\src\\main\\resources\\generator\\item.json"));
+////            JSONObject result = JSON.parseObject(jsonStr);
+////            System.out.println(result);
+////            System.out.println(result.get("expert"));
+//
+//            JSONArray objects = JSON.parseArray(jsonStr);
+//            JSONObject raw = objects.getJSONObject(0);
+//            System.out.println(raw.getString("extra"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Test
     public void testObj(){
         Student stu1 = new Student(312, "aaa");
         Student stu2 = new Student(121, "aaa");
@@ -282,6 +324,8 @@ public class DemoApplicationTests {
             System.out.println(RandomUtils.nextInt(0, 3));
 //            System.out.println(randGenerator(3));
         }
+
+        System.out.println(RandomUtils.nextInt(0, 1));
     }
 
     @Test
@@ -366,4 +410,5 @@ public class DemoApplicationTests {
         Pager p2 = Pager.of(1, 2);
         System.out.println(p1 == p2);
     }
+
 }

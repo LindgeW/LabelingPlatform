@@ -14,11 +14,11 @@
         <!--Style css-->
 		<link rel="stylesheet" href="css/bg/style.css">
 		<!--mCustomScrollbar css-->
-		<link rel="stylesheet" href="css/plugins/jquery.mCustomScrollbar.css">
+<!--		<link rel="stylesheet" href="css/plugins/jquery.mCustomScrollbar.css">-->
         <!--Sidemenu css-->
 		<link rel="stylesheet" href="css/plugins/sidemenu.css">
 
-		<script>
+<!--		<script>-->
 //            function changeHeight() {
 //                var iframe = document.getElementById("iframe");
 ////                var win = iframe.contentWindow;  // 通过contentWindow获取ifame子页面的window窗体对象。(不允许跨域名访问)
@@ -28,31 +28,31 @@
 //                iframe.height = winDoc.body.scrollHeight;
 //            }
 
-            var timeIframe = null;
-            window.onload = function() {
-                if (timeIframe != null){
-                    clearTimeout(timeIframe);
-                }
+<!--            var timeIframe = null;-->
+<!--            window.onload = function() {-->
+<!--                if (timeIframe != null){-->
+<!--                    clearTimeout(timeIframe);-->
+<!--                }-->
 
-                timeIframe = setTimeout(GetIframeStatus, 300);
-            };
+<!--                timeIframe = setTimeout(GetIframeStatus, 300);-->
+<!--            };-->
 
-            function GetIframeStatus() {
-                var iframe = document.getElementById("iframe");
-                var iframeWindow = iframe.contentWindow;
-                //内容是否加载完
-                if (iframeWindow.document.readyState === "complete") {
-                    var iframeHeight;
-                    //获取Iframe的内容实际高度
-//                    iframeHeight = iframeWindow.document.documentElement.scrollHeight;
-                    iframeHeight = iframeWindow.document.body.scrollHeight;
-                    //设置Iframe的高度
-                    iframe.height = iframeHeight;
-                }
+<!--            function GetIframeStatus() {-->
+<!--                var iframe = document.getElementById("iframe");-->
+<!--                var iframeWindow = iframe.contentWindow;-->
+<!--                //内容是否加载完-->
+<!--                if (iframeWindow.document.readyState === "complete") {-->
+<!--                    var iframeHeight;-->
+<!--                    //获取Iframe的内容实际高度-->
+<!--//                    iframeHeight = iframeWindow.document.documentElement.scrollHeight;-->
+<!--                    iframeHeight = iframeWindow.document.body.scrollHeight;-->
+<!--                    //设置Iframe的高度-->
+<!--                    iframe.height = iframeHeight;-->
+<!--                }-->
 
-                timeIframe = setTimeout(GetIframeStatus, 100);
-            }
-        </script>
+<!--                timeIframe = setTimeout(GetIframeStatus, 100);-->
+<!--            }-->
+<!--        </script>-->
 	</head>
 
 	<body class="app ">
@@ -142,7 +142,7 @@
                                     <div class="mb-0">
                                         <div class="card-body">
                                             <!--<iframe src="/login" id="iframe" name="right" width="100%" height="100%" frameborder="0" onload="this.height=right.document.body.scrollHeight"></iframe>-->
-                                            <iframe src="/bg_index" id="iframe" name="right" width="100%" height="100%" scrolling="no" frameborder="0"></iframe>
+                                            <iframe src="/bg_index" id="iframe" name="right" style="min-height: 800px; width: 100%;" scrolling="no" frameborder="0"></iframe>
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +165,7 @@
 	<!--popper js-->
 	<script src="js/popper.js"></script>
 	<!--Tooltip js-->
-	<script src="js/tooltip.js"></script>
+<!--	<script src="js/tooltip.js"></script>-->
 	<!--Bootstrap.min js-->
 	<script src="js/bootstrap.min.js"></script>
 	<!--Jquery.nicescroll.min js-->
@@ -179,7 +179,7 @@
 	<!--&lt;!&ndash;Scripts js&ndash;&gt;-->
 	<script src="js/scripts.js"></script>
 	<!--&lt;!&ndash;Dashboard js&ndash;&gt;-->
-	<script src="js/dashboard.js"></script>
-	<script src="js/apexcharts.js"></script>
+<!--	<script src="js/dashboard.js"></script>-->
+<!--	<script src="js/apexcharts.js"></script>-->
 
 </html>

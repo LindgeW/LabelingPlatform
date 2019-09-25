@@ -27,14 +27,12 @@ public interface InstanceMapper {
     @Select("select * from tb_instance")
     List<Instance> findAll();
 
-    List<Instance> findPageData(Pager instPage);
-
-    List<Instance> findPageDataByTaskName(String taskName, @Param("pager") Pager pageable);
+    List<Instance> findPageDataByTaskId(Integer taskId, @Param("pager") Pager pageable);
 
     List<Instance> findPageDataByTaskNameRand(String taskName, @Param("pager") Pager pageable);
 
-    @Select("select * from tb_instance where taskName = #{taskName}")
-    List<Instance> findByTaskName(String taskName);
+    @Select("select * from tb_instance where taskId = #{taskId}")
+    List<Instance> findByTaskId(Integer taskId);
 
     @Select("select count(0) from tb_instance")
     Long count();

@@ -18,14 +18,12 @@ public interface InstanceService {
 
     List<Instance> findAll();
 
-//    List<Instance> findPageData(Pageable instPage);
-    List<Instance> findPageDataByTaskName(String taskName, Pager pageable);
+//    List<Instance> findPageDataByTaskName(String taskName, Pager pageable);
+    List<Instance> findPageDataByTaskId(Integer taskId, Pager pageable);
 
     Instance findPageDataByTaskNameRand(String userName, String taskName, Pager pageable);
 
-//    Instance findInstById(Long id);
-
-    List<Instance> findByTaskName(String taskName);
+    List<Instance> findByTaskId(Integer taskId);
 
     long count();
 

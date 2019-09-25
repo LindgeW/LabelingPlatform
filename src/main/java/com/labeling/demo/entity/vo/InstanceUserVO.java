@@ -12,7 +12,7 @@ public class InstanceUserVO<T> extends InstanceUser {
     }
 
     public InstanceUserVO(InstanceUser instanceUser, T item, String role) {
-        super(instanceUser.getId(), instanceUser.getUsername(), instanceUser.getInstanceId(), instanceUser.getTag(), instanceUser.getTaskname(), instanceUser.getResponseTime());
+        super(instanceUser.getId(), instanceUser.getUsername(), instanceUser.getInstanceId(), instanceUser.getTag(), instanceUser.getTaskId(), instanceUser.getResponseTime());
         this.item = item;
         this.role = role;
     }

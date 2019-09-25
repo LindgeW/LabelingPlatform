@@ -51,12 +51,26 @@
         });
 
         function goldSelect(goldTag) {
+            var isChecked = false;
             var tag_radios = $(".radio_tag");
-            tag_radios.each(function (i, tr) {
-                if (goldTag === tr.value) {
-                    tr.checked = true;
+            // tag_radios.each(function (i, tr) {
+            //     if (goldTag === tr.value) {
+            //         tr.checked = true;
+            //     }
+            // });
+
+            for(var i=0, len=tag_radios.length; i<len; i++) {
+                var curTag = tag_radios[i];
+                if (goldTag === curTag.value) {
+                    curTag.checked = true;
+                    isChecked = true;
+                    break;
                 }
-            });
+            }
+
+            if (!isChecked) {
+                randSelect();
+            }
         }
 
         function randSelect() {
@@ -65,11 +79,10 @@
             tag_radios[randNum].checked = true;
         }
 
-
         function save() {
             var t2 = new Date();
             var username = $("#username").text();
-            var taskName = $("#taskName").text();
+            var taskId = $("#taskId").val();
             var role = $('#role').val();
             var instId = $("#instanceId").val();
             var tagNum = parseInt($("#tagNum").text());
@@ -80,7 +93,7 @@
                 "username": username,
                 "role": role,
                 "instanceId": instId,
-                "taskname": taskName,
+                "taskId": taskId,
                 "tag": tag,
                 "tagNum": tagNum,
                 "responseTime": respTime
@@ -193,6 +206,7 @@
     </h5>
     <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
     <input type="hidden" id="role" th:value="${userVo.role}"/>
+    <input type="hidden" id="taskId" th:value="${taskVo.taskId}"/>
 </div>
 
 <div>

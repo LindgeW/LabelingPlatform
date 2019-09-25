@@ -7,7 +7,7 @@
       <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="instanceId" javaType="java.lang.Long" jdbcType="BIGINT" />
       <arg column="tag" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="taskname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="taskId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tagTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="responseTime" javaType="java.lang.Float" jdbcType="REAL" />
     </constructor>
@@ -18,7 +18,7 @@
     <result property="username" column="username"/>
     <result property="instanceId" column="instanceId"/>
     <result property="tag" column="tag" />
-    <result property="taskname" column="taskname" />
+    <result property="taskId" column="taskId" />
     <result property="tagTime" column="tagTime" />
     <result property="responseTime" column="responseTime"/>
     <result property="item" column="item" />
@@ -26,7 +26,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, username, instanceId, tag, taskname, tagTime, responseTime
+    id, username, instanceId, tag, taskId, tagTime, responseTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -40,9 +40,9 @@
   </delete>
   <insert id="insert" parameterType="com.labeling.demo.entity.InstanceUser">
     insert into tb_instance_user (id, username, instanceId, 
-      tag, taskname, tagTime, responseTime)
+      tag, taskId, tagTime, responseTime)
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{instanceId,jdbcType=BIGINT}, 
-      #{tag,jdbcType=VARCHAR}, #{taskname,jdbcType=VARCHAR}, #{tagTime,jdbcType=TIMESTAMP}, 
+      #{tag,jdbcType=VARCHAR}, #{taskId,jdbcType=INTEGER}, #{tagTime,jdbcType=TIMESTAMP}, 
       #{responseTime,jdbcType=REAL})
   </insert>
   <insert id="insertSelective" parameterType="com.labeling.demo.entity.InstanceUser">
@@ -60,8 +60,8 @@
       <if test="tag != null">
         tag,
       </if>
-      <if test="taskname != null">
-        taskname,
+      <if test="taskId != null">
+        taskId,
       </if>
       <if test="tagTime != null">
         tagTime,
@@ -83,8 +83,8 @@
       <if test="tag != null">
         #{tag,jdbcType=VARCHAR},
       </if>
-      <if test="taskname != null">
-        #{taskname,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
       </if>
       <if test="tagTime != null">
         #{tagTime,jdbcType=TIMESTAMP},
@@ -106,8 +106,8 @@
       <if test="tag != null">
         tag = #{tag,jdbcType=VARCHAR},
       </if>
-      <if test="taskname != null">
-        taskname = #{taskname,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        taskId = #{taskId,jdbcType=INTEGER},
       </if>
       <if test="tagTime != null">
         tagTime = #{tagTime,jdbcType=TIMESTAMP},
@@ -123,7 +123,7 @@
     set username = #{username,jdbcType=VARCHAR},
       instanceId = #{instanceId,jdbcType=BIGINT},
       tag = #{tag,jdbcType=VARCHAR},
-      taskname = #{taskname,jdbcType=VARCHAR},
+      taskId = #{taskId,jdbcType=INTEGER},
       tagTime = #{tagTime,jdbcType=TIMESTAMP},
       responseTime = #{responseTime,jdbcType=REAL}
     where id = #{id,jdbcType=BIGINT}
@@ -132,25 +132,25 @@
   <select id="findByPage" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from tb_instance_user WHERE username = #{username}
+    from tb_instance_user WHERE username = #{username} and taskId = #{taskId}
     limit #{pager.offset}, #{pager.pageSize}
   </select>
 
   <insert id="save" parameterType="com.labeling.demo.entity.InstanceUser">
-    insert into tb_instance_user (id, username, taskname, instanceId, tag, responseTime)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{taskname, jdbcType=VARCHAR}, #{instanceId,jdbcType=INTEGER},
+    insert into tb_instance_user (id, username, taskId, instanceId, tag, responseTime)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{taskId, jdbcType=INTEGER}, #{instanceId,jdbcType=INTEGER},
       #{tag,jdbcType=VARCHAR}, #{responseTime, jdbcType=REAL})
     ON DUPLICATE KEY UPDATE
     instanceId = #{instanceId,jdbcType=BIGINT},
     username = #{username,jdbcType=VARCHAR},
-    taskname = #{taskname,jdbcType=VARCHAR},
+    taskId = #{taskId,jdbcType=INTEGER},
     tag = #{tag,jdbcType=VARCHAR}
     responseTime = #{responseTime, jdbcType=REAL}
   </insert>
 
   <select id="findFullRecord" parameterType="java.lang.Long" resultMap="VoResultMap">
     select
-    id, tu.username, ti.instanceId, tag, tiu.taskname, tagTime, responseTime, ti.item, tu.role
+    id, tu.username, ti.instanceId, tag, tiu.taskId, tagTime, responseTime, ti.item, tu.role
     from tb_instance_user tiu
     join tb_user tu on tiu.username = tu.username
     join tb_instance ti on tiu.instanceId = ti.instanceId

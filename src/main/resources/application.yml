@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 9300
 spring:
   thymeleaf:
     cache: false
@@ -7,10 +7,15 @@ spring:
   resources:
     static-locations: classpath:/static/
   datasource:
-    url: jdbc:mysql://172.23.43.28:3306/db_label_platform?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/db_label_platform?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: ncu151568
+  servlet:
+    multipart:
+      max-file-size: 500MB  #限制单个文件大小
+      max-request-size: 1000MB #限制总文件大小
+      enabled: true
 mybatis:
   #mybatis mapper文件的位置
   mapper-locations: classpath:mapper/*Mapper.xml

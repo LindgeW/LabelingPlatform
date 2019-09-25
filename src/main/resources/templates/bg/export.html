@@ -32,8 +32,8 @@
             <div class="col-4 offset-4">
                 <div class="form-inline">
                     <label for="tasks">选择标注任务：</label>
-                    <select class="form-control" id="tasks" name="task">
-                        <option th:each="task: ${tasks}" th:value="${task.taskname}" th:text="${task.taskname}">无</option>
+                    <select class="form-control" id="tasks" name="taskId">
+                        <option th:each="task: ${tasks}" th:value="${task.taskId}" th:text="${task.taskname}">无</option>
                     </select>
                 </div>
             </div>

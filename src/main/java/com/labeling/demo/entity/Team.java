@@ -1,11 +1,13 @@
 package com.labeling.demo.entity;
 
+import org.omg.PortableInterceptor.INACTIVE;
+
 public class Team {
     private Integer teamId;
 
     private String teamName;
 
-    private String taskName;
+    private Integer taskId;
 
     private String members;
 
@@ -13,18 +15,18 @@ public class Team {
 
     private String expertname;
 
-    public Team(String teamName, String taskName, String members, String expertname, Boolean status) {
+    public Team(String teamName, Integer taskId, String members, String expertname, Boolean status) {
         this.teamName = teamName;
-        this.taskName = taskName;
+        this.taskId = taskId;
         this.members = members;
         this.expertname = expertname;
         this.status = status;
     }
 
-    public Team(Integer teamId, String teamName, String taskName, String members, Boolean status, String expertname) {
+    public Team(Integer teamId, String teamName, Integer taskId, String members, Boolean status, String expertname) {
         this.teamId = teamId;
         this.teamName = teamName;
-        this.taskName = taskName;
+        this.taskId = taskId;
         this.members = members;
         this.status = status;
         this.expertname = expertname;
@@ -50,12 +52,12 @@ public class Team {
         this.teamName = teamName == null ? null : teamName.trim();
     }
 
-    public String getTaskName() {
-        return taskName;
+    public Integer getTaskId() {
+        return taskId;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName == null ? null : taskName.trim();
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public String getMembers() {
@@ -87,7 +89,7 @@ public class Team {
         return "Team{" +
                 "teamId=" + teamId +
                 ", teamName='" + teamName + '\'' +
-                ", taskName='" + taskName + '\'' +
+                ", taskId=" + taskId +
                 ", members='" + members + '\'' +
                 ", status=" + status +
                 ", expertname='" + expertname + '\'' +

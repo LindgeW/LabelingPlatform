@@ -14,10 +14,13 @@
     <div class="container" style="min-height: 800px;">
         <h4>管理员须知</h4>
         <div>
+            <b>为了保证数据标注平台的合理使用，管理员需要按要求管理后台</b>
             <ol>
-                <li>为了保证数据标注的正确性和规范性，管理员需要按要求管理后台</li>
-                <li>每个团队只参与一个标注任务！</li>
-                <li>每位标注员属于一个团队！</li>
+                <li>务必要保证上传数据格式的正确性和规范性</li>
+                <li>发布任务之后，需要创建团队才能生效！</li>
+                <li>每个团队（成员）一次只参与一个标注任务！</li>
+                <li>数据量很大时，可以分批次创建多个任务，分别让多个团队参与标注（任务名和团队名不要重复）！</li>
+                <li>更多 <a href="https://github.com/tjuwlz/LabelingPlatform" target="_blank">平台细节</a></li>
             </ol>
         </div>
 
@@ -71,7 +74,7 @@
                                 z: 22
                             },
                             title: {
-                                text: datar.teamName + datar.taskName + "完成比",
+                                text: datar.teamName + " 小组 " +datar.taskName + " 任务 " + "完成比",
                                 textStyle: {
                                     color: "#000000",
                                     fontSize: 15
@@ -178,7 +181,7 @@
                 var teamName = datar[0]["teamName"];
                 $.each(datar, function(i, item){
                     nameList.push(item["userName"]);
-                    tagNumList.push((item["tagNum"] / item["corpusSize"]).toFixed(2));
+                    tagNumList.push((item["tagNum"] / item["corpusSize"]).toFixed(3));
                 });
 
                 return {

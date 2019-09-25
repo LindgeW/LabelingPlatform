@@ -1,6 +1,8 @@
 package com.labeling.demo.entity;
 
 public class Task {
+    private Integer taskId;
+
     private String taskname;
 
     private Short datatype;
@@ -25,8 +27,27 @@ public class Task {
         this.status = status;
     }
 
+    public Task(Integer taskId, String taskname, Short datatype, Integer corpussize, String tags, String itemSeparator, String expertname, Boolean status) {
+        this.taskId = taskId;
+        this.taskname = taskname;
+        this.datatype = datatype;
+        this.corpussize = corpussize;
+        this.tags = tags;
+        this.itemSeparator = itemSeparator;
+        this.expertname = expertname;
+        this.status = status;
+    }
+
     public Task() {
         super();
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public String getTaskname() {

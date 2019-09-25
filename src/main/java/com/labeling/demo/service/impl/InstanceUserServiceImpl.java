@@ -34,8 +34,8 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
-    public List<InstanceUser> findByPage(String username, Pager pageable) {
-        return instanceuserMapper.findByPage(username, pageable);
+    public List<InstanceUser> findByPage(String username, Integer taskId, Pager pageable) {
+        return instanceuserMapper.findByPage(username, taskId, pageable);
     }
 
     @Override
@@ -62,10 +62,6 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
 
-    public Integer countByUsername(String username) {
-        return  this.instanceuserMapper.countByUserName(username);
-    }
-
 //    @Override
 //    public boolean saveBtach(List<InstanceUser> list) {
 //        return this.instanceuserMapper.saveBatch(list);
@@ -77,8 +73,8 @@ public class InstanceUserServiceImpl implements InstanceUserService {
     }
 
     @Override
-    public Integer countByTask(String username, String taskname) {
-        return instanceuserMapper.countByTask(username, taskname);
+    public Integer countByTask(String username, Integer taskId) {
+        return instanceuserMapper.countByTask(username, taskId);
     }
 
     @Override

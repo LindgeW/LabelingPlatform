@@ -5,14 +5,14 @@
     <constructor>
       <idArg column="teamId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="teamName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="taskName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="taskId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="members" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
       <arg column="expertname" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    teamId, teamName, taskName, members, status, expertname
+    teamId, teamName, taskId, members, status, expertname
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,15 +24,15 @@
     delete from tb_team
     where teamId = #{teamId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.labeling.demo.entity.Team">
-    insert into tb_team (teamId, teamName, taskName, 
+  <insert id="insert" useGeneratedKeys="true" keyProperty="teamId" parameterType="com.labeling.demo.entity.Team">
+    insert into tb_team (teamId, teamName, taskId, 
       members, status, expertname
       )
-    values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, 
+    values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, #{taskId,jdbcType=INTEGER}, 
       #{members,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{expertname,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.labeling.demo.entity.Team">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="teamId" parameterType="com.labeling.demo.entity.Team">
     insert into tb_team
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="teamId != null">
@@ -41,8 +41,8 @@
       <if test="teamName != null">
         teamName,
       </if>
-      <if test="taskName != null">
-        taskName,
+      <if test="taskId != null">
+        taskId,
       </if>
       <if test="members != null">
         members,
@@ -61,8 +61,8 @@
       <if test="teamName != null">
         #{teamName,jdbcType=VARCHAR},
       </if>
-      <if test="taskName != null">
-        #{taskName,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
       </if>
       <if test="members != null">
         #{members,jdbcType=VARCHAR},
@@ -81,8 +81,8 @@
       <if test="teamName != null">
         teamName = #{teamName,jdbcType=VARCHAR},
       </if>
-      <if test="taskName != null">
-        taskName = #{taskName,jdbcType=VARCHAR},
+      <if test="taskId != null">
+        taskId = #{taskId,jdbcType=INTEGER},
       </if>
       <if test="members != null">
         members = #{members,jdbcType=VARCHAR},
@@ -99,7 +99,7 @@
   <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.Team">
     update tb_team
     set teamName = #{teamName,jdbcType=VARCHAR},
-      taskName = #{taskName,jdbcType=VARCHAR},
+      taskId = #{taskId,jdbcType=INTEGER},
       members = #{members,jdbcType=VARCHAR},
       status = #{status,jdbcType=BIT},
       expertname = #{expertname,jdbcType=VARCHAR}

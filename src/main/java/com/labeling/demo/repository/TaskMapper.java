@@ -8,13 +8,13 @@ import java.util.List;
 
 @Mapper
 public interface TaskMapper {
-    int deleteByPrimaryKey(String taskname);
+    int deleteByPrimaryKey(Integer taskId);
 
     int insert(Task record);
 
     int insertSelective(Task record);
 
-    Task selectByPrimaryKey(String taskname);
+    Task selectByPrimaryKey(Integer taskId);
 
     int updateByPrimaryKeySelective(Task record);
 
@@ -25,4 +25,10 @@ public interface TaskMapper {
 
     @Select("select * from tb_task where expertname = #{expertname}")
     List<Task> findByExpert(String expertName);
+
+    @Select("select * from tb_task where taskname = #{taskname}")
+    Task findByName(String taskName);
+
+    @Select("select count(0) from tb_task")
+    Integer count();
 }

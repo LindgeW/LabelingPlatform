@@ -145,7 +145,7 @@
 
             $("#tag_seq").text(tags);
             var username = $("#username").text();
-            var taskName = $("#taskName").text();
+            var taskId = $("#taskId").val();
             var role = $('#role').val();
             var instId = $("#instanceId").val();
             var tagNum = parseInt($("#tagNum").text());
@@ -156,7 +156,7 @@
                 "username": username,
                 "role": role,
                 "instanceId": instId,
-                "taskname": taskName,
+                "taskId": taskId,
                 "tag": tags,
                 "tagNum": tagNum,
                 "responseTime": respTime
@@ -203,14 +203,12 @@
             }
 
             // alert(JSON.stringify(spans)); //数组转成json字符串
-            // sendData("/annotate", getTags(spans, $(".token").length));
             sendData("/annotate", getTags(spans));
             spans = []
         }
 
         function noEntity() {
-            // sendData("/annotate", getTags(spans, $(".token").length));
-            sendData("/annotate", getTags(spans));
+            sendData("/annotate", "0_0_XX");
             spans = []
         }
 
@@ -239,7 +237,7 @@
             padding-left: 0.75em;
             padding-right: 0.75em;
             margin-right: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             white-space: nowrap;
         }
 
@@ -257,7 +255,7 @@
         }
 
         #lbl_panel{
-            padding: 1rem;
+            padding: 0.75em 0.75em 0 0.75em;
             text-align: center;
         }
 
@@ -345,6 +343,7 @@
     </h5>
     <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
     <input type="hidden" id="role" th:value="${userVo.role}"/>
+    <input type="hidden" id="taskId" th:value="${taskVo.taskId}"/>
 </div>
 
 <div class="container">

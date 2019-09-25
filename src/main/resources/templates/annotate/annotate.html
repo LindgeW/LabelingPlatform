@@ -49,26 +49,40 @@
             t1 = new Date();
         });
 
-        function goldSelect(goldTag) {
-            var tag_radios = $(".radio_tag");
-            tag_radios.each(function (i, tr) {
-                if (goldTag === tr.value) {
-                    tr.checked = true;
-                }
-            });
-        }
-
         function randSelect() {
             var tag_radios = $(".radio_tag");
             var randNum = Math.floor(Math.random() * tag_radios.length);
             tag_radios[randNum].checked = true;
         }
 
+        function goldSelect(goldTag) {
+            var isChecked = false;
+            var tag_radios = $(".radio_tag");
+            // tag_radios.each(function (i, tr) {
+            //     if (goldTag === tr.value) {
+            //         tr.checked = true;
+            //         isChecked = true;
+            //     }
+            // });
+
+            for(var i=0, len=tag_radios.length; i<len; i++) {
+                var curTag = tag_radios[i];
+                if (goldTag === curTag.value) {
+                    curTag.checked = true;
+                    isChecked = true;
+                    break;
+                }
+            }
+
+            if (!isChecked) {
+                randSelect();
+            }
+        }
 
         function save() {
             var t2 = new Date();
             var username = $("#username").text();
-            var taskName = $("#taskName").text();
+            var taskId = $("#taskId").val();
             var role = $('#role').val();
             var instId = $("#instanceId").val();
             var tagNum = parseInt($("#tagNum").text());
@@ -79,7 +93,7 @@
                 "username": username,
                 "role": role,
                 "instanceId": instId,
-                "taskname": taskName,
+                "taskId": taskId,
                 "tag": tag,
                 "tagNum": tagNum,
                 "responseTime": respTime
@@ -180,7 +194,7 @@
 <div class="container" style="padding-top: 20px;">
     <h5 class="text-center">
         <embed src="img/annotate_task_logo.svg" type="image/svg+xml" width="25" height="25"/>
-        您现在进行的是<span id="taskName" th:text="${taskVo.taskname}" style="text-decoration: underline;color: #1677b3"></span>任务，
+        您现在进行的是<span th:text="${taskVo.taskname}" style="text-decoration: underline;color: #1677b3"></span>任务，
         标注类型为<span th:text="${taskVo.dataType}" style="text-decoration: underline;color: #1677b3"></span>
     </h5>
     <h5 class="text-center">
@@ -190,6 +204,7 @@
     </h5>
     <input type="hidden" id="instanceId" th:value="${instanceVo.instanceId}"/>
     <input type="hidden" id="role" th:value="${userVo.role}"/>
+    <input type="hidden" id="taskId" th:value="${taskVo.taskId}"/>
 </div>
 
 <div>

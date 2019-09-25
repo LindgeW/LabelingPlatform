@@ -3,7 +3,8 @@
 <mapper namespace="com.labeling.demo.repository.TaskMapper">
   <resultMap id="BaseResultMap" type="com.labeling.demo.entity.Task">
     <constructor>
-      <idArg column="taskname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <idArg column="taskId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="taskname" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="datatype" javaType="java.lang.Short" jdbcType="SMALLINT" />
       <arg column="corpussize" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="tags" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -13,29 +14,32 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    taskname, datatype, corpussize, tags, itemSeparator, expertname, status
+    taskId, taskname, datatype, corpussize, tags, itemSeparator, expertname, status
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tb_task
-    where taskname = #{taskname,jdbcType=VARCHAR}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_task
-    where taskname = #{taskname,jdbcType=VARCHAR}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.labeling.demo.entity.Task">
-    insert into tb_task (taskname, datatype, corpussize, 
-      tags, itemSeparator, expertname, 
-      status)
-    values (#{taskname,jdbcType=VARCHAR}, #{datatype,jdbcType=SMALLINT}, #{corpussize,jdbcType=INTEGER}, 
-      #{tags,jdbcType=VARCHAR}, #{itemSeparator,jdbcType=VARCHAR}, #{expertname,jdbcType=VARCHAR}, 
-      #{status,jdbcType=BIT})
+  <insert id="insert" useGeneratedKeys="true" keyProperty="taskId" parameterType="com.labeling.demo.entity.Task">
+    insert into tb_task (taskId, taskname, datatype, 
+      corpussize, tags, itemSeparator, 
+      expertname, status)
+    values (#{taskId,jdbcType=INTEGER}, #{taskname,jdbcType=VARCHAR}, #{datatype,jdbcType=SMALLINT}, 
+      #{corpussize,jdbcType=INTEGER}, #{tags,jdbcType=VARCHAR}, #{itemSeparator,jdbcType=VARCHAR}, 
+      #{expertname,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.labeling.demo.entity.Task">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="taskId" parameterType="com.labeling.demo.entity.Task">
     insert into tb_task
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        taskId,
+      </if>
       <if test="taskname != null">
         taskname,
       </if>
@@ -59,6 +63,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
       <if test="taskname != null">
         #{taskname,jdbcType=VARCHAR},
       </if>
@@ -85,6 +92,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.labeling.demo.entity.Task">
     update tb_task
     <set>
+      <if test="taskname != null">
+        taskname = #{taskname,jdbcType=VARCHAR},
+      </if>
       <if test="datatype != null">
         datatype = #{datatype,jdbcType=SMALLINT},
       </if>
@@ -104,16 +114,17 @@
         status = #{status,jdbcType=BIT},
       </if>
     </set>
-    where taskname = #{taskname,jdbcType=VARCHAR}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.labeling.demo.entity.Task">
     update tb_task
-    set datatype = #{datatype,jdbcType=SMALLINT},
+    set taskname = #{taskname,jdbcType=VARCHAR},
+      datatype = #{datatype,jdbcType=SMALLINT},
       corpussize = #{corpussize,jdbcType=INTEGER},
       tags = #{tags,jdbcType=VARCHAR},
       itemSeparator = #{itemSeparator,jdbcType=VARCHAR},
       expertname = #{expertname,jdbcType=VARCHAR},
       status = #{status,jdbcType=BIT}
-    where taskname = #{taskname,jdbcType=VARCHAR}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </update>
 </mapper>

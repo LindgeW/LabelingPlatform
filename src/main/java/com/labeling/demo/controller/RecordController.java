@@ -6,6 +6,7 @@ import com.labeling.demo.entity.vo.TaskVO;
 import com.labeling.demo.service.InstanceService;
 import com.labeling.demo.service.InstanceUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -28,33 +29,21 @@ public class RecordController {
         this.instanceUserService = instanceUserService;
     }
 
-//    private Set<String> colorGenerator(int n){
-//        Set<String> colorSet = new HashSet<>();
-//        Random random = new Random(25);
-//        for(int i=0; i<n; i++) {
-//            int r = random.nextInt(255);
-//            int g = random.nextInt(255);
-//            int b = random.nextInt(255);
-//            colorSet.add(String.format("rgb(%d, %d, %d)", r, g, b));
-//        }
-//        return colorSet;
-//    }
-
     @RequestMapping("/history")
     public String history(Model model){
         Subject subject = SecurityUtils.getSubject();
         User user = (User)subject.getPrincipal();
-
         //获取当前用户的任务信息
         Session session = subject.getSession();
         TaskVO taskVO = (TaskVO) session.getAttribute("taskVo");
-
         model.addAttribute("taskVo", taskVO);
         model.addAttribute("userVo", user);
 
+        String userName = user.getUsername();
+        Integer taskId = taskVO.getTaskId();
         if (TagType.NER == TagType.getTypeByID(taskVO.getDatatype())){
-            InstanceUser record = instanceUserService.findByPage(user.getUsername(), Pager.of(0, 1)).get(0);
-            Integer totalRows = instanceUserService.countByUsername(user.getUsername());
+            InstanceUser record = instanceUserService.findByPage(userName, taskId, Pager.of(0, 1)).get(0);
+            Integer totalRows = instanceUserService.countByTask(userName, taskId);
             Instance instance = instanceService.findById(record.getInstanceId());
             String[] items = StringUtils.split(instance.getItem(), " ");
             model.addAttribute("instanceVo", new InstanceUserVO<>(record, items, null));
@@ -68,22 +57,22 @@ public class RecordController {
     @PostMapping("/list")
     @ResponseBody
     public Map<String, Object> personalRecords(@RequestParam("username") String username,
+                                               @RequestParam("taskId") Integer taskId,
                                                @RequestParam("pageNum") Integer pageNum,
                                                @RequestParam("limit") Integer limit,
                                                @RequestParam("search") String search){
 
-        Integer totalNum;
         List<InstanceUserVO> instanceUserVOs = new ArrayList<>();
+        Integer totalNum = instanceUserService.countByTask(username, taskId);
+
         if(StringUtils.isBlank(search)){
-            Pager pageable = Pager.of(pageNum, limit);
-            totalNum = instanceUserService.countByUsername(username);
-            List<InstanceUser> instanceUsers = instanceUserService.findByPage(username, pageable);
+            List<InstanceUser> instanceUsers = instanceUserService.findByPage(username, taskId, Pager.of(pageNum, limit));
             for (InstanceUser instanceUser: instanceUsers) {
                 String item = instanceService.findById(instanceUser.getInstanceId()).getItem();
                 instanceUserVOs.add(new InstanceUserVO<>(instanceUser, item, null));
             }
         } else{  //关键字查询（模糊查询）
-            List<InstanceUser> instanceUsers = instanceUserService.findByUserName(username);
+            List<InstanceUser> instanceUsers = instanceUserService.findByPage(username, taskId, Pager.of(0, totalNum));
             List<InstanceUserVO> instanceUserLst = new ArrayList<>();
             for (InstanceUser instanceUser: instanceUsers) {
                 String item = instanceService.findById(instanceUser.getInstanceId()).getItem();
@@ -128,7 +117,8 @@ public class RecordController {
 
         //取出指定页数据
         String username = instanceUser.getUsername();
-        InstanceUser nextPage = instanceUserService.findByPage(username, Pager.of(offset, 1)).get(0);
+        Integer taskId = instanceUser.getTaskId();
+        InstanceUser nextPage = instanceUserService.findByPage(username, taskId, Pager.of(offset, 1)).get(0);
         Instance instance = instanceService.findById(nextPage.getInstanceId());
         return new InstanceUserVO<>(nextPage, StringUtils.split(instance.getItem(), " "), null);
     }
