@@ -3,8 +3,10 @@
 ## 业务流
 ![](imgs/process.png)
 
-### 无标签数据：txt或csv文件，每行一条数据
-### 带标签数据：json文件，格式：[{"item": "xxx1", "defaultTag": "yyy1"}, {"item": "xxx2", "defaultTag": "yyy2"}, ...]
+### 无标签数据：
+  txt或csv文件，每行一条数据
+### 带标签数据：
+  json文件，格式：[{"item": "xxx1", "defaultTag": "yyy1"}, {"item": "xxx2", "defaultTag": "yyy2"}, ...]
 
 ## 数据流
 ![](imgs/dataflow.png)
